@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RR Joyería Fina y Vintage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { light: '#c9a84c', DEFAULT: '#8B6914', dark: '#5a4409' },
+            cream: '#faf8f4',
+            charcoal: '#1a1a1a'
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'serif'],
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #faf8f4; }
+    .gold-border { border: 1px solid #c9a84c44; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(139,105,20,0.15); }
+    .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+    .hero-overlay { background: linear-gradient(to bottom, rgba(250,248,244,0) 60%, rgba(250,248,244,1) 100%); }
+    .filter-btn.active { background-color: #8B6914; color: white; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
+  </style>
+</head>
+<body class="font-sans text-charcoal min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 w-full z-50 bg-cream/90 backdrop-blur-sm border-b border-gold/20">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.jpg" alt="RR Joyería" class="h-10 w-10 object-contain"/>
+        <div>
+          <p class="font-serif text-lg leading-none text-gold-dark">RR Joyería</p>
+          <p class="font-sans text-xs tracking-widest text-gold uppercase">Fina y Vintage</p>
+        </div>
+      </div>
+      <a href="dashboard.html" class="font-sans text-xs tracking-widest uppercase border border-gold text-gold px-4 py-2 hover:bg-gold hover:text-white transition-all duration-300">
+        Ingresar
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="pt-24 pb-10 px-4 text-center">
+    <p class="font-sans text-xs tracking-[0.3em] text-gold uppercase mb-3">Colección</p>
+    <h1 class="font-serif text-5xl md:text-7xl text-gold-dark font-light italic mb-4">Nuestra Joyería</h1>
+    <p class="font-sans text-sm text-gray-500 tracking-wide max-w-md mx-auto">Piezas únicas seleccionadas con elegancia. Cada joya cuenta una historia.</p>
+    <div class="w-16 h-px bg-gold mx-auto mt-6"></div>
+  </section>
+
+  <!-- FILTROS -->
+  <section class="px-4 pb-8">
+    <div class="max-w-6xl mx-auto">
+      <div id="filters" class="flex flex-wrap gap-2 justify-center">
+        <button onclick="filterProducts('Todos')" class="filter-btn active font-sans text-xs tracking-widest uppercase px-4 py-2 border border-gold text-gold transition-all duration-200 rounded-none">Todos</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section class="px-4 pb-20">
+    <div class="max-w-6xl mx-auto">
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      </div>
+      <div id="empty-state" class="text-center py-20 hidden">
+        <p class="font-serif text-4xl text-gold/40 italic mb-3">Sin productos</p>
+        <p class="font-sans text-sm text-gray-400">Aún no hay productos en esta categoría.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gold/20 py-8 text-center">
+    <img src="assets/logo.jpg" alt="RR" class="h-8 mx-auto mb-3 opacity-60"/>
+    <p class="font-serif italic text-gold text-sm">RR Joyería Fina y Vintage</p>
+    <p class="font-sans text-xs text-gray-400 mt-1 tracking-widest">© 2025</p>
+  </footer>
+
+  <script>
+    const WHATSAPP_NUMBER = '50688888888'; // <-- Cambia este número
+
+    function getProducts() {
+      return JSON.parse(localStorage.getItem('rr_products') || '[]');
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(price);
+    }
+
+    function getCategories() {
+      const products = getProducts();
+      const cats = [...new Set(products.map(p => p.category))].filter(Boolean);
+      return cats;
+    }
+
+    function renderFilters(activeCategory = 'Todos') {
+      const cats = getCategories();
+      const container = document.getElementById('filters');
+      container.innerHTML = `<button onclick="filterProducts('Todos')" class="filter-btn ${activeCategory==='Todos'?'active':''} font-sans text-xs tracking-widest uppercase px-4 py-2 border border-gold text-gold transition-all duration-200">Todos</button>`;
+      cats.forEach(cat => {
+        container.innerHTML += `<button onclick="filterProducts('${cat}')" class="filter-btn ${activeCategory===cat?'active':''} font-sans text-xs tracking-widest uppercase px-4 py-2 border border-gold text-gold transition-all duration-200">${cat}</button>`;
+      });
+    }
+
+    function renderProducts(category = 'Todos') {
+      const products = getProducts();
+      const filtered = category === 'Todos' ? products : products.filter(p => p.category === category);
+      const grid = document.getElementById('products-grid');
+      const empty = document.getElementById('empty-state');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      grid.innerHTML = filtered.map((p, i) => `
+        <div class="card-hover gold-border bg-white fade-in" style="animation-delay:${i*0.07}s">
+          <div class="aspect-square overflow-hidden bg-gray-50">
+            <img src="${p.image || 'https://placehold.co/400x400/f5f0e8/8B6914?text=RR'}" 
+                 alt="${p.name}" 
+                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
+          </div>
+          <div class="p-4">
+            <p class="font-sans text-xs tracking-widest text-gold uppercase mb-1">${p.category || ''}</p>
+            <h3 class="font-serif text-lg text-charcoal leading-tight mb-1">${p.name}</h3>
+            <p class="font-sans text-xs text-gray-400 mb-3 line-clamp-2">${p.description || ''}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-serif text-xl text-gold-dark font-semibold">${formatPrice(p.price)}</p>
+            </div>
+            <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola!%20Me%20interesa%20esta%20joya:%20*${encodeURIComponent(p.name)}*%20-%20${formatPrice(p.price)}" 
+               target="_blank"
+               class="mt-3 w-full btn-whatsapp text-white font-sans text-xs tracking-widest uppercase py-2 px-4 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+              Consultar por WhatsApp
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterProducts(category) {
+      renderFilters(category);
+      renderProducts(category);
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim() === category);
+        if(btn.classList.contains('active')) { btn.style.backgroundColor='#8B6914'; btn.style.color='white'; }
+        else { btn.style.backgroundColor=''; btn.style.color='#8B6914'; }
+      });
+    }
+
+    // Init
+    renderFilters();
+    renderProducts();
+  </script>
+</body>
+</html>
