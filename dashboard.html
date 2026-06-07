@@ -5,378 +5,446 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard — RR Joyería</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            gold: { light: '#c9a84c', DEFAULT: '#8B6914', dark: '#5a4409' },
-            cream: '#faf8f4',
-            charcoal: '#1a1a1a'
+            gold: { light: '#d4a843', DEFAULT: '#8B6914', dark: '#5a4409', faint: '#fdf8ee' },
+            cream: '#faf8f4', charcoal: '#1a1a1a'
           },
           fontFamily: {
             serif: ['Cormorant Garamond', 'serif'],
-            sans: ['Montserrat', 'sans-serif']
+            sans: ['Raleway', 'sans-serif']
           }
         }
       }
     }
   </script>
   <style>
-    body { background-color: #f5f0e8; }
-    .gold-border { border: 1px solid #c9a84c55; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .fade-in { animation: fadeIn 0.3s ease forwards; }
+    :root { --gold: #8B6914; --gold-light: #d4a843; }
+    body { background: #f4efe6; }
+    .card { background: #fff; border: 1px solid #d4a84330; }
+    .input-field { border: 1px solid #e5e0d8; font-size: 0.8rem; transition: border-color 0.2s; }
+    .input-field:focus { outline: none; border-color: var(--gold); }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeIn 0.25s ease forwards; }
+    .sidebar { width: 280px; min-width: 280px; }
+    @media(max-width:1023px){ .sidebar{ width:100%; min-width:unset; } }
+    .tag { display:inline-flex; align-items:center; gap:4px; background:#f9f3e6; border:1px solid #d4a84340; color:var(--gold); font-size:0.65rem; padding:2px 8px; }
+    .photo-thumb { position:relative; }
+    .photo-thumb .remove-btn { position:absolute; top:-6px; right:-6px; background:#1a1a1a; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px; opacity:0; transition:opacity 0.2s; }
+    .photo-thumb:hover .remove-btn { opacity:1; }
+    .sold-toggle { cursor:pointer; }
+    .sold-toggle input:checked + .toggle-track { background: #1a1a1a; }
+    .toggle-track { width:40px; height:22px; background:#e5e0d8; border-radius:11px; position:relative; transition:background 0.2s; }
+    .toggle-track::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; background:#fff; border-radius:50%; transition:left 0.2s; }
+    .sold-toggle input:checked + .toggle-track::after { left:21px; }
+    /* TOAST */
+    .toast { position:fixed; bottom:24px; right:24px; z-index:9999; padding:12px 20px; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; animation:slideToast 0.3s ease; }
+    @keyframes slideToast { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .stat-card { border-left: 3px solid var(--gold-light); }
   </style>
 </head>
 <body class="font-sans text-charcoal min-h-screen">
 
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white gold-border p-10 w-full max-w-sm shadow-xl">
-      <div class="text-center mb-8">
-        <img src="assets/logo.jpg" alt="RR" class="h-16 mx-auto mb-4 object-contain"/>
-        <h1 class="font-serif text-3xl italic text-gold-dark">Panel Admin</h1>
-        <p class="font-sans text-xs tracking-widest text-gray-400 uppercase mt-1">RR Joyería</p>
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(135deg,#f9f3e6,#faf8f4)">
+  <div class="card p-8 sm:p-10 w-full max-w-xs shadow-2xl">
+    <div class="text-center mb-8">
+      <img src="assets/logo.jpg" alt="RR" class="h-16 w-16 mx-auto mb-4 object-contain rounded-full border-2 border-gold/20"/>
+      <h1 class="font-serif text-3xl italic text-gold-dark">Panel Admin</h1>
+      <p class="font-sans text-[9px] tracking-[0.3em] text-charcoal/40 uppercase mt-1">RR Joyería Fina y Vintage</p>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Usuario</label>
+        <input id="login-user" type="text" class="input-field w-full px-3 py-2.5" placeholder="admin"/>
       </div>
-      <div class="space-y-4">
-        <div>
-          <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Usuario</label>
-          <input id="login-user" type="text" class="w-full border border-gray-200 px-3 py-2 font-sans text-sm focus:outline-none focus:border-gold" placeholder="admin"/>
-        </div>
-        <div>
-          <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Contraseña</label>
-          <input id="login-pass" type="password" class="w-full border border-gray-200 px-3 py-2 font-sans text-sm focus:outline-none focus:border-gold" placeholder="••••••" onkeydown="if(event.key==='Enter') doLogin()"/>
-        </div>
-        <p id="login-error" class="text-red-500 text-xs hidden">Usuario o contraseña incorrectos.</p>
-        <button onclick="doLogin()" class="w-full bg-gold text-white font-sans text-xs tracking-widest uppercase py-3 hover:bg-gold-dark transition-colors duration-200">
-          Ingresar
-        </button>
+      <div>
+        <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Contraseña</label>
+        <input id="login-pass" type="password" class="input-field w-full px-3 py-2.5" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
       </div>
+      <p id="login-error" class="text-red-400 text-[10px] hidden tracking-wide">Usuario o contraseña incorrectos.</p>
+      <button onclick="doLogin()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[0.2em] uppercase py-3 hover:bg-gold-dark transition-colors">
+        Ingresar
+      </button>
     </div>
   </div>
+</div>
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="hidden min-h-screen">
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dashboard" class="hidden min-h-screen flex flex-col">
 
-    <!-- NAVBAR -->
-    <nav class="bg-white border-b border-gold/20 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-      <div class="flex items-center gap-3">
-        <img src="assets/logo.jpg" alt="RR" class="h-9 w-9 object-contain"/>
-        <div>
-          <p class="font-serif text-base leading-none text-gold-dark">RR Joyería</p>
-          <p class="font-sans text-xs tracking-widest text-gold uppercase">Dashboard</p>
-        </div>
+  <!-- TOPBAR -->
+  <header class="bg-charcoal text-white px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 object-contain rounded-full opacity-90"/>
+      <div class="leading-none">
+        <p class="font-serif text-sm text-gold-light">RR Joyería</p>
+        <p class="font-sans text-[8px] tracking-[0.3em] text-white/40 uppercase">Dashboard</p>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="index.html" target="_blank" class="font-sans text-xs tracking-widest uppercase border border-gold text-gold px-4 py-2 hover:bg-gold hover:text-white transition-all duration-200">
-          Ver Tienda
-        </a>
-        <button onclick="doLogout()" class="font-sans text-xs tracking-widest uppercase border border-red-300 text-red-400 px-4 py-2 hover:bg-red-400 hover:text-white transition-all duration-200">
-          Salir
-        </button>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="index.html" target="_blank" class="font-sans text-[9px] tracking-widest uppercase border border-gold/40 text-gold-light px-3 py-1.5 hover:border-gold-light transition-colors hidden sm:flex items-center gap-1.5">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        Ver Tienda
+      </a>
+      <button onclick="doLogout()" class="font-sans text-[9px] tracking-widest uppercase border border-white/10 text-white/50 px-3 py-1.5 hover:border-red-400 hover:text-red-400 transition-colors">
+        Salir
+      </button>
+    </div>
+  </header>
+
+  <div class="flex-1 p-4 sm:p-6 max-w-7xl mx-auto w-full">
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div class="card stat-card p-4">
+        <p id="stat-total" class="font-serif text-4xl text-gold-dark">0</p>
+        <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase mt-0.5">Total Productos</p>
       </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-8">
-
-      <!-- STATS -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white gold-border p-5 text-center">
-          <p id="stat-total" class="font-serif text-4xl text-gold-dark">0</p>
-          <p class="font-sans text-xs tracking-widest text-gray-400 uppercase mt-1">Productos</p>
-        </div>
-        <div class="bg-white gold-border p-5 text-center">
-          <p id="stat-cats" class="font-serif text-4xl text-gold-dark">0</p>
-          <p class="font-sans text-xs tracking-widest text-gray-400 uppercase mt-1">Categorías</p>
-        </div>
-        <div class="bg-white gold-border p-5 text-center">
-          <p id="stat-max" class="font-serif text-2xl text-gold-dark">₡0</p>
-          <p class="font-sans text-xs tracking-widest text-gray-400 uppercase mt-1">Precio Máx</p>
-        </div>
-        <div class="bg-white gold-border p-5 text-center">
-          <p id="stat-min" class="font-serif text-2xl text-gold-dark">₡0</p>
-          <p class="font-sans text-xs tracking-widest text-gray-400 uppercase mt-1">Precio Mín</p>
-        </div>
+      <div class="card stat-card p-4">
+        <p id="stat-cats" class="font-serif text-4xl text-gold-dark">0</p>
+        <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase mt-0.5">Categorías</p>
       </div>
+      <div class="card stat-card p-4">
+        <p id="stat-sold" class="font-serif text-4xl text-charcoal">0</p>
+        <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase mt-0.5">Agotados</p>
+      </div>
+      <div class="card stat-card p-4">
+        <p id="stat-avail" class="font-serif text-4xl text-gold-dark">0</p>
+        <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase mt-0.5">Disponibles</p>
+      </div>
+    </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="flex flex-col lg:flex-row gap-6">
 
-        <!-- FORMULARIO -->
-        <div class="lg:col-span-1">
-          <div class="bg-white gold-border p-6">
-            <h2 id="form-title" class="font-serif text-2xl italic text-gold-dark mb-6">Agregar Producto</h2>
+      <!-- ── FORMULARIO ── -->
+      <div class="sidebar">
+        <div class="card p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h2 id="form-title" class="font-serif text-xl italic text-gold-dark">Agregar Producto</h2>
+            <button id="cancel-btn" onclick="clearForm()" class="hidden font-sans text-[9px] tracking-widest uppercase text-charcoal/40 border border-charcoal/10 px-2 py-1 hover:border-red-300 hover:text-red-400 transition-colors">
+              Cancelar
+            </button>
+          </div>
 
-            <div class="space-y-4">
-              <input type="hidden" id="edit-id"/>
+          <input type="hidden" id="edit-id"/>
 
-              <div>
-                <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Nombre *</label>
-                <input id="f-name" type="text" class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gold" placeholder="Collar de oro 18k"/>
-              </div>
+          <div class="space-y-4">
 
-              <div>
-                <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Categoría *</label>
-                <div class="flex gap-2">
-                  <input id="f-category" type="text" list="cat-list" class="flex-1 border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gold" placeholder="Collares, Anillos..."/>
-                  <datalist id="cat-list"></datalist>
-                </div>
-              </div>
-
-              <div>
-                <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Precio (₡) *</label>
-                <input id="f-price" type="number" class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gold" placeholder="25000"/>
-              </div>
-
-              <div>
-                <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-1">Descripción</label>
-                <textarea id="f-desc" rows="3" class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gold resize-none" placeholder="Descripción del producto..."></textarea>
-              </div>
-
-              <div>
-                <label class="font-sans text-xs tracking-widest uppercase text-gray-500 block mb-2">Foto del Producto</label>
-                <div id="drop-zone" class="border-2 border-dashed border-gold/30 p-6 text-center cursor-pointer hover:border-gold transition-colors" onclick="document.getElementById('f-image').click()">
-                  <div id="drop-preview" class="hidden">
-                    <img id="preview-img" class="h-32 mx-auto object-contain mb-2"/>
-                    <p class="font-sans text-xs text-gray-400">Click para cambiar</p>
-                  </div>
-                  <div id="drop-placeholder">
-                    <svg class="w-8 h-8 text-gold/40 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <p class="font-sans text-xs text-gray-400">Click para subir foto</p>
-                  </div>
-                  <input id="f-image" type="file" accept="image/*" class="hidden" onchange="previewImage(this)"/>
-                </div>
-              </div>
-
-              <div class="flex gap-2 pt-2">
-                <button onclick="saveProduct()" class="flex-1 bg-gold text-white font-sans text-xs tracking-widest uppercase py-3 hover:bg-gold-dark transition-colors">
-                  Guardar
-                </button>
-                <button onclick="clearForm()" id="cancel-btn" class="hidden px-4 border border-gray-300 text-gray-500 font-sans text-xs tracking-widest uppercase hover:bg-gray-50 transition-colors">
-                  Cancelar
-                </button>
-              </div>
-              <p id="form-msg" class="text-center text-xs hidden"></p>
+            <!-- Nombre -->
+            <div>
+              <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Nombre *</label>
+              <input id="f-name" type="text" class="input-field w-full px-3 py-2.5" placeholder="Collar de oro 18k"/>
             </div>
+
+            <!-- Categoría -->
+            <div>
+              <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Categoría *</label>
+              <input id="f-category" type="text" list="cat-list" class="input-field w-full px-3 py-2.5" placeholder="Collares, Anillos..."/>
+              <datalist id="cat-list"></datalist>
+            </div>
+
+            <!-- Precio -->
+            <div>
+              <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Precio (₡) *</label>
+              <input id="f-price" type="number" class="input-field w-full px-3 py-2.5" placeholder="25000"/>
+            </div>
+
+            <!-- Descripción -->
+            <div>
+              <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-1.5">Descripción</label>
+              <textarea id="f-desc" rows="3" class="input-field w-full px-3 py-2.5 resize-none" placeholder="Descripción del producto..."></textarea>
+            </div>
+
+            <!-- AGOTADO TOGGLE -->
+            <div class="flex items-center justify-between py-2 border-t border-b border-gold/10">
+              <div>
+                <p class="font-sans text-[10px] tracking-widest uppercase text-charcoal/70">Marcar como Agotado</p>
+                <p class="font-sans text-[9px] text-charcoal/30 mt-0.5">Se mostrará con etiqueta "Agotado"</p>
+              </div>
+              <label class="sold-toggle flex items-center">
+                <input type="checkbox" id="f-sold" class="hidden"/>
+                <div class="toggle-track"></div>
+              </label>
+            </div>
+
+            <!-- FOTOS -->
+            <div>
+              <label class="font-sans text-[9px] tracking-widest uppercase text-charcoal/50 block mb-2">Fotos del Producto</label>
+              <div id="photos-preview" class="flex flex-wrap gap-2 mb-2"></div>
+              <div onclick="document.getElementById('f-images').click()"
+                class="border-2 border-dashed border-gold/20 p-4 text-center cursor-pointer hover:border-gold transition-colors">
+                <svg class="w-6 h-6 text-gold/30 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+                <p class="font-sans text-[10px] text-charcoal/30">Agregar fotos (múltiples)</p>
+                <input id="f-images" type="file" accept="image/*" multiple class="hidden" onchange="addImages(this)"/>
+              </div>
+              <p class="font-sans text-[9px] text-charcoal/30 mt-1">* La primera foto será la principal</p>
+            </div>
+
+            <!-- GUARDAR -->
+            <button onclick="saveProduct()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[0.2em] uppercase py-3 hover:bg-gold-dark transition-colors mt-2">
+              Guardar Producto
+            </button>
+            <p id="form-msg" class="text-center text-[10px] hidden"></p>
           </div>
         </div>
-
-        <!-- LISTA DE PRODUCTOS -->
-        <div class="lg:col-span-2">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="font-serif text-2xl italic text-gold-dark">Productos</h2>
-            <input id="search-input" type="text" onkeyup="renderList()" class="border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gold w-48" placeholder="Buscar..."/>
-          </div>
-
-          <div id="product-list" class="space-y-3"></div>
-          <div id="list-empty" class="hidden text-center py-16">
-            <p class="font-serif text-3xl italic text-gold/30">Sin productos</p>
-            <p class="font-sans text-xs text-gray-400 mt-2">Agrega tu primer producto con el formulario.</p>
-          </div>
-        </div>
-
       </div>
+
+      <!-- ── LISTA ── -->
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <h2 class="font-serif text-2xl italic text-gold-dark">Productos</h2>
+          <div class="flex gap-2">
+            <div class="relative flex-1 sm:flex-none">
+              <input id="search-dash" type="text" onkeyup="renderList()" placeholder="Buscar..."
+                class="input-field px-3 py-2 pl-7 w-full sm:w-44"/>
+              <svg class="absolute left-2 top-2.5 w-3 h-3 text-charcoal/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+            <select id="filter-dash" onchange="renderList()" class="input-field px-3 py-2">
+              <option value="">Todas</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="product-list" class="space-y-3"></div>
+        <div id="list-empty" class="hidden text-center py-20 card">
+          <p class="font-serif text-3xl italic text-gold/20 mb-2">Sin productos</p>
+          <p class="font-sans text-xs text-charcoal/30">Agrega tu primer producto con el formulario.</p>
+        </div>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <script>
-    // ── AUTH ──────────────────────────────────────────────
-    const ADMIN_USER = 'admin';
-    const ADMIN_PASS = 'rr2025';
+<!-- TOAST -->
+<div id="toast" class="toast hidden font-sans"></div>
 
-    function doLogin() {
-      const u = document.getElementById('login-user').value.trim();
-      const p = document.getElementById('login-pass').value.trim();
-      if (u === ADMIN_USER && p === ADMIN_PASS) {
-        sessionStorage.setItem('rr_auth', '1');
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        initDashboard();
-      } else {
-        document.getElementById('login-error').classList.remove('hidden');
-      }
-    }
+<script>
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'rr2025';
 
-    function doLogout() {
-      sessionStorage.removeItem('rr_auth');
-      location.reload();
-    }
-
-    if (sessionStorage.getItem('rr_auth') === '1') {
+  /* ── AUTH ── */
+  function doLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value.trim();
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      sessionStorage.setItem('rr_auth','1');
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
       initDashboard();
+    } else {
+      document.getElementById('login-error').classList.remove('hidden');
     }
+  }
+  function doLogout() { sessionStorage.removeItem('rr_auth'); location.reload(); }
+  if (sessionStorage.getItem('rr_auth')==='1') {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    initDashboard();
+  }
 
-    // ── STORAGE ───────────────────────────────────────────
-    function getProducts() { return JSON.parse(localStorage.getItem('rr_products') || '[]'); }
-    function saveProducts(arr) { localStorage.setItem('rr_products', JSON.stringify(arr)); }
+  /* ── STORAGE ── */
+  function getProducts() { return JSON.parse(localStorage.getItem('rr_products')||'[]'); }
+  function saveProducts(arr) { localStorage.setItem('rr_products', JSON.stringify(arr)); }
+  function formatPrice(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
 
-    function formatPrice(p) {
-      return new Intl.NumberFormat('es-CR', { style:'currency', currency:'CRC', minimumFractionDigits:0 }).format(p);
-    }
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg, ok=true) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast font-sans ${ok ? 'bg-charcoal text-white' : 'bg-red-500 text-white'}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+  }
 
-    // ── IMAGE PREVIEW ─────────────────────────────────────
-    let currentImageBase64 = '';
+  /* ── IMAGES ── */
+  let pendingImages = []; // array of base64
 
-    function previewImage(input) {
-      if (!input.files || !input.files[0]) return;
+  function addImages(input) {
+    const files = Array.from(input.files);
+    files.forEach(file => {
       const reader = new FileReader();
       reader.onload = e => {
-        currentImageBase64 = e.target.result;
-        document.getElementById('preview-img').src = currentImageBase64;
-        document.getElementById('drop-preview').classList.remove('hidden');
-        document.getElementById('drop-placeholder').classList.add('hidden');
+        pendingImages.push(e.target.result);
+        renderPhotoPreview();
       };
-      reader.readAsDataURL(input.files[0]);
-    }
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+  }
 
-    // ── FORM ──────────────────────────────────────────────
-    function clearForm() {
-      document.getElementById('edit-id').value = '';
-      document.getElementById('f-name').value = '';
-      document.getElementById('f-category').value = '';
-      document.getElementById('f-price').value = '';
-      document.getElementById('f-desc').value = '';
-      document.getElementById('f-image').value = '';
-      currentImageBase64 = '';
-      document.getElementById('preview-img').src = '';
-      document.getElementById('drop-preview').classList.add('hidden');
-      document.getElementById('drop-placeholder').classList.remove('hidden');
-      document.getElementById('form-title').textContent = 'Agregar Producto';
-      document.getElementById('cancel-btn').classList.add('hidden');
-      document.getElementById('form-msg').classList.add('hidden');
-    }
+  function renderPhotoPreview() {
+    const container = document.getElementById('photos-preview');
+    container.innerHTML = pendingImages.map((img, i) => `
+      <div class="photo-thumb w-16 h-16 border border-gold/20 overflow-hidden">
+        <img src="${img}" class="w-full h-full object-cover"/>
+        <div class="remove-btn" onclick="removeImage(${i})">✕</div>
+        ${i===0 ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,105,20,0.8);color:#fff;font-size:8px;text-align:center;padding:1px;letter-spacing:0.1em;">PRINCIPAL</div>' : ''}
+      </div>
+    `).join('');
+  }
 
-    function saveProduct() {
-      const id    = document.getElementById('edit-id').value;
-      const name  = document.getElementById('f-name').value.trim();
-      const cat   = document.getElementById('f-category').value.trim();
-      const price = parseFloat(document.getElementById('f-price').value);
-      const desc  = document.getElementById('f-desc').value.trim();
-      const msg   = document.getElementById('form-msg');
+  function removeImage(idx) {
+    pendingImages.splice(idx, 1);
+    renderPhotoPreview();
+  }
 
-      if (!name || !cat || isNaN(price)) {
-        msg.textContent = 'Nombre, categoría y precio son obligatorios.';
-        msg.className = 'text-center text-xs text-red-500';
-        msg.classList.remove('hidden');
-        return;
+  /* ── FORM ── */
+  function clearForm() {
+    document.getElementById('edit-id').value = '';
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-category').value = '';
+    document.getElementById('f-price').value = '';
+    document.getElementById('f-desc').value = '';
+    document.getElementById('f-sold').checked = false;
+    pendingImages = [];
+    renderPhotoPreview();
+    document.getElementById('form-title').textContent = 'Agregar Producto';
+    document.getElementById('cancel-btn').classList.add('hidden');
+    document.getElementById('form-msg').classList.add('hidden');
+  }
+
+  function saveProduct() {
+    const id    = document.getElementById('edit-id').value;
+    const name  = document.getElementById('f-name').value.trim();
+    const cat   = document.getElementById('f-category').value.trim();
+    const price = parseFloat(document.getElementById('f-price').value);
+    const desc  = document.getElementById('f-desc').value.trim();
+    const sold  = document.getElementById('f-sold').checked;
+
+    if (!name || !cat || isNaN(price)) { showToast('Nombre, categoría y precio son obligatorios.', false); return; }
+
+    const products = getProducts();
+    if (id) {
+      const idx = products.findIndex(p => p.id === id);
+      if (idx > -1) {
+        const existing = products[idx];
+        products[idx] = {
+          ...existing, name, category:cat, price, description:desc, sold,
+          images: pendingImages.length ? pendingImages : (existing.images || (existing.image ? [existing.image] : []))
+        };
       }
-
-      const products = getProducts();
-
-      if (id) {
-        const idx = products.findIndex(p => p.id === id);
-        if (idx > -1) {
-          products[idx] = { ...products[idx], name, category: cat, price, description: desc, image: currentImageBase64 || products[idx].image };
-        }
-      } else {
-        products.unshift({ id: Date.now().toString(), name, category: cat, price, description: desc, image: currentImageBase64, createdAt: new Date().toISOString() });
-      }
-
-      saveProducts(products);
-      msg.textContent = id ? '✓ Producto actualizado.' : '✓ Producto guardado.';
-      msg.className = 'text-center text-xs text-green-600';
-      msg.classList.remove('hidden');
-      setTimeout(() => { clearForm(); msg.classList.add('hidden'); }, 1500);
-      renderList();
-      updateStats();
-      updateCatList();
+    } else {
+      products.unshift({ id: Date.now().toString(), name, category:cat, price, description:desc, sold, images: pendingImages, createdAt: new Date().toISOString() });
     }
 
-    function editProduct(id) {
-      const p = getProducts().find(x => x.id === id);
-      if (!p) return;
-      document.getElementById('edit-id').value = p.id;
-      document.getElementById('f-name').value = p.name;
-      document.getElementById('f-category').value = p.category;
-      document.getElementById('f-price').value = p.price;
-      document.getElementById('f-desc').value = p.description || '';
-      currentImageBase64 = p.image || '';
-      if (p.image) {
-        document.getElementById('preview-img').src = p.image;
-        document.getElementById('drop-preview').classList.remove('hidden');
-        document.getElementById('drop-placeholder').classList.add('hidden');
-      }
-      document.getElementById('form-title').textContent = 'Editar Producto';
-      document.getElementById('cancel-btn').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    saveProducts(products);
+    showToast(id ? '✓ Producto actualizado' : '✓ Producto agregado');
+    clearForm();
+    renderList();
+    updateStats();
+    updateCatList();
+  }
 
-    function deleteProduct(id) {
-      if (!confirm('¿Eliminar este producto?')) return;
-      saveProducts(getProducts().filter(p => p.id !== id));
-      renderList();
-      updateStats();
-      updateCatList();
-    }
+  function editProduct(id) {
+    const p = getProducts().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('edit-id').value = p.id;
+    document.getElementById('f-name').value = p.name;
+    document.getElementById('f-category').value = p.category;
+    document.getElementById('f-price').value = p.price;
+    document.getElementById('f-desc').value = p.description || '';
+    document.getElementById('f-sold').checked = !!p.sold;
+    pendingImages = p.images ? [...p.images] : (p.image ? [p.image] : []);
+    renderPhotoPreview();
+    document.getElementById('form-title').textContent = 'Editar Producto';
+    document.getElementById('cancel-btn').classList.remove('hidden');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
 
-    // ── LIST ──────────────────────────────────────────────
-    function renderList() {
-      const search = document.getElementById('search-input').value.toLowerCase();
-      const products = getProducts().filter(p =>
-        p.name.toLowerCase().includes(search) ||
-        (p.category || '').toLowerCase().includes(search)
-      );
-      const container = document.getElementById('product-list');
-      const empty = document.getElementById('list-empty');
+  function deleteProduct(id) {
+    if (!confirm('¿Eliminar este producto?')) return;
+    saveProducts(getProducts().filter(p => p.id !== id));
+    renderList(); updateStats(); updateCatList();
+    showToast('Producto eliminado');
+  }
 
-      if (products.length === 0) {
-        container.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
+  function toggleSold(id) {
+    const products = getProducts();
+    const idx = products.findIndex(p => p.id === id);
+    if (idx > -1) { products[idx].sold = !products[idx].sold; saveProducts(products); }
+    renderList(); updateStats();
+    showToast(products[idx]?.sold ? 'Marcado como Agotado' : 'Marcado como Disponible');
+  }
 
-      container.innerHTML = products.map(p => `
-        <div class="bg-white gold-border flex gap-4 p-4 fade-in">
-          <div class="w-16 h-16 flex-shrink-0 bg-gray-50 overflow-hidden">
-            <img src="${p.image || 'https://placehold.co/80x80/f5f0e8/8B6914?text=RR'}" class="w-full h-full object-cover"/>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <p class="font-sans text-xs tracking-widest text-gold uppercase">${p.category || ''}</p>
-                <p class="font-serif text-base text-charcoal">${p.name}</p>
-                <p class="font-sans text-xs text-gray-400 truncate">${p.description || ''}</p>
+  /* ── LIST ── */
+  function renderList() {
+    const search = (document.getElementById('search-dash').value || '').toLowerCase();
+    const catFilter = document.getElementById('filter-dash').value;
+    let products = getProducts();
+    if (catFilter) products = products.filter(p => p.category === catFilter);
+    if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || (p.category||'').toLowerCase().includes(search));
+
+    const container = document.getElementById('product-list');
+    const empty = document.getElementById('list-empty');
+    if (!products.length) { container.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+
+    container.innerHTML = products.map(p => {
+      const imgs = p.images && p.images.length ? p.images : (p.image ? [p.image] : []);
+      const thumb = imgs[0] || 'https://placehold.co/80x80/f5f0e8/8B6914?text=RR';
+      return `
+      <div class="card flex gap-3 p-3 sm:p-4 fade-in ${p.sold?'opacity-60':''}">
+        <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden bg-gray-50 border border-gold/10">
+          <img src="${thumb}" class="w-full h-full object-cover"/>
+          ${imgs.length > 1 ? `<div class="absolute bottom-0 right-0 bg-black/50 text-white text-[8px] px-1">+${imgs.length}</div>` : ''}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-2 justify-between">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-sans text-[9px] tracking-widest text-gold uppercase">${p.category||''}</span>
+                ${p.sold ? '<span class="font-sans text-[8px] tracking-widest uppercase bg-charcoal text-white px-2 py-0.5">Agotado</span>' : '<span class="font-sans text-[8px] tracking-widest uppercase bg-gold/10 text-gold px-2 py-0.5">Disponible</span>'}
               </div>
-              <p class="font-serif text-lg text-gold-dark whitespace-nowrap">${formatPrice(p.price)}</p>
+              <p class="font-serif text-base sm:text-lg text-charcoal truncate">${p.name}</p>
+              <p class="font-sans text-[10px] text-charcoal/40 truncate hidden sm:block">${p.description||''}</p>
             </div>
-            <div class="flex gap-2 mt-2">
-              <button onclick="editProduct('${p.id}')" class="font-sans text-xs tracking-widest uppercase border border-gold text-gold px-3 py-1 hover:bg-gold hover:text-white transition-all">
-                Editar
-              </button>
-              <button onclick="deleteProduct('${p.id}')" class="font-sans text-xs tracking-widest uppercase border border-red-200 text-red-400 px-3 py-1 hover:bg-red-400 hover:text-white transition-all">
-                Eliminar
-              </button>
-            </div>
+            <p class="font-serif text-base sm:text-lg text-gold-dark whitespace-nowrap flex-shrink-0">${formatPrice(p.price)}</p>
+          </div>
+          <div class="flex gap-1.5 mt-2 flex-wrap">
+            <button onclick="editProduct('${p.id}')" class="font-sans text-[9px] tracking-widest uppercase border border-gold text-gold px-2.5 py-1 hover:bg-gold hover:text-white transition-all">
+              Editar
+            </button>
+            <button onclick="toggleSold('${p.id}')" class="font-sans text-[9px] tracking-widest uppercase border ${p.sold?'border-green-300 text-green-500 hover:bg-green-500':'border-charcoal/20 text-charcoal/50 hover:bg-charcoal'} px-2.5 py-1 hover:text-white transition-all">
+              ${p.sold ? 'Disponible' : 'Agotado'}
+            </button>
+            <button onclick="deleteProduct('${p.id}')" class="font-sans text-[9px] tracking-widest uppercase border border-red-200 text-red-400 px-2.5 py-1 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all">
+              Eliminar
+            </button>
           </div>
         </div>
-      `).join('');
-    }
+      </div>`;
+    }).join('');
+  }
 
-    // ── STATS ─────────────────────────────────────────────
-    function updateStats() {
-      const products = getProducts();
-      const prices = products.map(p => p.price).filter(Boolean);
-      const cats = [...new Set(products.map(p => p.category))].filter(Boolean);
-      document.getElementById('stat-total').textContent = products.length;
-      document.getElementById('stat-cats').textContent = cats.length;
-      document.getElementById('stat-max').textContent = prices.length ? formatPrice(Math.max(...prices)) : '₡0';
-      document.getElementById('stat-min').textContent = prices.length ? formatPrice(Math.min(...prices)) : '₡0';
-    }
+  /* ── STATS ── */
+  function updateStats() {
+    const products = getProducts();
+    const cats = [...new Set(products.map(p => p.category))].filter(Boolean);
+    const soldCount = products.filter(p => p.sold).length;
+    document.getElementById('stat-total').textContent = products.length;
+    document.getElementById('stat-cats').textContent = cats.length;
+    document.getElementById('stat-sold').textContent = soldCount;
+    document.getElementById('stat-avail').textContent = products.length - soldCount;
+  }
 
-    function updateCatList() {
-      const cats = [...new Set(getProducts().map(p => p.category))].filter(Boolean);
-      document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}"/>`).join('');
-    }
+  function updateCatList() {
+    const cats = [...new Set(getProducts().map(p => p.category))].filter(Boolean);
+    document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}"/>`).join('');
+    const sel = document.getElementById('filter-dash');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => `<option value="${c}" ${c===cur?'selected':''}>${c}</option>`).join('');
+  }
 
-    function initDashboard() {
-      renderList();
-      updateStats();
-      updateCatList();
-    }
-  </script>
+  function initDashboard() { renderList(); updateStats(); updateCatList(); }
+</script>
 </body>
 </html>
