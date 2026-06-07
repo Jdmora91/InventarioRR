@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RR Joyería Fina y Vintage</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            gold: { light: '#d4a843', DEFAULT: '#8B6914', dark: '#5a4409', faint: '#f9f3e6' },
-            cream: '#faf8f4',
-            charcoal: '#1a1a1a'
+            gold: { light: '#d4a843', DEFAULT: '#8B6914', dark: '#5a4409', faint: '#fdf8ee' },
+            cream: '#faf8f4', charcoal: '#1a1a1a'
           },
           fontFamily: {
             serif: ['Cormorant Garamond', 'serif'],
@@ -24,189 +23,396 @@
     }
   </script>
   <style>
-    :root { --gold: #8B6914; --gold-light: #d4a843; --cream: #faf8f4; }
-    * { box-sizing: border-box; }
-    body { background-color: var(--cream); }
+    :root{--gold:#8B6914;--gold-l:#d4a843;--cream:#faf8f4;--dark:#1a1a1a;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--cream);color:var(--dark);}
 
-    /* NAV */
-    .nav-blur { background: rgba(250,248,244,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    /* ── NAV ── */
+    .nav-glass{background:rgba(250,248,244,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
 
-    /* HERO */
-    .hero-bg { background: linear-gradient(135deg, #f9f3e6 0%, #faf8f4 50%, #f5ede0 100%); }
-    .hero-ornament { color: #d4a84330; font-size: 18rem; line-height: 1; }
+    /* ── HERO ── */
+    .hero-section{background:linear-gradient(160deg,#f9f2e2 0%,#faf8f4 45%,#f3ead8 100%);min-height:92vh;position:relative;overflow:hidden;}
+    .hero-grain::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;}
+    .hero-circle{position:absolute;border-radius:50%;border:1px solid #d4a84322;}
+    .hero-text-main{font-size:clamp(3.5rem,9vw,8rem);line-height:0.9;letter-spacing:-0.02em;}
 
-    /* CARDS */
-    .product-card { transition: transform 0.35s cubic-bezier(.25,.8,.25,1), box-shadow 0.35s cubic-bezier(.25,.8,.25,1); }
-    .product-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(139,105,20,0.14); }
-    .sold-overlay { background: rgba(26,26,26,0.55); }
+    /* ── MARQUEE ── */
+    .marquee-wrap{overflow:hidden;white-space:nowrap;}
+    .marquee-track{display:inline-flex;animation:marquee 28s linear infinite;}
+    .marquee-track:hover{animation-play-state:paused;}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-    /* BADGE */
-    .badge-agotado { background: #1a1a1a; color: #fff; font-size: 0.6rem; letter-spacing: 0.15em; }
-    .badge-nuevo { background: var(--gold); color: #fff; font-size: 0.6rem; letter-spacing: 0.15em; }
+    /* ── CARDS ── */
+    .product-card{transition:transform .35s cubic-bezier(.25,.8,.25,1),box-shadow .35s cubic-bezier(.25,.8,.25,1);cursor:pointer;}
+    .product-card:hover{transform:translateY(-8px);box-shadow:0 32px 64px rgba(139,105,20,.16);}
+    .product-card:hover .card-img{transform:scale(1.07);}
+    .card-img{transition:transform .5s cubic-bezier(.25,.8,.25,1);}
 
-    /* FILTER BUTTONS */
-    .filter-btn { transition: all 0.2s; border: 1px solid #d4a84360; color: var(--gold); font-size: 0.65rem; letter-spacing: 0.15em; }
-    .filter-btn:hover, .filter-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+    /* ── FILTERS ── */
+    .filter-pill{font-size:.62rem;letter-spacing:.15em;border:1px solid #d4a84350;color:var(--gold);transition:all .2s;white-space:nowrap;}
+    .filter-pill:hover,.filter-pill.active{background:var(--gold);color:#fff;border-color:var(--gold);}
+    .filter-tab{font-size:.65rem;letter-spacing:.12em;border-bottom:2px solid transparent;padding-bottom:6px;transition:all .2s;color:#888;}
+    .filter-tab.active{border-color:var(--gold);color:var(--gold);}
 
-    /* MODAL */
-    .modal-backdrop { background: rgba(0,0,0,0.88); animation: fadeIn 0.2s ease; }
-    .modal-box { animation: slideUp 0.3s cubic-bezier(.25,.8,.25,1); max-height: 95vh; }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-    .fade-in { animation: fadeIn 0.5s ease forwards; }
+    /* ── BADGE ── */
+    .badge-sold{background:rgba(26,26,26,.9);color:#fff;font-size:.58rem;letter-spacing:.15em;}
+    .sold-overlay{background:rgba(26,26,26,.45);}
 
-    /* THUMB */
-    .thumb { cursor: pointer; opacity: 0.55; transition: opacity 0.2s, border-color 0.2s; border: 2px solid transparent; }
-    .thumb.active, .thumb:hover { opacity: 1; border-color: var(--gold); }
+    /* ── MODAL ── */
+    .modal-bg{background:rgba(0,0,0,.9);animation:mfade .2s ease;}
+    .modal-panel{animation:mup .3s cubic-bezier(.25,.8,.25,1);max-height:95vh;}
+    @keyframes mfade{from{opacity:0}to{opacity:1}}
+    @keyframes mup{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    .thumb{cursor:pointer;opacity:.5;border:2px solid transparent;transition:all .2s;}
+    .thumb.active,.thumb:hover{opacity:1;border-color:var(--gold);}
 
-    /* BRANDS */
-    .brand-item { filter: grayscale(100%); opacity: 0.5; transition: all 0.3s; }
-    .brand-item:hover { filter: grayscale(0%); opacity: 1; }
+    /* ── BRANDS ── */
+    .brand-card{transition:all .3s;filter:grayscale(100%);opacity:.45;border:1px solid transparent;}
+    .brand-card:hover{filter:grayscale(0%);opacity:1;border-color:#d4a84340;transform:translateY(-3px);box-shadow:0 12px 28px rgba(139,105,20,.1);}
 
-    /* DIVIDER */
-    .ornament-divider { display: flex; align-items: center; gap: 1rem; }
-    .ornament-divider::before, .ornament-divider::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, transparent, #d4a84360, transparent); }
+    /* ── HOW TO BUY ── */
+    .step-num{width:36px;height:36px;border:1px solid var(--gold-l);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.2rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .payment-card{border:1px solid #d4a84330;transition:border-color .2s,transform .2s;}
+    .payment-card:hover{border-color:var(--gold-l);transform:translateY(-2px);}
 
-    /* WHATSAPP BTN */
-    .btn-wa { background: linear-gradient(135deg, #25d366, #1db954); transition: all 0.25s; }
-    .btn-wa:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    /* ── DIVIDERS ── */
+    .ornadiv{display:flex;align-items:center;gap:12px;}
+    .ornadiv::before,.ornadiv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#d4a84355,transparent);}
 
-    /* SCROLL */
-    ::-webkit-scrollbar { width: 4px; } 
-    ::-webkit-scrollbar-track { background: var(--cream); }
-    ::-webkit-scrollbar-thumb { background: #d4a84360; border-radius: 2px; }
+    /* ── WA BTN ── */
+    .btn-wa{background:linear-gradient(135deg,#25d366,#1db954);transition:all .25s;}
+    .btn-wa:hover{filter:brightness(1.08);transform:translateY(-1px);}
 
-    /* RESPONSIVE GRID */
-    @media (max-width: 640px) { .hero-ornament { font-size: 8rem; } }
+    /* ── SCROLL ── */
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:#d4a84350;border-radius:2px;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp .5s ease forwards;}
   </style>
 </head>
-<body class="font-sans text-charcoal min-h-screen">
+<body class="font-sans">
 
-<!-- ═══════════════ NAVBAR ═══════════════ -->
-<nav class="fixed top-0 w-full z-50 nav-blur border-b border-gold/10">
+<!-- ══════════════════════ NAVBAR ══════════════════════ -->
+<nav class="nav-glass fixed top-0 w-full z-50 border-b border-gold/10">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-3">
-      <img src="assets/logo.jpg" alt="RR Joyería" class="h-9 w-9 object-contain rounded-full"/>
+    <a href="#" class="flex items-center gap-3">
+      <img src="assets/logo.jpg" alt="RR" class="h-9 w-9 rounded-full object-contain border border-gold/20"/>
       <div class="leading-none">
-        <p class="font-serif text-base text-gold-dark tracking-wide">RR Joyería</p>
-        <p class="font-sans text-[9px] tracking-[0.25em] text-gold uppercase">Fina y Vintage</p>
+        <p class="font-serif text-[15px] text-gold-dark tracking-wide">RR Joyería</p>
+        <p class="font-sans text-[8px] tracking-[.28em] text-gold/70 uppercase">Fina y Vintage</p>
       </div>
     </a>
-    <div class="flex items-center gap-3">
-      <a href="#coleccion" class="hidden sm:block font-sans text-[10px] tracking-widest uppercase text-charcoal/60 hover:text-gold transition-colors px-2">Colección</a>
-      <a href="#marcas" class="hidden sm:block font-sans text-[10px] tracking-widest uppercase text-charcoal/60 hover:text-gold transition-colors px-2">Marcas</a>
-      <a href="dashboard.html" class="font-sans text-[10px] tracking-widest uppercase border border-gold text-gold px-4 py-2 hover:bg-gold hover:text-white transition-all duration-250 ml-2">
-        Ingresar
-      </a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#coleccion" class="font-sans text-[10px] tracking-widest uppercase text-charcoal/50 hover:text-gold transition-colors">Colección</a>
+      <a href="#marcas" class="font-sans text-[10px] tracking-widest uppercase text-charcoal/50 hover:text-gold transition-colors">Marcas</a>
+      <a href="#como-comprar" class="font-sans text-[10px] tracking-widest uppercase text-charcoal/50 hover:text-gold transition-colors">Cómo Comprar</a>
     </div>
+    <a href="dashboard.html" class="font-sans text-[10px] tracking-widest uppercase border border-gold text-gold px-4 py-2 hover:bg-gold hover:text-white transition-all duration-200">
+      Ingresar
+    </a>
   </div>
 </nav>
 
-<!-- ═══════════════ HERO ═══════════════ -->
-<section class="hero-bg pt-24 pb-16 px-4 sm:px-6 relative overflow-hidden">
-  <div class="absolute right-0 top-0 hero-ornament font-serif select-none pointer-events-none leading-none -mt-8 -mr-8">✦</div>
-  <div class="max-w-3xl mx-auto text-center relative z-10">
-    <p class="font-sans text-[10px] tracking-[0.4em] text-gold uppercase mb-4">Colección Exclusiva</p>
-    <h1 class="font-serif text-5xl sm:text-6xl md:text-7xl text-gold-dark font-light leading-none mb-6">
-      <span class="italic">Joyería</span><br/>
-      <span class="not-italic font-semibold">Fina y Vintage</span>
-    </h1>
-    <p class="font-sans text-xs sm:text-sm text-charcoal/50 tracking-wide max-w-sm mx-auto leading-relaxed">
-      Piezas únicas seleccionadas con elegancia.<br/>Cada joya cuenta una historia.
-    </p>
-    <div class="ornament-divider max-w-xs mx-auto mt-8">
-      <span class="font-serif text-gold text-lg">✦</span>
-    </div>
-    <a href="#coleccion" class="inline-block mt-6 font-sans text-[10px] tracking-widest uppercase bg-gold text-white px-8 py-3 hover:bg-gold-dark transition-colors duration-250">
-      Ver Colección
-    </a>
-  </div>
-</section>
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero-section hero-grain flex items-center pt-16">
+  <!-- Decorative circles -->
+  <div class="hero-circle" style="width:600px;height:600px;top:-200px;right:-200px;"></div>
+  <div class="hero-circle" style="width:300px;height:300px;bottom:-100px;left:-80px;"></div>
+  <div class="hero-circle" style="width:150px;height:150px;bottom:20%;right:10%;"></div>
 
-<!-- ═══════════════ FILTROS ═══════════════ -->
-<section id="coleccion" class="px-4 sm:px-6 py-10 bg-white border-b border-gold/10">
-  <div class="max-w-6xl mx-auto">
-    <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-      <h2 class="font-serif text-2xl italic text-gold-dark">Nuestra Colección</h2>
-      <div class="relative">
-        <input id="search-pub" type="text" onkeyup="applyFilters()" placeholder="Buscar joya..."
-          class="font-sans text-xs border border-gold/20 px-4 py-2 pl-8 focus:outline-none focus:border-gold w-44 sm:w-56"/>
-        <svg class="absolute left-2 top-2.5 w-3.5 h-3.5 text-gold/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="font-sans text-[9px] tracking-[.45em] text-gold uppercase mb-6 flex items-center gap-3">
+          <span class="w-8 h-px bg-gold inline-block"></span> Colección Exclusiva
+        </p>
+        <h1 class="hero-text-main font-serif text-gold-dark font-light leading-none mb-6">
+          <span class="block italic">Joyería</span>
+          <span class="block font-semibold not-italic">Fina &</span>
+          <span class="block italic font-light">Vintage</span>
+        </h1>
+        <p class="font-sans text-xs text-charcoal/50 leading-relaxed max-w-sm mb-10 tracking-wide">
+          Piezas únicas seleccionadas con elegancia.<br/>Cada joya cuenta una historia que merece ser contada.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="#coleccion" class="font-sans text-[10px] tracking-[.2em] uppercase bg-gold text-white px-8 py-3.5 hover:bg-gold-dark transition-colors">
+            Ver Colección
+          </a>
+          <a href="#como-comprar" class="font-sans text-[10px] tracking-[.2em] uppercase border border-gold/40 text-gold px-8 py-3.5 hover:border-gold transition-colors">
+            Cómo Comprar
+          </a>
+        </div>
+      </div>
+      <div class="hidden lg:flex justify-end">
+        <div class="relative w-96 h-96">
+          <div class="absolute inset-0 border border-gold/15 rotate-45 scale-75"></div>
+          <div class="absolute inset-0 border border-gold/10 rotate-12 scale-90"></div>
+          <div class="w-full h-full bg-gradient-to-br from-gold/8 to-transparent flex items-center justify-center">
+            <img src="assets/logo.jpg" alt="RR" class="w-48 h-48 object-contain opacity-20"/>
+          </div>
+          <div class="absolute -bottom-4 -right-4 bg-white border border-gold/20 px-5 py-3 shadow-xl">
+            <p class="font-serif text-2xl text-gold-dark italic" id="hero-count">0+</p>
+            <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase">Piezas únicas</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="filters" class="flex flex-wrap gap-2">
-      <button onclick="setFilter('Todos')" class="filter-btn active font-sans uppercase px-4 py-1.5">Todos</button>
-    </div>
   </div>
 </section>
 
-<!-- ═══════════════ PRODUCTOS ═══════════════ -->
-<section class="px-4 sm:px-6 py-12 bg-cream">
+<!-- ══════════════════════ MARQUEE ══════════════════════ -->
+<div class="bg-gold py-3 overflow-hidden">
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      ${['JOYERÍA FINA','✦','VINTAGE','✦','COLLARES','✦','ANILLOS','✦','PULSERAS','✦','ARETES','✦','BROCHES','✦','MARCAS EXCLUSIVAS','✦','JOYERÍA FINA','✦','VINTAGE','✦','COLLARES','✦','ANILLOS','✦','PULSERAS','✦','ARETES','✦','BROCHES','✦','MARCAS EXCLUSIVAS','✦'].map(t=>`<span class="font-sans text-[10px] tracking-[.3em] uppercase text-white/80 mx-6">${t}</span>`).join('')}
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ COLECCIÓN ══════════════════════ -->
+<section id="coleccion" class="py-16 sm:py-20 px-4 sm:px-6 bg-cream">
   <div class="max-w-6xl mx-auto">
-    <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
-    <div id="empty-state" class="hidden text-center py-24">
-      <p class="font-serif text-5xl italic text-gold/20 mb-3">Sin resultados</p>
-      <p class="font-sans text-xs text-charcoal/40 tracking-wide">No hay productos en esta categoría.</p>
+    <div class="text-center mb-12">
+      <p class="font-sans text-[9px] tracking-[.4em] text-gold uppercase mb-3">Explorar</p>
+      <h2 class="font-serif text-4xl sm:text-5xl italic text-gold-dark font-light mb-4">Nuestra Colección</h2>
+      <div class="ornadiv max-w-[220px] mx-auto"><span class="font-serif text-gold text-lg">✦</span></div>
+    </div>
+
+    <!-- SEARCH + FILTERS -->
+    <div class="bg-white border border-gold/10 p-4 sm:p-5 mb-8">
+      <div class="flex flex-col sm:flex-row gap-3 mb-4">
+        <div class="relative flex-1">
+          <input id="search-pub" type="text" onkeyup="applyFilters()" placeholder="Buscar joya, marca, descripción..."
+            class="w-full border border-gold/20 px-4 py-2.5 pl-9 font-sans text-xs focus:outline-none focus:border-gold"/>
+          <svg class="absolute left-3 top-3 w-3.5 h-3.5 text-gold/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <select id="sort-pub" onchange="applyFilters()" class="border border-gold/20 px-3 py-2.5 font-sans text-xs focus:outline-none focus:border-gold text-charcoal/60">
+          <option value="">Ordenar por...</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+          <option value="new">Más recientes</option>
+        </select>
+      </div>
+
+      <!-- Filter tabs: Categoría / Marca -->
+      <div class="flex gap-6 border-b border-gold/10 mb-3">
+        <button onclick="switchFilterMode('category')" id="tab-cat" class="filter-tab active font-sans uppercase tracking-widest">Categoría</button>
+        <button onclick="switchFilterMode('brand')" id="tab-brand" class="filter-tab font-sans uppercase tracking-widest">Marca</button>
+      </div>
+
+      <div id="filter-pills" class="flex flex-wrap gap-2">
+        <button onclick="setFilter('Todos','category')" class="filter-pill active font-sans uppercase px-4 py-1.5">Todos</button>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5"></div>
+    <div id="empty-state" class="hidden text-center py-24 bg-white border border-gold/10">
+      <p class="font-serif text-5xl italic text-gold/15 mb-3">Sin resultados</p>
+      <p class="font-sans text-xs text-charcoal/30 tracking-wide">No hay productos que coincidan con tu búsqueda.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ MARCAS ═══════════════ -->
-<section id="marcas" class="bg-white border-t border-gold/10 py-14 px-4 sm:px-6">
+<!-- ══════════════════════ MARCAS ══════════════════════ -->
+<section id="marcas" class="py-20 px-4 sm:px-6 bg-charcoal relative overflow-hidden">
+  <!-- BG pattern -->
+  <div class="absolute inset-0 opacity-5" style="background-image:repeating-linear-gradient(45deg,#d4a843 0,#d4a843 1px,transparent 0,transparent 50%);background-size:20px 20px;"></div>
+  <div class="max-w-5xl mx-auto relative z-10">
+    <div class="text-center mb-14">
+      <p class="font-sans text-[9px] tracking-[.4em] text-gold/60 uppercase mb-3">Trabajamos con</p>
+      <h2 class="font-serif text-4xl sm:text-5xl italic text-gold-light font-light mb-4">Marcas de Prestigio</h2>
+      <div class="ornadiv max-w-[200px] mx-auto"><span class="font-serif text-gold/50 text-lg">✦</span></div>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 sm:gap-6 items-center justify-items-center">
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/Avon.png" alt="Avon" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Avon</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/Daus.avif" alt="Daus" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Daus</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/Emmons.jpg" alt="Emmons" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Emmons</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/HeidiDaus.jpg" alt="Heidi Daus" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Heidi Daus</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/joanR.jpg" alt="Joan R." class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Joan R.</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/joanRivers.webp" alt="Joan Rivers" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Joan Rivers</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/monet.png" alt="Monet" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Monet</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/pilgrim.webp" alt="Pilgrim" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Pilgrim</p>
+      </div>
+      <div class="brand-card bg-white/5 p-4 sm:p-6 w-full flex flex-col items-center gap-2">
+        <img src="assets/trifari.jpg" alt="Trifari" class="h-10 sm:h-12 object-contain"/>
+        <p class="font-sans text-[9px] tracking-widest text-white/30 uppercase">Trifari</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ CÓMO COMPRAR ══════════════════════ -->
+<section id="como-comprar" class="py-20 px-4 sm:px-6 bg-cream">
   <div class="max-w-5xl mx-auto">
-    <div class="text-center mb-10">
-      <p class="font-sans text-[10px] tracking-[0.35em] text-gold uppercase mb-2">Trabajamos con</p>
-      <h2 class="font-serif text-3xl italic text-gold-dark">Marcas de Prestigio</h2>
-      <div class="ornament-divider max-w-[200px] mx-auto mt-4"><span class="font-serif text-gold">✦</span></div>
+    <div class="text-center mb-14">
+      <p class="font-sans text-[9px] tracking-[.4em] text-gold uppercase mb-3">Guía rápida</p>
+      <h2 class="font-serif text-4xl sm:text-5xl italic text-gold-dark font-light mb-2">Cómo Puedes Comprar</h2>
+      <p class="font-sans text-xs text-charcoal/40 tracking-wide">Tu guía para realizar tu pedido en pocos pasos</p>
+      <div class="ornadiv max-w-[200px] mx-auto mt-6"><span class="font-serif text-gold text-lg">✦</span></div>
     </div>
-    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 sm:gap-8 items-center justify-items-center">
-      <div class="brand-item p-3"><img src="assets/Avon.png" alt="Avon" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/Daus.avif" alt="Daus" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/Emmons.jpg" alt="Emmons" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/HeidiDaus.jpg" alt="Heidi Daus" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/joanR.jpg" alt="Joan Rivers" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/joanRivers.webp" alt="Joan Rivers" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/monet.png" alt="Monet" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/pilgrim.webp" alt="Pilgrim" class="h-10 sm:h-12 object-contain"/></div>
-      <div class="brand-item p-3"><img src="assets/trifari.jpg" alt="Trifari" class="h-10 sm:h-12 object-contain"/></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
+      <!-- PASOS -->
+      <div class="bg-white border border-gold/10 p-6 sm:p-8">
+        <div class="flex items-center gap-3 mb-7">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <h3 class="font-serif text-xl italic text-gold-dark">Pasos para Comprar</h3>
+        </div>
+        <div class="space-y-5">
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">1</div>
+            <p class="font-sans text-xs text-charcoal/70 leading-relaxed pt-2">Compra a través de nuestras <strong class="text-charcoal">redes sociales</strong>: WhatsApp · Facebook · Instagram</p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">2</div>
+            <p class="font-sans text-xs text-charcoal/70 leading-relaxed pt-2">Hace una <strong class="text-charcoal">captura de pantalla</strong> con las piezas que te gustan.</p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">3</div>
+            <p class="font-sans text-xs text-charcoal/70 leading-relaxed pt-2"><strong class="text-charcoal">Consulta disponibilidad</strong> por mensaje privado o comentario en la publicación.</p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">4</div>
+            <p class="font-sans text-xs text-charcoal/70 leading-relaxed pt-2">El costo del envío es de <strong class="text-charcoal">₡3.500 adicionales</strong> al precio de tu joya.</p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">5</div>
+            <p class="font-sans text-xs text-charcoal/70 leading-relaxed pt-2"><strong class="text-charcoal">Deposita</strong> el monto total: precio de tu joya + costo de envío.</p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="step-num font-serif">6</div>
+            <div class="pt-2">
+              <p class="font-sans text-xs text-charcoal/70 leading-relaxed mb-2"><strong class="text-charcoal">Envíanos tus datos</strong> para el envío:</p>
+              <ul class="space-y-1">
+                <li class="font-sans text-xs text-charcoal/60 flex items-center gap-2"><span class="w-1 h-1 bg-gold rounded-full flex-shrink-0"></span>Nombre completo</li>
+                <li class="font-sans text-xs text-charcoal/60 flex items-center gap-2"><span class="w-1 h-1 bg-gold rounded-full flex-shrink-0"></span>Dirección exacta (provincia, cantón y distrito)</li>
+                <li class="font-sans text-xs text-charcoal/60 flex items-center gap-2"><span class="w-1 h-1 bg-gold rounded-full flex-shrink-0"></span>Número de teléfono</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEDIOS DE PAGO -->
+      <div>
+        <div class="flex items-center gap-3 mb-7">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          <h3 class="font-serif text-xl italic text-gold-dark">Medios de Pago</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- SINPE -->
+          <div class="payment-card bg-white p-5 text-center">
+            <div class="w-10 h-10 mx-auto mb-3 bg-red-500 rounded-lg flex items-center justify-center">
+              <span class="font-sans text-[9px] text-white font-bold tracking-tight">SINPE</span>
+            </div>
+            <p class="font-sans text-[9px] tracking-widest uppercase text-charcoal/40 mb-2">SINPE Móvil</p>
+            <p class="font-serif text-2xl text-gold-dark font-semibold">8304-9209</p>
+            <p class="font-sans text-[9px] text-charcoal/40 mt-1 leading-relaxed">A nombre de:<br/><strong class="text-charcoal/60">Jency Alpízar Rodríguez</strong></p>
+          </div>
+          <!-- BANCO NACIONAL -->
+          <div class="payment-card bg-white p-5 text-center">
+            <div class="w-10 h-10 mx-auto mb-3 bg-green-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg>
+            </div>
+            <p class="font-sans text-[9px] tracking-widest uppercase text-charcoal/40 mb-2">Banco Nacional</p>
+            <p class="font-sans text-[10px] text-charcoal/70 leading-relaxed">200-01-004-055933-7</p>
+            <div class="mt-2 pt-2 border-t border-gold/10">
+              <p class="font-sans text-[8px] text-charcoal/40 uppercase tracking-wide">IBAN</p>
+              <p class="font-sans text-[9px] text-charcoal/60 break-all">CR660151002010559337</p>
+            </div>
+          </div>
+          <!-- BCR -->
+          <div class="payment-card bg-white p-5 text-center">
+            <div class="w-10 h-10 mx-auto mb-3 bg-blue-700 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg>
+            </div>
+            <p class="font-sans text-[9px] tracking-widest uppercase text-charcoal/40 mb-2">Banco de Costa Rica</p>
+            <p class="font-sans text-[9px] text-charcoal/60 break-all leading-relaxed">CR38015202010373417<wbr/>1</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-gold/6 border border-gold/20 p-4 flex items-start gap-3">
+          <svg class="w-4 h-4 text-gold flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <p class="font-sans text-[10px] text-charcoal/60 leading-relaxed">¿Dudas? Envíanos un mensaje privado. <strong class="text-gold">¡Con gusto te ayudamos!</strong></p>
+        </div>
+        <div class="mt-3">
+          <a href="https://wa.me/50683049209?text=Hola!%20Quisiera%20hacer%20una%20consulta%20sobre%20sus%20joyas." target="_blank"
+            class="btn-wa w-full text-white font-sans text-[10px] tracking-widest uppercase py-3 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Consultar por WhatsApp
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="bg-charcoal text-white py-10 px-4 text-center">
-  <img src="assets/logo.jpg" alt="RR" class="h-10 mx-auto mb-4 opacity-70 rounded-full"/>
-  <p class="font-serif italic text-gold-light text-lg">RR Joyería Fina y Vintage</p>
-  <p class="font-sans text-[10px] text-white/30 mt-2 tracking-widest uppercase">© 2025 · Todos los derechos reservados</p>
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="bg-charcoal py-12 px-4 text-center border-t border-gold/10">
+  <img src="assets/logo.jpg" alt="RR" class="h-12 w-12 mx-auto mb-4 opacity-60 rounded-full"/>
+  <p class="font-serif italic text-gold-light text-xl mb-1">RR Joyería Fina y Vintage</p>
+  <p class="font-sans text-[9px] text-white/20 tracking-[.3em] uppercase">© 2025 · Todos los derechos reservados</p>
+  <div class="flex justify-center gap-4 mt-5">
+    <a href="https://wa.me/50683049209" target="_blank" class="font-sans text-[9px] tracking-widest uppercase text-white/30 hover:text-gold transition-colors">WhatsApp</a>
+    <span class="text-white/10">·</span>
+    <a href="#coleccion" class="font-sans text-[9px] tracking-widest uppercase text-white/30 hover:text-gold transition-colors">Colección</a>
+    <span class="text-white/10">·</span>
+    <a href="#como-comprar" class="font-sans text-[9px] tracking-widest uppercase text-white/30 hover:text-gold transition-colors">Cómo Comprar</a>
+  </div>
 </footer>
 
-<!-- ═══════════════ MODAL GALERÍA ═══════════════ -->
-<div id="modal" class="fixed inset-0 z-[100] modal-backdrop hidden flex items-center justify-center p-4">
-  <div class="modal-box bg-white w-full max-w-2xl overflow-y-auto relative">
-
-    <!-- Close -->
-    <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-charcoal text-white flex items-center justify-center hover:bg-gold transition-colors">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-
+<!-- ══════════════════════ MODAL ══════════════════════ -->
+<div id="modal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4">
+  <div class="modal-panel bg-white w-full max-w-2xl overflow-y-auto relative">
+    <button onclick="closeModal()" class="absolute top-3 right-3 z-10 w-8 h-8 bg-charcoal text-white flex items-center justify-center hover:bg-gold transition-colors text-sm">✕</button>
     <div class="flex flex-col md:flex-row">
-      <!-- Galería -->
-      <div class="md:w-1/2 bg-gray-50 p-4 flex flex-col gap-3">
+      <div class="md:w-5/12 bg-gold-faint p-4 flex flex-col gap-3">
         <div class="aspect-square overflow-hidden bg-white border border-gold/10">
           <img id="modal-main-img" class="w-full h-full object-contain transition-all duration-300"/>
         </div>
         <div id="modal-thumbs" class="flex gap-2 flex-wrap"></div>
       </div>
-      <!-- Info -->
-      <div class="md:w-1/2 p-6 flex flex-col justify-between">
+      <div class="md:w-7/12 p-5 sm:p-7 flex flex-col justify-between">
         <div>
-          <p id="modal-category" class="font-sans text-[10px] tracking-widest text-gold uppercase mb-2"></p>
-          <h3 id="modal-name" class="font-serif text-2xl text-charcoal leading-tight mb-3"></h3>
-          <div id="modal-sold-badge" class="hidden inline-block badge-agotado font-sans uppercase px-3 py-1 mb-3">Agotado</div>
-          <p id="modal-desc" class="font-sans text-xs text-charcoal/60 leading-relaxed mb-4"></p>
-          <p id="modal-price" class="font-serif text-3xl text-gold-dark font-semibold mb-6"></p>
+          <div class="flex items-center gap-2 flex-wrap mb-2">
+            <span id="modal-category" class="font-sans text-[9px] tracking-widest text-gold uppercase"></span>
+            <span class="text-gold/30">·</span>
+            <span id="modal-brand" class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase"></span>
+          </div>
+          <h3 id="modal-name" class="font-serif text-2xl sm:text-3xl text-charcoal leading-tight mb-3"></h3>
+          <div id="modal-sold-badge" class="hidden mb-3">
+            <span class="badge-sold font-sans text-[9px] uppercase tracking-widest px-3 py-1.5">Agotado</span>
+          </div>
+          <p id="modal-desc" class="font-sans text-xs text-charcoal/55 leading-relaxed mb-5"></p>
+          <p id="modal-price" class="font-serif text-3xl text-gold-dark font-semibold mb-1"></p>
+          <p class="font-sans text-[9px] text-charcoal/40 mb-6">+ ₡3.500 envío a todo el país</p>
         </div>
         <div id="modal-wa-btn"></div>
       </div>
@@ -215,62 +421,94 @@
 </div>
 
 <script>
-  const WHATSAPP_NUMBER = '50683049209';
-  let currentFilter = 'Todos';
+  const WA = '50683049209';
+  let filterMode = 'category';
+  let activeFilter = 'Todos';
 
-  function getProducts() { return JSON.parse(localStorage.getItem('rr_products') || '[]'); }
+  function getProducts(){ return JSON.parse(localStorage.getItem('rr_products')||'[]'); }
+  function fmt(p){ return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
 
-  function formatPrice(price) {
-    return new Intl.NumberFormat('es-CR', { style:'currency', currency:'CRC', minimumFractionDigits:0 }).format(price);
+  /* ── HERO COUNT ── */
+  function updateHeroCount(){
+    const n = getProducts().filter(p=>!p.sold).length;
+    document.getElementById('hero-count').textContent = n + '+';
   }
 
-  /* ── FILTERS ── */
-  function renderFilters() {
-    const cats = [...new Set(getProducts().map(p => p.category))].filter(Boolean);
-    const c = document.getElementById('filters');
-    c.innerHTML = `<button onclick="setFilter('Todos')" class="filter-btn ${currentFilter==='Todos'?'active':''} font-sans uppercase px-4 py-1.5">Todos</button>`;
-    cats.forEach(cat => {
-      c.innerHTML += `<button onclick="setFilter('${cat}')" class="filter-btn ${currentFilter===cat?'active':''} font-sans uppercase px-4 py-1.5">${cat}</button>`;
-    });
-  }
-
-  function setFilter(cat) {
-    currentFilter = cat;
-    renderFilters();
+  /* ── FILTER TABS ── */
+  function switchFilterMode(mode){
+    filterMode = mode;
+    activeFilter = 'Todos';
+    document.getElementById('tab-cat').classList.toggle('active', mode==='category');
+    document.getElementById('tab-brand').classList.toggle('active', mode==='brand');
+    renderFilterPills();
     applyFilters();
   }
 
-  function applyFilters() {
-    const search = (document.getElementById('search-pub').value || '').toLowerCase();
+  function renderFilterPills(){
+    const products = getProducts();
+    let values;
+    if(filterMode==='category'){
+      values = [...new Set(products.map(p=>p.category))].filter(Boolean);
+    } else {
+      values = [...new Set(products.map(p=>p.brand))].filter(Boolean);
+    }
+    const c = document.getElementById('filter-pills');
+    c.innerHTML = `<button onclick="setFilter('Todos')" class="filter-pill ${activeFilter==='Todos'?'active':''} font-sans uppercase px-4 py-1.5">Todos</button>`;
+    values.forEach(v => {
+      c.innerHTML += `<button onclick="setFilter('${v}')" class="filter-pill ${activeFilter===v?'active':''} font-sans uppercase px-4 py-1.5">${v}</button>`;
+    });
+  }
+
+  function setFilter(val){
+    activeFilter = val;
+    renderFilterPills();
+    applyFilters();
+  }
+
+  function applyFilters(){
+    const search = (document.getElementById('search-pub').value||'').toLowerCase();
+    const sort = document.getElementById('sort-pub').value;
     let products = getProducts();
-    if (currentFilter !== 'Todos') products = products.filter(p => p.category === currentFilter);
-    if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || (p.description||'').toLowerCase().includes(search));
+
+    if(activeFilter !== 'Todos'){
+      if(filterMode==='category') products = products.filter(p=>p.category===activeFilter);
+      else products = products.filter(p=>p.brand===activeFilter);
+    }
+    if(search) products = products.filter(p=>
+      p.name.toLowerCase().includes(search)||
+      (p.description||'').toLowerCase().includes(search)||
+      (p.category||'').toLowerCase().includes(search)||
+      (p.brand||'').toLowerCase().includes(search)
+    );
+    if(sort==='price-asc') products.sort((a,b)=>a.price-b.price);
+    else if(sort==='price-desc') products.sort((a,b)=>b.price-a.price);
+    else if(sort==='new') products.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+
     renderProducts(products);
   }
 
-  /* ── PRODUCTS ── */
-  function renderProducts(products) {
+  function renderProducts(products){
     const grid = document.getElementById('products-grid');
     const empty = document.getElementById('empty-state');
-    if (!products.length) { grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+    if(!products.length){ grid.innerHTML=''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
-    const mainImg = p => (p.images && p.images.length) ? p.images[0] : (p.image || '');
+    const mainImg = p => (p.images&&p.images.length)?p.images[0]:(p.image||'');
 
-    grid.innerHTML = products.map((p, i) => `
-      <div class="product-card bg-white border border-gold/10 cursor-pointer fade-in" style="animation-delay:${i*0.06}s" onclick="openModal('${p.id}')">
+    grid.innerHTML = products.map((p,i)=>`
+      <div class="product-card bg-white border border-gold/10 fade-up" style="animation-delay:${i*.05}s" onclick="openModal('${p.id}')">
         <div class="relative aspect-square overflow-hidden bg-gray-50">
-          <img src="${mainImg(p) || 'https://placehold.co/400x400/f5f0e8/8B6914?text=RR'}"
-               alt="${p.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"/>
-          ${p.sold ? `<div class="absolute inset-0 sold-overlay flex items-center justify-center"><span class="badge-agotado font-sans uppercase px-3 py-1.5 text-xs tracking-widest">Agotado</span></div>` : ''}
-          ${p.images && p.images.length > 1 ? `<div class="absolute bottom-2 right-2 bg-black/50 text-white font-sans text-[9px] px-2 py-0.5 tracking-wide">+${p.images.length} fotos</div>` : ''}
+          <img src="${mainImg(p)||'https://placehold.co/400x400/f5f0e8/8B6914?text=RR'}" alt="${p.name}" class="card-img w-full h-full object-cover"/>
+          ${p.sold?`<div class="absolute inset-0 sold-overlay flex items-center justify-center"><span class="badge-sold font-sans uppercase px-3 py-1.5 tracking-widest">Agotado</span></div>`:''}
+          ${p.images&&p.images.length>1?`<div class="absolute bottom-2 right-2 bg-black/50 text-white font-sans text-[8px] px-2 py-0.5 tracking-wide">+${p.images.length} fotos</div>`:''}
+          ${p.brand?`<div class="absolute top-2 left-2 bg-white/90 text-charcoal font-sans text-[8px] uppercase tracking-widest px-2 py-0.5">${p.brand}</div>`:''}
         </div>
         <div class="p-3 sm:p-4">
-          <p class="font-sans text-[9px] tracking-widest text-gold uppercase mb-1">${p.category||''}</p>
+          <p class="font-sans text-[9px] tracking-widest text-gold/70 uppercase mb-0.5">${p.category||''}</p>
           <h3 class="font-serif text-base sm:text-lg text-charcoal leading-tight mb-1 line-clamp-1">${p.name}</h3>
-          <p class="font-sans text-[10px] text-charcoal/40 mb-3 line-clamp-2 leading-relaxed">${p.description||''}</p>
+          <p class="font-sans text-[10px] text-charcoal/35 mb-3 line-clamp-2 leading-relaxed">${p.description||''}</p>
           <div class="flex items-center justify-between">
-            <p class="font-serif text-lg sm:text-xl text-gold-dark font-semibold">${formatPrice(p.price)}</p>
-            <span class="font-sans text-[9px] tracking-widest uppercase text-gold border border-gold/30 px-2 py-1">Ver más</span>
+            <p class="font-serif text-lg sm:text-xl text-gold-dark font-semibold">${fmt(p.price)}</p>
+            <span class="font-sans text-[8px] tracking-widest uppercase text-gold border border-gold/25 px-2 py-1 hover:bg-gold hover:text-white transition-all">Ver más</span>
           </div>
         </div>
       </div>
@@ -278,62 +516,55 @@
   }
 
   /* ── MODAL ── */
-  function openModal(id) {
-    const p = getProducts().find(x => x.id === id);
-    if (!p) return;
-    const images = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
-    const placeholder = 'https://placehold.co/600x600/f5f0e8/8B6914?text=RR';
+  function openModal(id){
+    const p = getProducts().find(x=>x.id===id);
+    if(!p) return;
+    const images = (p.images&&p.images.length)?p.images:(p.image?[p.image]:[]);
+    const ph = 'https://placehold.co/600x600/f5f0e8/8B6914?text=RR';
 
-    document.getElementById('modal-category').textContent = p.category || '';
+    document.getElementById('modal-category').textContent = p.category||'';
+    document.getElementById('modal-brand').textContent = p.brand||'';
     document.getElementById('modal-name').textContent = p.name;
-    document.getElementById('modal-desc').textContent = p.description || '';
-    document.getElementById('modal-price').textContent = formatPrice(p.price);
-    document.getElementById('modal-main-img').src = images[0] || placeholder;
+    document.getElementById('modal-desc').textContent = p.description||'';
+    document.getElementById('modal-price').textContent = fmt(p.price);
+    document.getElementById('modal-main-img').src = images[0]||ph;
+    const sb = document.getElementById('modal-sold-badge');
+    p.sold ? sb.classList.remove('hidden') : sb.classList.add('hidden');
 
-    const soldBadge = document.getElementById('modal-sold-badge');
-    p.sold ? soldBadge.classList.remove('hidden') : soldBadge.classList.add('hidden');
-
-    // Thumbs
     const thumbsEl = document.getElementById('modal-thumbs');
-    if (images.length > 1) {
-      thumbsEl.innerHTML = images.map((img, i) => `
-        <img src="${img}" onclick="switchImg(this,'${img}')"
-             class="thumb w-14 h-14 object-cover ${i===0?'active':''}" />
-      `).join('');
-    } else { thumbsEl.innerHTML = ''; }
+    thumbsEl.innerHTML = images.length>1
+      ? images.map((img,i)=>`<img src="${img}" onclick="switchImg(this,'${img}')" class="thumb w-14 h-14 object-cover ${i===0?'active':''}"/>`).join('')
+      : '';
 
-    // WA button
-    const waText = `Hola! Me interesa esta joya: *${p.name}* - ${formatPrice(p.price)}`;
+    const waText = `Hola! Me interesa esta joya: *${p.name}* - ${fmt(p.price)}`;
     document.getElementById('modal-wa-btn').innerHTML = p.sold
-      ? `<div class="font-sans text-xs text-center text-charcoal/40 border border-charcoal/10 py-3 tracking-widest uppercase">Producto Agotado</div>`
-      : `<a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}" target="_blank"
-           class="btn-wa text-white font-sans text-xs tracking-widest uppercase py-3 px-4 flex items-center justify-center gap-2 w-full">
-           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-           Consultar por WhatsApp
-         </a>`;
+      ? `<div class="font-sans text-xs text-center text-charcoal/30 border border-charcoal/10 py-3 tracking-widest uppercase">Producto Agotado</div>`
+      : `<a href="https://wa.me/${WA}?text=${encodeURIComponent(waText)}" target="_blank" class="btn-wa text-white font-sans text-[10px] tracking-widest uppercase py-3 flex items-center justify-center gap-2 w-full">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Consultar por WhatsApp
+        </a>`;
 
     document.getElementById('modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow='hidden';
   }
 
-  function switchImg(el, src) {
-    document.getElementById('modal-main-img').src = src;
-    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  function switchImg(el,src){
+    document.getElementById('modal-main-img').src=src;
+    document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
   }
 
-  function closeModal() {
+  function closeModal(){
     document.getElementById('modal').classList.add('hidden');
-    document.body.style.overflow = '';
+    document.body.style.overflow='';
   }
 
-  document.getElementById('modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.getElementById('modal').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 
   // INIT
-  renderFilters();
+  updateHeroCount();
+  renderFilterPills();
   applyFilters();
 </script>
 </body>
