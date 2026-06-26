@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard — RR Joyería</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script>
     tailwind.config={theme:{extend:{colors:{gold:{light:'#d4a843',DEFAULT:'#8B6914',dark:'#5a4409',faint:'#fdf8ee'},cream:'#faf8f4',charcoal:'#1a1a1a'},fontFamily:{serif:['Cormorant Garamond','serif'],sans:['Raleway','sans-serif']}}}}
@@ -19,25 +20,29 @@
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     .fade-up{animation:fadeUp .25s ease forwards;}
     .stat-card{border-left:3px solid var(--gold-l);}
-    /* toggle */
-    .tog input:checked+.ttrack{background:var(--dark,#1a1a1a);}
+    .tog input:checked+.ttrack{background:#1a1a1a;}
     .ttrack{width:42px;height:24px;background:#ddd;border-radius:12px;position:relative;transition:background .2s;cursor:pointer;}
     .ttrack::after{content:'';position:absolute;top:4px;left:4px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
     .tog input:checked+.ttrack::after{left:22px;}
-    /* toast */
-    #toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:11px 20px;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;animation:fadeUp .3s ease;}
-    /* photo thumb */
     .ph-wrap{position:relative;}
     .ph-wrap .rm{position:absolute;top:-5px;right:-5px;background:#1a1a1a;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;opacity:0;transition:opacity .2s;}
     .ph-wrap:hover .rm{opacity:1;}
-    /* sidebar */
     @media(min-width:1024px){#form-sidebar{width:300px;min-width:300px;flex-shrink:0;}}
+    .spinner{border:2px solid #d4a84330;border-top:2px solid var(--gold);border-radius:50%;width:18px;height:18px;animation:spin .7s linear infinite;display:inline-block;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #loading-overlay{position:fixed;inset:0;background:rgba(250,248,244,.95);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
   </style>
 </head>
 <body class="font-sans text-charcoal min-h-screen">
 
-<!-- ══════════ LOGIN ══════════ -->
-<div id="login-screen" class="min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(145deg,#f9f2e2,#faf8f4 60%,#f3e8d4)">
+<!-- LOADING -->
+<div id="loading-overlay">
+  <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
+  <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase">Conectando...</p>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="hidden min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(145deg,#f9f2e2,#faf8f4 60%,#f3e8d4)">
   <div class="card p-8 sm:p-10 w-full max-w-xs" style="box-shadow:0 32px 80px rgba(139,105,20,.12)">
     <div class="text-center mb-8">
       <div class="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-gold/20 overflow-hidden">
@@ -57,10 +62,8 @@
   </div>
 </div>
 
-<!-- ══════════ DASHBOARD ══════════ -->
+<!-- DASHBOARD -->
 <div id="dashboard" class="hidden min-h-screen">
-
-  <!-- TOPBAR -->
   <header class="bg-charcoal text-white px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
       <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 rounded-full object-contain opacity-80 border border-white/10"/>
@@ -74,81 +77,44 @@
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         Ver Tienda
       </a>
-      <button onclick="doLogout()" class="font-sans text-[9px] tracking-widest uppercase border border-white/10 text-white/40 px-3 py-1.5 hover:border-red-400 hover:text-red-400 transition-colors">
-        Salir
-      </button>
+      <button onclick="doLogout()" class="font-sans text-[9px] tracking-widest uppercase border border-white/10 text-white/40 px-3 py-1.5 hover:border-red-400 hover:text-red-400 transition-colors">Salir</button>
     </div>
   </header>
 
   <div class="p-4 sm:p-6 max-w-7xl mx-auto">
-
-    <!-- STATS -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-      <div class="card stat-card p-4 sm:p-5">
-        <p id="st-total" class="font-serif text-4xl text-gold-dark">0</p>
-        <p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Productos</p>
-      </div>
-      <div class="card stat-card p-4 sm:p-5">
-        <p id="st-cats" class="font-serif text-4xl text-gold-dark">0</p>
-        <p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Categorías</p>
-      </div>
-      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#1a1a1a">
-        <p id="st-sold" class="font-serif text-4xl text-charcoal">0</p>
-        <p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Agotados</p>
-      </div>
-      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#22c55e">
-        <p id="st-avail" class="font-serif text-4xl text-green-600">0</p>
-        <p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Disponibles</p>
-      </div>
+      <div class="card stat-card p-4 sm:p-5"><p id="st-total" class="font-serif text-4xl text-gold-dark">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Productos</p></div>
+      <div class="card stat-card p-4 sm:p-5"><p id="st-cats" class="font-serif text-4xl text-gold-dark">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Categorías</p></div>
+      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#1a1a1a"><p id="st-sold" class="font-serif text-4xl text-charcoal">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Agotados</p></div>
+      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#22c55e"><p id="st-avail" class="font-serif text-4xl text-green-600">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Disponibles</p></div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
-
-      <!-- ── FORM ── -->
+      <!-- FORM -->
       <div id="form-sidebar">
         <div class="card p-5 sm:p-6">
           <div class="flex items-center justify-between mb-5">
             <h2 id="form-title" class="font-serif text-xl italic text-gold-dark">Agregar Producto</h2>
-            <button id="cancel-btn" onclick="clearForm()" class="hidden font-sans text-[8px] tracking-widest uppercase text-red-400 border border-red-200 px-2 py-1 hover:bg-red-50 transition-colors">
-              Cancelar
-            </button>
+            <button id="cancel-btn" onclick="clearForm()" class="hidden font-sans text-[8px] tracking-widest uppercase text-red-400 border border-red-200 px-2 py-1 hover:bg-red-50 transition-colors">Cancelar</button>
           </div>
           <input type="hidden" id="eid"/>
-
           <div class="space-y-4">
-
             <div><label class="inp-label">Nombre *</label><input id="fn" type="text" class="inp" placeholder="Collar de oro 18k"/></div>
-
             <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="inp-label">Categoría *</label>
-                <input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Collares..."/>
-                <datalist id="cat-dl"></datalist>
-              </div>
-              <div>
-                <label class="inp-label">Marca</label>
-                <input id="fbrand" type="text" list="brand-dl" class="inp" placeholder="Avon, Monet..."/>
-                <datalist id="brand-dl"></datalist>
-              </div>
+              <div><label class="inp-label">Categoría *</label><input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Collares..."/><datalist id="cat-dl"></datalist></div>
+              <div><label class="inp-label">Marca</label><input id="fbrand" type="text" list="brand-dl" class="inp" placeholder="Avon, Monet..."/><datalist id="brand-dl"></datalist></div>
             </div>
-
             <div><label class="inp-label">Precio (₡) *</label><input id="fprice" type="number" class="inp" placeholder="25000"/></div>
-
             <div><label class="inp-label">Descripción</label><textarea id="fdesc" rows="3" class="inp resize-none" placeholder="Descripción del producto..."></textarea></div>
 
-            <!-- AGOTADO -->
             <div class="flex items-center justify-between py-3 border-t border-b border-gold/10">
               <div>
                 <p class="font-sans text-[10px] tracking-wide text-charcoal/70 font-medium">Marcar como Agotado</p>
                 <p class="font-sans text-[8px] text-charcoal/30 mt-0.5">Aparecerá con etiqueta oscura</p>
               </div>
-              <label class="tog flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="fsold" class="hidden"/>
-                <div class="ttrack"></div>
-              </label>
+              <label class="tog flex items-center gap-2 cursor-pointer"><input type="checkbox" id="fsold" class="hidden"/><div class="ttrack"></div></label>
             </div>
 
-            <!-- FOTOS -->
             <div>
               <label class="inp-label">Fotos del Producto</label>
               <div id="ph-preview" class="flex flex-wrap gap-2 mb-2 min-h-0"></div>
@@ -160,32 +126,26 @@
               <p class="font-sans text-[8px] text-charcoal/25 mt-1">La primera foto será la imagen principal</p>
             </div>
 
-            <button onclick="saveProduct()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[.2em] uppercase py-3 hover:bg-gold-dark transition-colors">
+            <button id="save-btn" onclick="saveProduct()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[.2em] uppercase py-3 hover:bg-gold-dark transition-colors flex items-center justify-center gap-2">
               Guardar Producto
             </button>
           </div>
         </div>
       </div>
 
-      <!-- ── LIST ── -->
+      <!-- LIST -->
       <div class="flex-1 min-w-0">
         <div class="flex flex-col sm:flex-row gap-3 mb-4 items-start sm:items-center justify-between">
           <h2 class="font-serif text-2xl italic text-gold-dark">Productos</h2>
           <div class="flex gap-2 w-full sm:w-auto">
             <div class="relative flex-1 sm:flex-none">
-              <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..."
-                class="inp pl-7 py-2 w-full sm:w-40" style="padding-top:8px;padding-bottom:8px"/>
+              <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..." class="inp pl-7 py-2 w-full sm:w-40" style="padding-top:8px;padding-bottom:8px"/>
               <svg class="absolute left-2 top-2.5 w-3.5 h-3.5 text-charcoal/25" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
-            <select id="s-cat" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;">
-              <option value="">Categoría</option>
-            </select>
-            <select id="s-brand" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;">
-              <option value="">Marca</option>
-            </select>
+            <select id="s-cat" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Categoría</option></select>
+            <select id="s-brand" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Marca</option></select>
           </div>
         </div>
-
         <div id="product-list" class="space-y-3"></div>
         <div id="list-empty" class="hidden card text-center py-20">
           <p class="font-serif text-3xl italic text-gold/15 mb-2">Sin productos</p>
@@ -196,157 +156,223 @@
   </div>
 </div>
 
-<div id="toast" class="hidden font-sans"></div>
+<div id="toast" class="hidden font-sans" style="position:fixed;bottom:24px;right:24px;z-index:9999;padding:11px 20px;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;"></div>
 
 <script>
-  const AU='admin', AP='rr2025';
+  const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
+  const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
+  const { createClient } = supabase;
+  const db = createClient(SUPA_URL, SUPA_KEY);
+  const BUCKET = 'fotos-joyas';
 
-  function doLogin(){
-    const u=document.getElementById('lu').value.trim(), p=document.getElementById('lp').value.trim();
-    if(u===AU&&p===AP){ sessionStorage.setItem('rr_auth','1'); show(); }
+  const AU = 'admin', AP = 'rr2025';
+  let allProducts = [];
+  let newFiles = [];
+  let existingUrls = [];
+
+  // ── AUTH ──
+  function doLogin() {
+    const u = document.getElementById('lu').value.trim();
+    const p = document.getElementById('lp').value.trim();
+    if (u === AU && p === AP) { sessionStorage.setItem('rr_auth','1'); showDashboard(); }
     else document.getElementById('lerr').classList.remove('hidden');
   }
-  function doLogout(){ sessionStorage.removeItem('rr_auth'); location.reload(); }
-  function show(){
+  function doLogout() { sessionStorage.removeItem('rr_auth'); location.reload(); }
+
+  // ── INIT ──
+  window.addEventListener('DOMContentLoaded', async () => {
+    await loadProducts();
+    document.getElementById('loading-overlay').style.display = 'none';
+    if (sessionStorage.getItem('rr_auth') === '1') showDashboard();
+    else document.getElementById('login-screen').classList.remove('hidden');
+  });
+
+  async function loadProducts() {
+    const { data, error } = await db.from('productos').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); return; }
+    allProducts = data || [];
+  }
+
+  function showDashboard() {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
-    init();
+    renderList(); updateStats(); updateDataLists();
   }
-  if(sessionStorage.getItem('rr_auth')==='1') show();
 
-  function GP(){ return JSON.parse(localStorage.getItem('rr_products')||'[]'); }
-  function SP(a){ localStorage.setItem('rr_products',JSON.stringify(a)); }
-  function fmt(p){ return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
+  // ── UTILS ──
+  function fmt(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
 
   let toastT;
-  function toast(msg, ok=true){
-    const t=document.getElementById('toast');
-    t.textContent=msg;
-    t.className=`font-sans ${ok?'bg-charcoal text-white':'bg-red-500 text-white'}`;
-    t.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;padding:11px 20px;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;';
+  function toast(msg, ok=true) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `font-sans ${ok ? 'bg-charcoal text-white' : 'bg-red-500 text-white'}`;
+    t.style.display = 'block';
     clearTimeout(toastT);
-    toastT=setTimeout(()=>t.style.display='none',2800);
+    toastT = setTimeout(() => t.style.display = 'none', 2800);
   }
 
-  let imgs=[];
-  function addImages(inp){
-    Array.from(inp.files).forEach(f=>{
-      const r=new FileReader();
-      r.onload=e=>{ imgs.push(e.target.result); renderPH(); };
-      r.readAsDataURL(f);
-    });
-    inp.value='';
+  // ── FOTOS ──
+  function addImages(inp) {
+    Array.from(inp.files).forEach(f => newFiles.push(f));
+    inp.value = '';
+    renderPH();
   }
-  function renderPH(){
-    document.getElementById('ph-preview').innerHTML = imgs.map((im,i)=>`
-      <div class="ph-wrap w-16 h-16 border border-gold/15 overflow-hidden flex-shrink-0">
-        <img src="${im}" class="w-full h-full object-cover"/>
-        ${i===0?'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,105,20,.8);color:#fff;font-size:7px;text-align:center;padding:2px;letter-spacing:.1em">PRINCIPAL</div>':''}
-        <div class="rm" onclick="rmImg(${i})">✕</div>
+
+  function renderPH() {
+    const all = [
+      ...existingUrls.map(u => ({ type:'url', src:u })),
+      ...newFiles.map(f => ({ type:'file', src:URL.createObjectURL(f) }))
+    ];
+    document.getElementById('ph-preview').innerHTML = all.map((item, i) => `
+      <div class="ph-wrap w-16 h-16 border border-gold/15 overflow-hidden flex-shrink-0" style="position:relative">
+        <img src="${item.src}" class="w-full h-full object-cover"/>
+        ${i===0 ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,105,20,.8);color:#fff;font-size:7px;text-align:center;padding:2px;letter-spacing:.1em">PRINCIPAL</div>' : ''}
+        <div class="rm" onclick="rmImg(${i},'${item.type}')">✕</div>
       </div>`).join('');
   }
-  function rmImg(i){ imgs.splice(i,1); renderPH(); }
 
-  function clearForm(){
-    ['eid','fn','fcat','fbrand','fprice','fdesc'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('fsold').checked=false;
-    imgs=[]; renderPH();
-    document.getElementById('form-title').textContent='Agregar Producto';
+  function rmImg(idx, type) {
+    if (type === 'url') existingUrls.splice(idx, 1);
+    else newFiles.splice(idx - existingUrls.length, 1);
+    renderPH();
+  }
+
+  async function uploadFiles(productId) {
+    const urls = [];
+    for (const file of newFiles) {
+      const ext = file.name.split('.').pop();
+      const path = `${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await db.storage.from(BUCKET).upload(path, file, { upsert: true });
+      if (error) { toast('Error subiendo foto: ' + error.message, false); continue; }
+      const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+    return urls;
+  }
+
+  function clearForm() {
+    ['eid','fn','fcat','fbrand','fprice','fdesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fsold').checked = false;
+    newFiles = []; existingUrls = []; renderPH();
+    document.getElementById('form-title').textContent = 'Agregar Producto';
     document.getElementById('cancel-btn').classList.add('hidden');
   }
 
-  function saveProduct(){
-    const id=document.getElementById('eid').value;
-    const name=document.getElementById('fn').value.trim();
-    const cat=document.getElementById('fcat').value.trim();
-    const brand=document.getElementById('fbrand').value.trim();
-    const price=parseFloat(document.getElementById('fprice').value);
-    const desc=document.getElementById('fdesc').value.trim();
-    const sold=document.getElementById('fsold').checked;
+  // ── CRUD ──
+  async function saveProduct() {
+    const id    = document.getElementById('eid').value;
+    const name  = document.getElementById('fn').value.trim();
+    const cat   = document.getElementById('fcat').value.trim();
+    const brand = document.getElementById('fbrand').value.trim();
+    const price = parseFloat(document.getElementById('fprice').value);
+    const desc  = document.getElementById('fdesc').value.trim();
+    const sold  = document.getElementById('fsold').checked;
 
-    if(!name||!cat||isNaN(price)){ toast('Nombre, categoría y precio son obligatorios.',false); return; }
+    if (!name || !cat || isNaN(price)) { toast('Nombre, categoría y precio son obligatorios.', false); return; }
 
-    const products=GP();
-    if(id){
-      const idx=products.findIndex(p=>p.id===id);
-      if(idx>-1){
-        const ex=products[idx];
-        products[idx]={...ex,name,category:cat,brand,price,description:desc,sold,
-          images:imgs.length?imgs:(ex.images||(ex.image?[ex.image]:[]))};
+    const btn = document.getElementById('save-btn');
+    btn.innerHTML = '<span class="spinner"></span> Guardando...';
+    btn.disabled = true;
+
+    try {
+      if (id) {
+        const newUrls = await uploadFiles(id);
+        const finalImages = [...existingUrls, ...newUrls];
+        const { error } = await db.from('productos').update({
+          name, category: cat, brand: brand || null, price, description: desc || null, sold, images: finalImages
+        }).eq('id', id);
+        if (error) throw error;
+        toast('✓ Producto actualizado');
+      } else {
+        const { data, error } = await db.from('productos').insert({
+          name, category: cat, brand: brand || null, price, description: desc || null, sold, images: []
+        }).select().single();
+        if (error) throw error;
+        const newUrls = await uploadFiles(data.id);
+        if (newUrls.length) await db.from('productos').update({ images: newUrls }).eq('id', data.id);
+        toast('✓ Producto agregado');
       }
-    } else {
-      products.unshift({id:Date.now().toString(),name,category:cat,brand,price,description:desc,sold,images:imgs,createdAt:new Date().toISOString()});
+      await loadProducts();
+      clearForm(); renderList(); updateStats(); updateDataLists();
+    } catch (err) {
+      toast('Error: ' + err.message, false);
+    } finally {
+      btn.innerHTML = 'Guardar Producto';
+      btn.disabled = false;
     }
-    SP(products);
-    toast(id?'✓ Producto actualizado':'✓ Producto agregado');
-    clearForm(); renderList(); updateStats(); updateDataLists();
   }
 
-  function editProduct(id){
-    const p=GP().find(x=>x.id===id); if(!p) return;
-    document.getElementById('eid').value=p.id;
-    document.getElementById('fn').value=p.name;
-    document.getElementById('fcat').value=p.category;
-    document.getElementById('fbrand').value=p.brand||'';
-    document.getElementById('fprice').value=p.price;
-    document.getElementById('fdesc').value=p.description||'';
-    document.getElementById('fsold').checked=!!p.sold;
-    imgs=p.images?[...p.images]:(p.image?[p.image]:[]);
-    renderPH();
-    document.getElementById('form-title').textContent='Editar Producto';
+  function editProduct(id) {
+    const p = allProducts.find(x => x.id === id); if (!p) return;
+    document.getElementById('eid').value   = p.id;
+    document.getElementById('fn').value    = p.name;
+    document.getElementById('fcat').value  = p.category;
+    document.getElementById('fbrand').value = p.brand || '';
+    document.getElementById('fprice').value = p.price;
+    document.getElementById('fdesc').value  = p.description || '';
+    document.getElementById('fsold').checked = !!p.sold;
+    existingUrls = p.images ? [...p.images] : [];
+    newFiles = []; renderPH();
+    document.getElementById('form-title').textContent = 'Editar Producto';
     document.getElementById('cancel-btn').classList.remove('hidden');
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function deleteProduct(id){
-    if(!confirm('¿Eliminar este producto?')) return;
-    SP(GP().filter(p=>p.id!==id));
-    renderList(); updateStats(); updateDataLists();
+  async function deleteProduct(id) {
+    if (!confirm('¿Eliminar este producto?')) return;
+    const { data: files } = await db.storage.from(BUCKET).list(id);
+    if (files && files.length) {
+      await db.storage.from(BUCKET).remove(files.map(f => `${id}/${f.name}`));
+    }
+    const { error } = await db.from('productos').delete().eq('id', id);
+    if (error) { toast('Error al eliminar: ' + error.message, false); return; }
+    await loadProducts(); renderList(); updateStats(); updateDataLists();
     toast('Producto eliminado');
   }
 
-  function toggleSold(id){
-    const products=GP();
-    const idx=products.findIndex(p=>p.id===id);
-    if(idx>-1){ products[idx].sold=!products[idx].sold; SP(products); }
-    renderList(); updateStats();
-    toast(products[idx]?.sold?'Marcado como Agotado':'Marcado como Disponible');
+  async function toggleSold(id) {
+    const p = allProducts.find(x => x.id === id); if (!p) return;
+    const { error } = await db.from('productos').update({ sold: !p.sold }).eq('id', id);
+    if (error) { toast('Error: ' + error.message, false); return; }
+    toast(p.sold ? 'Marcado como Disponible' : 'Marcado como Agotado');
+    await loadProducts(); renderList(); updateStats();
   }
 
-  function renderList(){
-    const search=(document.getElementById('s-search').value||'').toLowerCase();
-    const catF=document.getElementById('s-cat').value;
-    const brandF=document.getElementById('s-brand').value;
-    let products=GP();
-    if(catF) products=products.filter(p=>p.category===catF);
-    if(brandF) products=products.filter(p=>p.brand===brandF);
-    if(search) products=products.filter(p=>
-      p.name.toLowerCase().includes(search)||
-      (p.category||'').toLowerCase().includes(search)||
+  // ── RENDER ──
+  function renderList() {
+    const search = (document.getElementById('s-search').value || '').toLowerCase();
+    const catF   = document.getElementById('s-cat').value;
+    const brandF = document.getElementById('s-brand').value;
+    let products = [...allProducts];
+    if (catF)   products = products.filter(p => p.category === catF);
+    if (brandF) products = products.filter(p => p.brand === brandF);
+    if (search) products = products.filter(p =>
+      p.name.toLowerCase().includes(search) ||
+      (p.category||'').toLowerCase().includes(search) ||
       (p.brand||'').toLowerCase().includes(search)
     );
 
-    const cont=document.getElementById('product-list');
-    const empty=document.getElementById('list-empty');
-    if(!products.length){ cont.innerHTML=''; empty.classList.remove('hidden'); return; }
+    const cont  = document.getElementById('product-list');
+    const empty = document.getElementById('list-empty');
+    if (!products.length) { cont.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
 
-    cont.innerHTML=products.map(p=>{
-      const ims=p.images&&p.images.length?p.images:(p.image?[p.image]:[]);
-      const thumb=ims[0]||'https://placehold.co/80x80/f5f0e8/8B6914?text=RR';
-      return `<div class="card flex gap-3 p-3 sm:p-4 fade-up ${p.sold?'opacity-55':''}">
+    cont.innerHTML = products.map(p => {
+      const thumb = (p.images && p.images.length) ? p.images[0] : 'https://placehold.co/80x80/f5f0e8/8B6914?text=RR';
+      return `<div class="card flex gap-3 p-3 sm:p-4 fade-up ${p.sold ? 'opacity-55' : ''}">
         <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden bg-gray-50 border border-gold/10">
           <img src="${thumb}" class="w-full h-full object-cover"/>
-          ${ims.length>1?`<div class="absolute bottom-0 right-0 bg-black/50 text-white text-[7px] px-1">+${ims.length}</div>`:''}
+          ${p.images && p.images.length > 1 ? `<div class="absolute bottom-0 right-0 bg-black/50 text-white text-[7px] px-1">+${p.images.length}</div>` : ''}
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-start gap-2 justify-between mb-1">
             <div class="flex items-center gap-2 flex-wrap">
               <span class="font-sans text-[8px] tracking-widest text-gold uppercase">${p.category||''}</span>
-              ${p.brand?`<span class="font-sans text-[8px] tracking-widest text-charcoal/40 uppercase border border-charcoal/10 px-1.5">${p.brand}</span>`:''}
+              ${p.brand ? `<span class="font-sans text-[8px] tracking-widest text-charcoal/40 uppercase border border-charcoal/10 px-1.5">${p.brand}</span>` : ''}
               ${p.sold
-                ?'<span class="font-sans text-[7px] tracking-widest uppercase bg-charcoal text-white px-2 py-0.5">Agotado</span>'
-                :'<span class="font-sans text-[7px] tracking-widest uppercase bg-green-50 text-green-600 border border-green-200 px-2 py-0.5">Disponible</span>'}
+                ? '<span class="font-sans text-[7px] tracking-widest uppercase bg-charcoal text-white px-2 py-0.5">Agotado</span>'
+                : '<span class="font-sans text-[7px] tracking-widest uppercase bg-green-50 text-green-600 border border-green-200 px-2 py-0.5">Disponible</span>'}
             </div>
             <p class="font-serif text-base text-gold-dark whitespace-nowrap flex-shrink-0">${fmt(p.price)}</p>
           </div>
@@ -354,8 +380,8 @@
           <p class="font-sans text-[9px] text-charcoal/35 truncate hidden sm:block mb-2">${p.description||''}</p>
           <div class="flex gap-1.5 flex-wrap">
             <button onclick="editProduct('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border border-gold text-gold px-2.5 py-1 hover:bg-gold hover:text-white transition-all">Editar</button>
-            <button onclick="toggleSold('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border px-2.5 py-1 transition-all ${p.sold?'border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500':'border-charcoal/15 text-charcoal/40 hover:bg-charcoal hover:text-white hover:border-charcoal'}">
-              ${p.sold?'Disponible':'Agotado'}
+            <button onclick="toggleSold('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border px-2.5 py-1 transition-all ${p.sold ? 'border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500' : 'border-charcoal/15 text-charcoal/40 hover:bg-charcoal hover:text-white hover:border-charcoal'}">
+              ${p.sold ? 'Disponible' : 'Agotado'}
             </button>
             <button onclick="deleteProduct('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border border-red-200 text-red-400 px-2.5 py-1 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all">Eliminar</button>
           </div>
@@ -364,32 +390,25 @@
     }).join('');
   }
 
-  function updateStats(){
-    const products=GP();
-    const sold=products.filter(p=>p.sold).length;
-    const cats=[...new Set(products.map(p=>p.category))].filter(Boolean);
-    document.getElementById('st-total').textContent=products.length;
-    document.getElementById('st-cats').textContent=cats.length;
-    document.getElementById('st-sold').textContent=sold;
-    document.getElementById('st-avail').textContent=products.length-sold;
+  function updateStats() {
+    const sold = allProducts.filter(p => p.sold).length;
+    const cats = [...new Set(allProducts.map(p => p.category))].filter(Boolean);
+    document.getElementById('st-total').textContent = allProducts.length;
+    document.getElementById('st-cats').textContent  = cats.length;
+    document.getElementById('st-sold').textContent  = sold;
+    document.getElementById('st-avail').textContent = allProducts.length - sold;
   }
 
-  function updateDataLists(){
-    const products=GP();
-    const cats=[...new Set(products.map(p=>p.category))].filter(Boolean);
-    const brands=[...new Set(products.map(p=>p.brand))].filter(Boolean);
-
-    document.getElementById('cat-dl').innerHTML=cats.map(c=>`<option value="${c}"/>`).join('');
-    document.getElementById('brand-dl').innerHTML=brands.map(b=>`<option value="${b}"/>`).join('');
-
-    const sc=document.getElementById('s-cat'), scv=sc.value;
-    sc.innerHTML='<option value="">Categoría</option>'+cats.map(c=>`<option value="${c}" ${c===scv?'selected':''}>${c}</option>`).join('');
-
-    const sb=document.getElementById('s-brand'), sbv=sb.value;
-    sb.innerHTML='<option value="">Marca</option>'+brands.map(b=>`<option value="${b}" ${b===sbv?'selected':''}>${b}</option>`).join('');
+  function updateDataLists() {
+    const cats   = [...new Set(allProducts.map(p => p.category))].filter(Boolean);
+    const brands = [...new Set(allProducts.map(p => p.brand))].filter(Boolean);
+    document.getElementById('cat-dl').innerHTML   = cats.map(c => `<option value="${c}"/>`).join('');
+    document.getElementById('brand-dl').innerHTML = brands.map(b => `<option value="${b}"/>`).join('');
+    const sc = document.getElementById('s-cat'), scv = sc.value;
+    sc.innerHTML = '<option value="">Categoría</option>' + cats.map(c => `<option value="${c}" ${c===scv?'selected':''}>${c}</option>`).join('');
+    const sb = document.getElementById('s-brand'), sbv = sb.value;
+    sb.innerHTML = '<option value="">Marca</option>' + brands.map(b => `<option value="${b}" ${b===sbv?'selected':''}>${b}</option>`).join('');
   }
-
-  function init(){ renderList(); updateStats(); updateDataLists(); }
 </script>
 </body>
 </html>
