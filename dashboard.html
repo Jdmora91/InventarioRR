@@ -5,57 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard — RR Joyería</title>
   <script src="https://cdn.tailwindcss.com"></script>
- <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <script>
-    tailwind.config={theme:{extend:{colors:{gold:{light:'#d4a843',DEFAULT:'#8B6914',dark:'#5a4409',faint:'#fdf8ee'},cream:'#faf8f4',charcoal:'#1a1a1a'},fontFamily:{serif:['Cormorant Garamond','serif'],sans:['Raleway','sans-serif']}}}}
-  </script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script>tailwind.config={theme:{extend:{colors:{gold:{light:'#C9A84C',DEFAULT:'#8B6914',dark:'#5a4409'},ink:'#0F0F0F',cream:'#FAF7F2'},fontFamily:{display:['Playfair Display','serif'],body:['Inter','sans-serif']}}}}</script>
   <style>
-    :root{--gold:#8B6914;--gold-l:#d4a843;}
-    body{background:#f0ebe0;}
-    .card{background:#fff;border:1px solid #d4a84328;}
-    .inp{border:1px solid #e5dfd4;font-size:.78rem;transition:border-color .2s;width:100%;padding:10px 12px;}
-    .inp:focus{outline:none;border-color:var(--gold);}
-    .inp-label{font-family:'Raleway',sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .fade-up{animation:fadeUp .25s ease forwards;}
-    .stat-card{border-left:3px solid var(--gold-l);}
-    .tog input:checked+.ttrack{background:#1a1a1a;}
+    :root{--gold:#C9A84C;--gold-dark:#8B6914;--ink:#0F0F0F;--cream:#FAF7F2;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#F0EBE0;font-family:'Inter',sans-serif;color:var(--ink);}
+    ::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:var(--gold);}
+
+    /* CARD */
+    .card{background:#fff;border:1px solid rgba(201,168,76,0.15);}
+
+    /* INPUTS */
+    .inp{border:1px solid #e5dfd4;font-size:0.78rem;transition:border-color .2s;width:100%;padding:10px 12px;font-family:'Inter',sans-serif;background:#fff;}
+    .inp:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+    .inp-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px;font-family:'Inter',sans-serif;}
+
+    /* TABS */
+    .tab-btn{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:10px 20px;border-bottom:2px solid transparent;color:rgba(15,15,15,0.4);transition:all 0.2s;cursor:pointer;white-space:nowrap;}
+    .tab-btn.active{border-color:var(--gold);color:var(--gold-dark);}
+    .tab-content{display:none;} .tab-content.active{display:block;}
+
+    /* TOGGLE */
+    .tog input:checked+.ttrack{background:var(--ink);}
     .ttrack{width:42px;height:24px;background:#ddd;border-radius:12px;position:relative;transition:background .2s;cursor:pointer;}
     .ttrack::after{content:'';position:absolute;top:4px;left:4px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
     .tog input:checked+.ttrack::after{left:22px;}
+
+    /* PHOTO */
     .ph-wrap{position:relative;}
-    .ph-wrap .rm{position:absolute;top:-5px;right:-5px;background:#1a1a1a;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;opacity:0;transition:opacity .2s;}
+    .ph-wrap .rm{position:absolute;top:-5px;right:-5px;background:var(--ink);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;opacity:0;transition:opacity .2s;}
     .ph-wrap:hover .rm{opacity:1;}
-    @media(min-width:1024px){#form-sidebar{width:300px;min-width:300px;flex-shrink:0;}}
-    .spinner{border:2px solid #d4a84330;border-top:2px solid var(--gold);border-radius:50%;width:18px;height:18px;animation:spin .7s linear infinite;display:inline-block;}
+
+    /* SPINNER */
+    .spinner{border:2px solid rgba(201,168,76,0.2);border-top:2px solid var(--gold);border-radius:50%;width:16px;height:16px;animation:spin .7s linear infinite;display:inline-block;}
     @keyframes spin{to{transform:rotate(360deg)}}
-    #loading-overlay{position:fixed;inset:0;background:rgba(250,248,244,.95);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+
+    /* LOADING */
+    #loading-overlay{position:fixed;inset:0;background:rgba(250,247,242,0.97);z-index:300;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+
+    /* STAT */
+    .stat-card{border-left:3px solid var(--gold);}
+
+    /* BADGE */
+    .badge{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;padding:3px 8px;border-radius:2px;}
+
+    /* PROMO CHECKBOX */
+    .promo-check{appearance:none;width:18px;height:18px;border:2px solid #ddd;border-radius:2px;cursor:pointer;transition:all .2s;flex-shrink:0;position:relative;}
+    .promo-check:checked{background:var(--gold-dark);border-color:var(--gold-dark);}
+    .promo-check:checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;}
+
+    /* SIDEBAR */
+    @media(min-width:1024px){#form-sidebar{width:320px;min-width:320px;flex-shrink:0;}}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 20px;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;display:none;}
+
+    /* FADE */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp .25s ease forwards;}
+
+    /* OFFER ITEM */
+    .offer-item{transition:all .2s;border:2px solid transparent;}
+    .offer-item.selected{border-color:var(--gold);background:rgba(201,168,76,0.04);}
+    .offer-item:hover{background:rgba(201,168,76,0.03);}
   </style>
 </head>
-<body class="font-sans text-charcoal min-h-screen">
+<body class="min-h-screen">
 
 <!-- LOADING -->
 <div id="loading-overlay">
   <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
-  <p class="font-sans text-[9px] tracking-widest text-charcoal/40 uppercase">Conectando...</p>
+  <p style="font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(15,15,15,0.35);">Conectando...</p>
 </div>
 
 <!-- LOGIN -->
-<div id="login-screen" class="hidden min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(145deg,#f9f2e2,#faf8f4 60%,#f3e8d4)">
+<div id="login-screen" class="hidden min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(145deg,#f9f2e2,#faf7f2 60%,#f0e8d8)">
   <div class="card p-8 sm:p-10 w-full max-w-xs" style="box-shadow:0 32px 80px rgba(139,105,20,.12)">
     <div class="text-center mb-8">
       <div class="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-gold/20 overflow-hidden">
-        <img src="assets/logo.jpg" alt="RR" class="w-full h-full object-contain"/>
+        <img src="assets/logo.jpg" alt="RR" class="w-full h-full object-contain" onerror="this.style.display='none'"/>
       </div>
-      <h1 class="font-serif text-3xl italic text-gold-dark">Panel Admin</h1>
-      <p class="font-sans text-[8px] tracking-[.3em] text-charcoal/30 uppercase mt-1">RR Joyería Fina y Vintage</p>
+      <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-style:italic;color:var(--gold-dark);">Panel Admin</h1>
+      <p style="font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(15,15,15,0.3);margin-top:4px;">RR Joyería Fina y Vintage</p>
     </div>
     <div class="space-y-4">
       <div><label class="inp-label">Usuario</label><input id="lu" type="text" class="inp" placeholder="admin"/></div>
       <div><label class="inp-label">Contraseña</label><input id="lp" type="password" class="inp" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-      <p id="lerr" class="text-red-400 text-[10px] hidden tracking-wide">Usuario o contraseña incorrectos.</p>
-      <button onclick="doLogin()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[.2em] uppercase py-3 hover:bg-gold-dark transition-colors">
+      <p id="lerr" class="hidden" style="font-size:0.7rem;color:#ef4444;letter-spacing:0.05em;">Usuario o contraseña incorrectos.</p>
+      <button onclick="doLogin()" style="width:100%;background:var(--ink);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;transition:background .2s;cursor:pointer;" onmouseover="this.style.background=getComputedStyle(document.documentElement).getPropertyValue('--gold-dark').trim()" onmouseout="this.style.background='var(--ink)'">
         Ingresar
       </button>
     </div>
@@ -64,351 +103,680 @@
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden min-h-screen">
-  <header class="bg-charcoal text-white px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-3">
-      <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 rounded-full object-contain opacity-80 border border-white/10"/>
-      <div class="leading-none">
-        <p class="font-serif text-sm text-gold-light">RR Joyería</p>
-        <p class="font-sans text-[7px] tracking-[.3em] text-white/30 uppercase">Panel de Administración</p>
+
+  <!-- TOPBAR -->
+  <header style="background:var(--ink);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(201,168,76,0.1);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 rounded-full object-contain border border-white/10 opacity-80" onerror="this.style.display='none'"/>
+        <div>
+          <p style="font-family:'Playfair Display',serif;font-size:0.85rem;color:rgba(201,168,76,0.8);">RR Joyería</p>
+          <p style="font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.25);">Panel de Administración</p>
+        </div>
       </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <a href="index.html" target="_blank" class="hidden sm:flex items-center gap-1.5 font-sans text-[9px] tracking-widest uppercase border border-gold/30 text-gold-light px-3 py-1.5 hover:border-gold-light transition-colors">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        Ver Tienda
-      </a>
-      <button onclick="doLogout()" class="font-sans text-[9px] tracking-widest uppercase border border-white/10 text-white/40 px-3 py-1.5 hover:border-red-400 hover:text-red-400 transition-colors">Salir</button>
+      <div class="flex items-center gap-2">
+        <a href="index.html" target="_blank" style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;border:1px solid rgba(201,168,76,0.3);color:rgba(201,168,76,0.8);padding:6px 12px;display:flex;align-items:center;gap:6px;transition:all .2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.7)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.3)'">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Ver Tienda
+        </a>
+        <button onclick="doLogout()" style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.35);padding:6px 12px;transition:all .2s;cursor:pointer;" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.35)'">Salir</button>
+      </div>
     </div>
   </header>
 
-  <div class="p-4 sm:p-6 max-w-7xl mx-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+    <!-- STATS -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-      <div class="card stat-card p-4 sm:p-5"><p id="st-total" class="font-serif text-4xl text-gold-dark">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Productos</p></div>
-      <div class="card stat-card p-4 sm:p-5"><p id="st-cats" class="font-serif text-4xl text-gold-dark">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Categorías</p></div>
-      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#1a1a1a"><p id="st-sold" class="font-serif text-4xl text-charcoal">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Agotados</p></div>
-      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#22c55e"><p id="st-avail" class="font-serif text-4xl text-green-600">0</p><p class="font-sans text-[8px] tracking-widest text-charcoal/35 uppercase mt-1">Disponibles</p></div>
+      <div class="card stat-card p-4 sm:p-5">
+        <p id="st-total" style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold-dark);line-height:1;">0</p>
+        <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(15,15,15,0.35);margin-top:4px;">Productos</p>
+      </div>
+      <div class="card stat-card p-4 sm:p-5">
+        <p id="st-cats" style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold-dark);line-height:1;">0</p>
+        <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(15,15,15,0.35);margin-top:4px;">Categorías</p>
+      </div>
+      <div class="card stat-card p-4 sm:p-5" style="border-left-color:var(--ink)">
+        <p id="st-sold" style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--ink);line-height:1;">0</p>
+        <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(15,15,15,0.35);margin-top:4px;">Agotados</p>
+      </div>
+      <div class="card stat-card p-4 sm:p-5" style="border-left-color:#16a34a">
+        <p id="st-avail" style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:#16a34a;line-height:1;">0</p>
+        <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(15,15,15,0.35);margin-top:4px;">Disponibles</p>
+      </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-6">
-      <!-- FORM -->
-      <div id="form-sidebar">
-        <div class="card p-5 sm:p-6">
-          <div class="flex items-center justify-between mb-5">
-            <h2 id="form-title" class="font-serif text-xl italic text-gold-dark">Agregar Producto</h2>
-            <button id="cancel-btn" onclick="clearForm()" class="hidden font-sans text-[8px] tracking-widest uppercase text-red-400 border border-red-200 px-2 py-1 hover:bg-red-50 transition-colors">Cancelar</button>
-          </div>
-          <input type="hidden" id="eid"/>
-          <div class="space-y-4">
-            <div><label class="inp-label">Nombre *</label><input id="fn" type="text" class="inp" placeholder="Collar de oro 18k"/></div>
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="inp-label">Categoría *</label><input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Collares..."/><datalist id="cat-dl"></datalist></div>
-              <div><label class="inp-label">Marca</label><input id="fbrand" type="text" list="brand-dl" class="inp" placeholder="Avon, Monet..."/><datalist id="brand-dl"></datalist></div>
-            </div>
-            <div><label class="inp-label">Precio (₡) *</label><input id="fprice" type="number" class="inp" placeholder="25000"/></div>
-            <div><label class="inp-label">Descripción</label><textarea id="fdesc" rows="3" class="inp resize-none" placeholder="Descripción del producto..."></textarea></div>
+    <!-- TABS -->
+    <div class="card mb-0" style="border-bottom:none;">
+      <div class="flex overflow-x-auto" style="border-bottom:1px solid rgba(201,168,76,0.1);">
+        <button class="tab-btn active" onclick="switchTab('productos')">📦 Productos</button>
+        <button class="tab-btn" onclick="switchTab('ofertas')">🏷️ Ofertas & Promociones</button>
+      </div>
+    </div>
 
-            <div class="flex items-center justify-between py-3 border-t border-b border-gold/10">
+    <!-- TAB: PRODUCTOS -->
+    <div id="tab-productos" class="tab-content active">
+      <div class="flex flex-col lg:flex-row gap-6 pt-6">
+
+        <!-- FORM -->
+        <div id="form-sidebar">
+          <div class="card p-5 sm:p-6">
+            <div class="flex items-center justify-between mb-5">
+              <h2 id="form-title" style="font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;color:var(--gold-dark);">Agregar Producto</h2>
+              <button id="cancel-btn" onclick="clearForm()" class="hidden" style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:4px 10px;cursor:pointer;">Cancelar</button>
+            </div>
+            <input type="hidden" id="eid"/>
+            <div class="space-y-4">
+              <div><label class="inp-label">Nombre *</label><input id="fn" type="text" class="inp" placeholder="Collar de oro vintage"/></div>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="inp-label">Categoría *</label><input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Collares..."/><datalist id="cat-dl"></datalist></div>
+                <div><label class="inp-label">Marca</label><input id="fbrand" type="text" list="brand-dl" class="inp" placeholder="Avon, Monet..."/><datalist id="brand-dl"></datalist></div>
+              </div>
+              <div><label class="inp-label">Precio (₡) *</label><input id="fprice" type="number" class="inp" placeholder="25000"/></div>
+              <div><label class="inp-label">Descripción</label><textarea id="fdesc" rows="3" class="inp resize-none" placeholder="Descripción de la pieza..."></textarea></div>
+
+              <!-- AGOTADO -->
+              <div class="flex items-center justify-between py-3" style="border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);">
+                <div>
+                  <p style="font-size:0.75rem;font-weight:500;color:rgba(15,15,15,0.7);">Marcar como Agotado</p>
+                  <p style="font-size:0.65rem;color:rgba(15,15,15,0.35);margin-top:2px;">Aparecerá con etiqueta oscura</p>
+                </div>
+                <label class="tog flex items-center gap-2 cursor-pointer"><input type="checkbox" id="fsold" class="hidden"/><div class="ttrack"></div></label>
+              </div>
+
+              <!-- FOTOS -->
               <div>
-                <p class="font-sans text-[10px] tracking-wide text-charcoal/70 font-medium">Marcar como Agotado</p>
-                <p class="font-sans text-[8px] text-charcoal/30 mt-0.5">Aparecerá con etiqueta oscura</p>
+                <label class="inp-label">Fotos del Producto</label>
+                <div id="ph-preview" class="flex flex-wrap gap-2 mb-2"></div>
+                <div onclick="document.getElementById('fimages').click()" style="border:2px dashed rgba(201,168,76,0.2);padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'">
+                  <svg class="w-5 h-5 mx-auto mb-1" style="color:rgba(201,168,76,0.35);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+                  <p style="font-size:0.7rem;color:rgba(15,15,15,0.3);">Agregar fotos (puede seleccionar varias)</p>
+                  <input id="fimages" type="file" accept="image/*" multiple class="hidden" onchange="addImages(this)"/>
+                </div>
+                <p style="font-size:0.65rem;color:rgba(15,15,15,0.25);margin-top:4px;">La primera foto será la imagen principal</p>
               </div>
-              <label class="tog flex items-center gap-2 cursor-pointer"><input type="checkbox" id="fsold" class="hidden"/><div class="ttrack"></div></label>
-            </div>
 
+              <button id="save-btn" onclick="saveProduct()" style="width:100%;background:var(--ink);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;transition:background .2s;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">
+                Guardar Producto
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT LIST -->
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-col sm:flex-row gap-3 mb-4 items-start sm:items-center justify-between">
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--gold-dark);">Productos</h2>
+            <div class="flex gap-2 w-full sm:w-auto flex-wrap">
+              <div class="relative flex-1 sm:flex-none">
+                <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..." class="inp pl-7" style="padding-top:8px;padding-bottom:8px;width:100%;min-width:120px;"/>
+                <svg class="w-3.5 h-3.5 absolute left-2 top-2.5" style="color:rgba(15,15,15,0.25);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <select id="s-cat" onchange="renderList()" class="inp" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Categoría</option></select>
+              <select id="s-brand" onchange="renderList()" class="inp" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Marca</option></select>
+            </div>
+          </div>
+          <div id="product-list" class="space-y-3"></div>
+          <div id="list-empty" class="hidden card text-center py-20">
+            <p style="font-family:'Playfair Display',serif;font-size:2rem;font-style:italic;color:rgba(201,168,76,0.2);margin-bottom:8px;">Sin productos</p>
+            <p style="font-size:0.75rem;color:rgba(15,15,15,0.3);">Agrega tu primer producto con el formulario.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: OFERTAS -->
+    <div id="tab-ofertas" class="tab-content pt-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- CONFIGURAR OFERTA -->
+        <div class="card p-6">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:var(--gold-dark);margin-bottom:4px;">Configurar Oferta Especial</h2>
+          <p style="font-size:0.7rem;color:rgba(15,15,15,0.4);margin-bottom:24px;">El contador en la tienda se ajustará automáticamente a estas fechas.</p>
+
+          <div class="space-y-5">
+            <!-- TITULO -->
             <div>
-              <label class="inp-label">Fotos del Producto</label>
-              <div id="ph-preview" class="flex flex-wrap gap-2 mb-2 min-h-0"></div>
-              <div onclick="document.getElementById('fimages').click()" class="border-2 border-dashed border-gold/20 p-4 text-center cursor-pointer hover:border-gold/50 transition-colors group">
-                <svg class="w-5 h-5 text-gold/30 mx-auto mb-1 group-hover:text-gold/50 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
-                <p class="font-sans text-[9px] text-charcoal/30 group-hover:text-charcoal/50 transition-colors">Agregar fotos (puede seleccionar varias)</p>
-                <input id="fimages" type="file" accept="image/*" multiple class="hidden" onchange="addImages(this)"/>
-              </div>
-              <p class="font-sans text-[8px] text-charcoal/25 mt-1">La primera foto será la imagen principal</p>
+              <label class="inp-label">Título de la Oferta</label>
+              <input id="promo-title" type="text" class="inp" placeholder="Ej: Especial de Fin de Mes"/>
             </div>
 
-            <button id="save-btn" onclick="saveProduct()" class="w-full bg-gold text-white font-sans text-[10px] tracking-[.2em] uppercase py-3 hover:bg-gold-dark transition-colors flex items-center justify-center gap-2">
-              Guardar Producto
+            <!-- DESCRIPCION -->
+            <div>
+              <label class="inp-label">Descripción (opcional)</label>
+              <textarea id="promo-desc" rows="2" class="inp resize-none" placeholder="Ej: Aprovechá estas joyas únicas a precios especiales..."></textarea>
+            </div>
+
+            <!-- FECHAS -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="inp-label">Fecha de inicio</label>
+                <input id="promo-start" type="datetime-local" class="inp"/>
+              </div>
+              <div>
+                <label class="inp-label">Fecha de fin</label>
+                <input id="promo-end" type="datetime-local" class="inp"/>
+              </div>
+            </div>
+
+            <!-- ESTADO -->
+            <div class="flex items-center justify-between py-3" style="border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);">
+              <div>
+                <p style="font-size:0.75rem;font-weight:500;color:rgba(15,15,15,0.7);">Oferta activa en la tienda</p>
+                <p style="font-size:0.65rem;color:rgba(15,15,15,0.35);margin-top:2px;">Mostrar sección de promociones en el index</p>
+              </div>
+              <label class="tog flex items-center gap-2 cursor-pointer"><input type="checkbox" id="promo-active" class="hidden"/><div class="ttrack"></div></label>
+            </div>
+
+            <!-- PREVIEW COUNTDOWN -->
+            <div id="promo-preview" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:16px;display:none;">
+              <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:8px;">Vista previa del contador:</p>
+              <div class="flex items-center gap-3">
+                <div style="text-align:center;"><p id="prev-d" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">días</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-h" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">horas</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-m" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">min</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-s" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">seg</p></div>
+              </div>
+            </div>
+
+            <button onclick="savePromo()" id="promo-save-btn" style="width:100%;background:var(--gold-dark);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--ink)'" onmouseout="this.style.background='var(--gold-dark)'">
+              Guardar Configuración de Oferta
             </button>
           </div>
         </div>
+
+        <!-- SELECCIONAR PRODUCTOS EN OFERTA -->
+        <div class="card p-6">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:var(--gold-dark);margin-bottom:4px;">Productos en Oferta</h2>
+          <p style="font-size:0.7rem;color:rgba(15,15,15,0.4);margin-bottom:16px;">Seleccioná cuáles aparecerán en la sección de promociones de la tienda.</p>
+
+          <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:between;gap:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+            <p style="font-size:0.7rem;color:rgba(15,15,15,0.6);flex:1;">Máximo 4 productos se muestran en la sección de ofertas.</p>
+            <span id="promo-count-badge" style="font-size:0.6rem;letter-spacing:0.1em;background:var(--gold-dark);color:#fff;padding:3px 10px;border-radius:2px;">0/4</span>
+          </div>
+
+          <div id="promo-product-list" class="space-y-2" style="max-height:400px;overflow-y:auto;padding-right:4px;">
+            <p style="font-size:0.75rem;color:rgba(15,15,15,0.3);text-align:center;padding:24px;">Cargando productos...</p>
+          </div>
+
+          <button onclick="savePromoProducts()" style="width:100%;background:var(--ink);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;cursor:pointer;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">
+            Guardar Selección
+          </button>
+        </div>
       </div>
 
-      <!-- LIST -->
-      <div class="flex-1 min-w-0">
-        <div class="flex flex-col sm:flex-row gap-3 mb-4 items-start sm:items-center justify-between">
-          <h2 class="font-serif text-2xl italic text-gold-dark">Productos</h2>
-          <div class="flex gap-2 w-full sm:w-auto">
-            <div class="relative flex-1 sm:flex-none">
-              <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..." class="inp pl-7 py-2 w-full sm:w-40" style="padding-top:8px;padding-bottom:8px"/>
-              <svg class="absolute left-2 top-2.5 w-3.5 h-3.5 text-charcoal/25" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <select id="s-cat" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Categoría</option></select>
-            <select id="s-brand" onchange="renderList()" class="inp py-2" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Marca</option></select>
-          </div>
+      <!-- OFERTA ACTIVA INFO -->
+      <div id="promo-status-card" class="card p-5 mt-6 hidden">
+        <div class="flex items-center gap-3 mb-3">
+          <div id="promo-status-dot" style="width:10px;height:10px;border-radius:50%;background:#ddd;flex-shrink:0;"></div>
+          <h3 style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.5);">Estado de la Oferta</h3>
         </div>
-        <div id="product-list" class="space-y-3"></div>
-        <div id="list-empty" class="hidden card text-center py-20">
-          <p class="font-serif text-3xl italic text-gold/15 mb-2">Sin productos</p>
-          <p class="font-sans text-xs text-charcoal/25">Agrega tu primer producto con el formulario.</p>
-        </div>
+        <p id="promo-status-text" style="font-size:0.85rem;color:var(--ink);"></p>
       </div>
     </div>
-  </div>
-</div>
 
-<div id="toast" class="hidden font-sans" style="position:fixed;bottom:24px;right:24px;z-index:9999;padding:11px 20px;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;"></div>
+  </div><!-- end main content -->
+</div><!-- end dashboard -->
+
+<div id="toast"></div>
 
 <script>
-  const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
-  const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
-  const { createClient } = supabase;
-  const db = createClient(SUPA_URL, SUPA_KEY);
-  const BUCKET = 'fotos-joyas';
+const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
+const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
+const { createClient } = supabase;
+const db = createClient(SUPA_URL, SUPA_KEY);
+const BUCKET = 'fotos-joyas';
+const AU = 'admin', AP = 'rr2025';
 
-  const AU = 'admin', AP = 'rr2025';
-  let allProducts = [];
-  let newFiles = [];
-  let existingUrls = [];
+let allProducts = [];
+let newFiles = [];
+let existingUrls = [];
+let selectedPromoIds = new Set();
+let promoCountdownInterval = null;
 
-  // ── AUTH ──
-  function doLogin() {
-    const u = document.getElementById('lu').value.trim();
-    const p = document.getElementById('lp').value.trim();
-    if (u === AU && p === AP) { sessionStorage.setItem('rr_auth','1'); showDashboard(); }
-    else document.getElementById('lerr').classList.remove('hidden');
-  }
-  function doLogout() { sessionStorage.removeItem('rr_auth'); location.reload(); }
+// ═══ AUTH ═══
+function doLogin() {
+  const u = document.getElementById('lu').value.trim();
+  const p = document.getElementById('lp').value.trim();
+  if (u === AU && p === AP) { sessionStorage.setItem('rr_auth','1'); showDashboard(); }
+  else document.getElementById('lerr').classList.remove('hidden');
+}
+function doLogout() { sessionStorage.removeItem('rr_auth'); location.reload(); }
 
-  // ── INIT ──
-  window.addEventListener('DOMContentLoaded', async () => {
-    await loadProducts();
-    document.getElementById('loading-overlay').style.display = 'none';
-    if (sessionStorage.getItem('rr_auth') === '1') showDashboard();
-    else document.getElementById('login-screen').classList.remove('hidden');
+// ═══ INIT ═══
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadProducts();
+  await loadPromoConfig();
+  document.getElementById('loading-overlay').style.display = 'none';
+  if (sessionStorage.getItem('rr_auth') === '1') showDashboard();
+  else document.getElementById('login-screen').classList.remove('hidden');
+});
+
+async function loadProducts() {
+  const { data, error } = await db.from('productos').select('*').order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  allProducts = data || [];
+}
+
+function showDashboard() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  renderList(); updateStats(); updateDataLists(); renderPromoProductList();
+}
+
+// ═══ TABS ═══
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['productos','ofertas'][i] === tab);
   });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
 
-  async function loadProducts() {
-    const { data, error } = await db.from('productos').select('*').order('created_at', { ascending: false });
-    if (error) { console.error(error); return; }
-    allProducts = data || [];
+// ═══ UTILS ═══
+function fmt(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
+
+function getImages(p) {
+  if (!p.images) return [];
+  if (Array.isArray(p.images)) return p.images;
+  try { return JSON.parse(p.images); } catch { return [p.images]; }
+}
+
+let toastT;
+function toast(msg, ok=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 20px;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;font-family:'Inter',sans-serif;display:block;background:${ok?'var(--ink)':'#ef4444'};color:#fff;`;
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.style.display='none', 2800);
+}
+
+// ═══ FOTOS ═══
+function addImages(inp) {
+  Array.from(inp.files).forEach(f => newFiles.push(f));
+  inp.value = '';
+  renderPH();
+}
+
+function renderPH() {
+  const all = [
+    ...existingUrls.map(u => ({type:'url',src:u})),
+    ...newFiles.map(f => ({type:'file',src:URL.createObjectURL(f)}))
+  ];
+  document.getElementById('ph-preview').innerHTML = all.map((item,i) => `
+    <div class="ph-wrap" style="width:64px;height:64px;border:1px solid rgba(201,168,76,0.2);overflow:hidden;flex-shrink:0;position:relative;">
+      <img src="${item.src}" style="width:100%;height:100%;object-fit:cover;"/>
+      ${i===0?'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,105,20,.8);color:#fff;font-size:6px;text-align:center;padding:2px;letter-spacing:.08em;">PRINCIPAL</div>':''}
+      <div class="rm" onclick="rmImg(${i},'${item.type}')">✕</div>
+    </div>`).join('');
+}
+
+function rmImg(idx,type) {
+  if (type==='url') existingUrls.splice(idx,1);
+  else newFiles.splice(idx-existingUrls.length,1);
+  renderPH();
+}
+
+async function uploadFiles(productId) {
+  const urls = [];
+  for (const file of newFiles) {
+    const ext = file.name.split('.').pop();
+    const path = `${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await db.storage.from(BUCKET).upload(path, file, {upsert:true});
+    if (error) { toast('Error subiendo foto: '+error.message, false); continue; }
+    const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+    urls.push(data.publicUrl);
   }
+  return urls;
+}
 
-  function showDashboard() {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    renderList(); updateStats(); updateDataLists();
-  }
+function clearForm() {
+  ['eid','fn','fcat','fbrand','fprice','fdesc'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('fsold').checked = false;
+  newFiles = []; existingUrls = []; renderPH();
+  document.getElementById('form-title').textContent = 'Agregar Producto';
+  document.getElementById('cancel-btn').classList.add('hidden');
+}
 
-  // ── UTILS ──
-  function fmt(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
+// ═══ CRUD PRODUCTOS ═══
+async function saveProduct() {
+  const id    = document.getElementById('eid').value;
+  const name  = document.getElementById('fn').value.trim();
+  const cat   = document.getElementById('fcat').value.trim();
+  const brand = document.getElementById('fbrand').value.trim();
+  const price = parseFloat(document.getElementById('fprice').value);
+  const desc  = document.getElementById('fdesc').value.trim();
+  const sold  = document.getElementById('fsold').checked;
 
-  let toastT;
-  function toast(msg, ok=true) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `font-sans ${ok ? 'bg-charcoal text-white' : 'bg-red-500 text-white'}`;
-    t.style.display = 'block';
-    clearTimeout(toastT);
-    toastT = setTimeout(() => t.style.display = 'none', 2800);
-  }
+  if (!name||!cat||isNaN(price)) { toast('Nombre, categoría y precio son obligatorios.',false); return; }
 
-  // ── FOTOS ──
-  function addImages(inp) {
-    Array.from(inp.files).forEach(f => newFiles.push(f));
-    inp.value = '';
-    renderPH();
-  }
+  const btn = document.getElementById('save-btn');
+  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+  btn.disabled = true;
 
-  function renderPH() {
-    const all = [
-      ...existingUrls.map(u => ({ type:'url', src:u })),
-      ...newFiles.map(f => ({ type:'file', src:URL.createObjectURL(f) }))
-    ];
-    document.getElementById('ph-preview').innerHTML = all.map((item, i) => `
-      <div class="ph-wrap w-16 h-16 border border-gold/15 overflow-hidden flex-shrink-0" style="position:relative">
-        <img src="${item.src}" class="w-full h-full object-cover"/>
-        ${i===0 ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,105,20,.8);color:#fff;font-size:7px;text-align:center;padding:2px;letter-spacing:.1em">PRINCIPAL</div>' : ''}
-        <div class="rm" onclick="rmImg(${i},'${item.type}')">✕</div>
-      </div>`).join('');
-  }
-
-  function rmImg(idx, type) {
-    if (type === 'url') existingUrls.splice(idx, 1);
-    else newFiles.splice(idx - existingUrls.length, 1);
-    renderPH();
-  }
-
-  async function uploadFiles(productId) {
-    const urls = [];
-    for (const file of newFiles) {
-      const ext = file.name.split('.').pop();
-      const path = `${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await db.storage.from(BUCKET).upload(path, file, { upsert: true });
-      if (error) { toast('Error subiendo foto: ' + error.message, false); continue; }
-      const { data } = db.storage.from(BUCKET).getPublicUrl(path);
-      urls.push(data.publicUrl);
+  try {
+    if (id) {
+      const newUrls = await uploadFiles(id);
+      const finalImages = [...existingUrls,...newUrls];
+      const { error } = await db.from('productos').update({
+        name, category:cat, brand:brand||null, price, description:desc||null, sold, images:finalImages
+      }).eq('id',id);
+      if (error) throw error;
+      toast('✓ Producto actualizado');
+    } else {
+      const { data, error } = await db.from('productos').insert({
+        name, category:cat, brand:brand||null, price, description:desc||null, sold, images:[]
+      }).select().single();
+      if (error) throw error;
+      const newUrls = await uploadFiles(data.id);
+      if (newUrls.length) await db.from('productos').update({images:newUrls}).eq('id',data.id);
+      toast('✓ Producto agregado');
     }
-    return urls;
+    await loadProducts();
+    clearForm(); renderList(); updateStats(); updateDataLists(); renderPromoProductList();
+  } catch(err) {
+    toast('Error: '+err.message, false);
+  } finally {
+    btn.innerHTML = 'Guardar Producto';
+    btn.disabled = false;
   }
+}
 
-  function clearForm() {
-    ['eid','fn','fcat','fbrand','fprice','fdesc'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('fsold').checked = false;
-    newFiles = []; existingUrls = []; renderPH();
-    document.getElementById('form-title').textContent = 'Agregar Producto';
-    document.getElementById('cancel-btn').classList.add('hidden');
-  }
+function editProduct(id) {
+  const p = allProducts.find(x=>x.id==id); if (!p) return;
+  document.getElementById('eid').value    = p.id;
+  document.getElementById('fn').value     = p.name;
+  document.getElementById('fcat').value   = p.category;
+  document.getElementById('fbrand').value = p.brand||'';
+  document.getElementById('fprice').value = p.price;
+  document.getElementById('fdesc').value  = p.description||'';
+  document.getElementById('fsold').checked = !!p.sold;
+  existingUrls = getImages(p); newFiles = []; renderPH();
+  document.getElementById('form-title').textContent = 'Editar Producto';
+  document.getElementById('cancel-btn').classList.remove('hidden');
+  switchTab('productos');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  // ── CRUD ──
-  async function saveProduct() {
-    const id    = document.getElementById('eid').value;
-    const name  = document.getElementById('fn').value.trim();
-    const cat   = document.getElementById('fcat').value.trim();
-    const brand = document.getElementById('fbrand').value.trim();
-    const price = parseFloat(document.getElementById('fprice').value);
-    const desc  = document.getElementById('fdesc').value.trim();
-    const sold  = document.getElementById('fsold').checked;
+async function deleteProduct(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  const { data:files } = await db.storage.from(BUCKET).list(id);
+  if (files&&files.length) await db.storage.from(BUCKET).remove(files.map(f=>`${id}/${f.name}`));
+  const { error } = await db.from('productos').delete().eq('id',id);
+  if (error) { toast('Error al eliminar: '+error.message,false); return; }
+  selectedPromoIds.delete(id);
+  await loadProducts(); renderList(); updateStats(); updateDataLists(); renderPromoProductList();
+  toast('Producto eliminado');
+}
 
-    if (!name || !cat || isNaN(price)) { toast('Nombre, categoría y precio son obligatorios.', false); return; }
+async function toggleSold(id) {
+  const p = allProducts.find(x=>x.id==id); if (!p) return;
+  const { error } = await db.from('productos').update({sold:!p.sold}).eq('id',id);
+  if (error) { toast('Error: '+error.message,false); return; }
+  toast(p.sold?'Marcado como Disponible':'Marcado como Agotado');
+  await loadProducts(); renderList(); updateStats(); renderPromoProductList();
+}
 
-    const btn = document.getElementById('save-btn');
-    btn.innerHTML = '<span class="spinner"></span> Guardando...';
-    btn.disabled = true;
+// ═══ RENDER LIST ═══
+function renderList() {
+  const search = (document.getElementById('s-search').value||'').toLowerCase();
+  const catF   = document.getElementById('s-cat').value;
+  const brandF = document.getElementById('s-brand').value;
+  let products = [...allProducts];
+  if (catF)   products = products.filter(p=>p.category===catF);
+  if (brandF) products = products.filter(p=>p.brand===brandF);
+  if (search) products = products.filter(p=>
+    p.name.toLowerCase().includes(search)||(p.category||'').toLowerCase().includes(search)||(p.brand||'').toLowerCase().includes(search)
+  );
 
-    try {
-      if (id) {
-        const newUrls = await uploadFiles(id);
-        const finalImages = [...existingUrls, ...newUrls];
-        const { error } = await db.from('productos').update({
-          name, category: cat, brand: brand || null, price, description: desc || null, sold, images: finalImages
-        }).eq('id', id);
-        if (error) throw error;
-        toast('✓ Producto actualizado');
-      } else {
-        const { data, error } = await db.from('productos').insert({
-          name, category: cat, brand: brand || null, price, description: desc || null, sold, images: []
-        }).select().single();
-        if (error) throw error;
-        const newUrls = await uploadFiles(data.id);
-        if (newUrls.length) await db.from('productos').update({ images: newUrls }).eq('id', data.id);
-        toast('✓ Producto agregado');
-      }
-      await loadProducts();
-      clearForm(); renderList(); updateStats(); updateDataLists();
-    } catch (err) {
-      toast('Error: ' + err.message, false);
-    } finally {
-      btn.innerHTML = 'Guardar Producto';
-      btn.disabled = false;
-    }
-  }
+  const cont  = document.getElementById('product-list');
+  const empty = document.getElementById('list-empty');
+  if (!products.length) { cont.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
 
-  function editProduct(id) {
-    const p = allProducts.find(x => x.id === id); if (!p) return;
-    document.getElementById('eid').value   = p.id;
-    document.getElementById('fn').value    = p.name;
-    document.getElementById('fcat').value  = p.category;
-    document.getElementById('fbrand').value = p.brand || '';
-    document.getElementById('fprice').value = p.price;
-    document.getElementById('fdesc').value  = p.description || '';
-    document.getElementById('fsold').checked = !!p.sold;
-    existingUrls = p.images ? [...p.images] : [];
-    newFiles = []; renderPH();
-    document.getElementById('form-title').textContent = 'Editar Producto';
-    document.getElementById('cancel-btn').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  async function deleteProduct(id) {
-    if (!confirm('¿Eliminar este producto?')) return;
-    const { data: files } = await db.storage.from(BUCKET).list(id);
-    if (files && files.length) {
-      await db.storage.from(BUCKET).remove(files.map(f => `${id}/${f.name}`));
-    }
-    const { error } = await db.from('productos').delete().eq('id', id);
-    if (error) { toast('Error al eliminar: ' + error.message, false); return; }
-    await loadProducts(); renderList(); updateStats(); updateDataLists();
-    toast('Producto eliminado');
-  }
-
-  async function toggleSold(id) {
-    const p = allProducts.find(x => x.id === id); if (!p) return;
-    const { error } = await db.from('productos').update({ sold: !p.sold }).eq('id', id);
-    if (error) { toast('Error: ' + error.message, false); return; }
-    toast(p.sold ? 'Marcado como Disponible' : 'Marcado como Agotado');
-    await loadProducts(); renderList(); updateStats();
-  }
-
-  // ── RENDER ──
-  function renderList() {
-    const search = (document.getElementById('s-search').value || '').toLowerCase();
-    const catF   = document.getElementById('s-cat').value;
-    const brandF = document.getElementById('s-brand').value;
-    let products = [...allProducts];
-    if (catF)   products = products.filter(p => p.category === catF);
-    if (brandF) products = products.filter(p => p.brand === brandF);
-    if (search) products = products.filter(p =>
-      p.name.toLowerCase().includes(search) ||
-      (p.category||'').toLowerCase().includes(search) ||
-      (p.brand||'').toLowerCase().includes(search)
-    );
-
-    const cont  = document.getElementById('product-list');
-    const empty = document.getElementById('list-empty');
-    if (!products.length) { cont.innerHTML = ''; empty.classList.remove('hidden'); return; }
-    empty.classList.add('hidden');
-
-    cont.innerHTML = products.map(p => {
-      const thumb = (p.images && p.images.length) ? p.images[0] : 'https://placehold.co/80x80/f5f0e8/8B6914?text=RR';
-      return `<div class="card flex gap-3 p-3 sm:p-4 fade-up ${p.sold ? 'opacity-55' : ''}">
-        <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden bg-gray-50 border border-gold/10">
-          <img src="${thumb}" class="w-full h-full object-cover"/>
-          ${p.images && p.images.length > 1 ? `<div class="absolute bottom-0 right-0 bg-black/50 text-white text-[7px] px-1">+${p.images.length}</div>` : ''}
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-start gap-2 justify-between mb-1">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="font-sans text-[8px] tracking-widest text-gold uppercase">${p.category||''}</span>
-              ${p.brand ? `<span class="font-sans text-[8px] tracking-widest text-charcoal/40 uppercase border border-charcoal/10 px-1.5">${p.brand}</span>` : ''}
-              ${p.sold
-                ? '<span class="font-sans text-[7px] tracking-widest uppercase bg-charcoal text-white px-2 py-0.5">Agotado</span>'
-                : '<span class="font-sans text-[7px] tracking-widest uppercase bg-green-50 text-green-600 border border-green-200 px-2 py-0.5">Disponible</span>'}
-            </div>
-            <p class="font-serif text-base text-gold-dark whitespace-nowrap flex-shrink-0">${fmt(p.price)}</p>
+  cont.innerHTML = products.map(p => {
+    const imgs = getImages(p);
+    const thumb = imgs[0]||'https://placehold.co/80x80/f0ebe0/8B6914?text=RR';
+    const isPromo = selectedPromoIds.has(String(p.id));
+    return `<div class="card flex gap-3 p-3 sm:p-4 fade-up ${p.sold?'opacity-50':''}">
+      <div style="position:relative;width:72px;height:72px;flex-shrink:0;overflow:hidden;background:#f5f0e8;border:1px solid rgba(201,168,76,0.1);">
+        <img src="${thumb}" style="width:100%;height:100%;object-fit:cover;"/>
+        ${imgs.length>1?`<div style="position:absolute;bottom:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:7px;padding:2px 5px;">+${imgs.length}</div>`:''}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-2 justify-between mb-1 flex-wrap">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">${p.category||''}</span>
+            ${p.brand?`<span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(15,15,15,0.35);border:1px solid rgba(15,15,15,0.1);padding:1px 6px;">${p.brand}</span>`:''}
+            ${p.sold?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;">Agotado</span>':'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:2px 7px;">Disponible</span>'}
+            ${isPromo?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:var(--gold-dark);border:1px solid rgba(201,168,76,0.3);padding:2px 7px;">En Oferta</span>':''}
           </div>
-          <p class="font-serif text-base text-charcoal truncate mb-1">${p.name}</p>
-          <p class="font-sans text-[9px] text-charcoal/35 truncate hidden sm:block mb-2">${p.description||''}</p>
-          <div class="flex gap-1.5 flex-wrap">
-            <button onclick="editProduct('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border border-gold text-gold px-2.5 py-1 hover:bg-gold hover:text-white transition-all">Editar</button>
-            <button onclick="toggleSold('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border px-2.5 py-1 transition-all ${p.sold ? 'border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500' : 'border-charcoal/15 text-charcoal/40 hover:bg-charcoal hover:text-white hover:border-charcoal'}">
-              ${p.sold ? 'Disponible' : 'Agotado'}
-            </button>
-            <button onclick="deleteProduct('${p.id}')" class="font-sans text-[8px] tracking-widest uppercase border border-red-200 text-red-400 px-2.5 py-1 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all">Eliminar</button>
-          </div>
+          <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold-dark);white-space:nowrap;flex-shrink:0;">${fmt(p.price)}</p>
         </div>
-      </div>`;
-    }).join('');
+        <p style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">${p.name}</p>
+        <p style="font-size:0.7rem;color:rgba(15,15,15,0.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:10px;">${p.description||''}</p>
+        <div class="flex gap-2 flex-wrap">
+          <button onclick="editProduct('${p.id}')" style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-dark);padding:5px 12px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='var(--gold-dark)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--gold-dark)'">Editar</button>
+          <button onclick="toggleSold('${p.id}')" style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid ${p.sold?'#16a34a':'rgba(15,15,15,0.15)'};color:${p.sold?'#16a34a':'rgba(15,15,15,0.4)'};padding:5px 12px;cursor:pointer;transition:all .2s;">${p.sold?'Disponible':'Agotado'}</button>
+          <button onclick="deleteProduct('${p.id}')" style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:5px 12px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#ef4444'">Eliminar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  const sold = allProducts.filter(p=>p.sold).length;
+  const cats = [...new Set(allProducts.map(p=>p.category))].filter(Boolean);
+  document.getElementById('st-total').textContent = allProducts.length;
+  document.getElementById('st-cats').textContent  = cats.length;
+  document.getElementById('st-sold').textContent  = sold;
+  document.getElementById('st-avail').textContent = allProducts.length-sold;
+}
+
+function updateDataLists() {
+  const cats   = [...new Set(allProducts.map(p=>p.category))].filter(Boolean);
+  const brands = [...new Set(allProducts.map(p=>p.brand))].filter(Boolean);
+  document.getElementById('cat-dl').innerHTML   = cats.map(c=>`<option value="${c}"/>`).join('');
+  document.getElementById('brand-dl').innerHTML = brands.map(b=>`<option value="${b}"/>`).join('');
+  const sc = document.getElementById('s-cat'), scv = sc.value;
+  sc.innerHTML = '<option value="">Categoría</option>'+cats.map(c=>`<option value="${c}" ${c===scv?'selected':''}>${c}</option>`).join('');
+  const sb = document.getElementById('s-brand'), sbv = sb.value;
+  sb.innerHTML = '<option value="">Marca</option>'+brands.map(b=>`<option value="${b}" ${b===sbv?'selected':''}>${b}</option>`).join('');
+}
+
+// ═══ PROMO PRODUCTS ═══
+function renderPromoProductList() {
+  const container = document.getElementById('promo-product-list');
+  if (!allProducts.length) {
+    container.innerHTML = '<p style="font-size:0.75rem;color:rgba(15,15,15,0.3);text-align:center;padding:24px;">No hay productos aún.</p>';
+    return;
+  }
+  container.innerHTML = allProducts.map(p => {
+    const imgs = getImages(p);
+    const thumb = imgs[0]||'https://placehold.co/50x50/f0ebe0/8B6914?text=RR';
+    const checked = selectedPromoIds.has(String(p.id));
+    return `<div class="offer-item ${checked?'selected':''} flex items-center gap-3 p-3 cursor-pointer" onclick="togglePromoProduct('${p.id}',this)" id="promo-item-${p.id}">
+      <input type="checkbox" class="promo-check" ${checked?'checked':''} onchange="togglePromoProduct('${p.id}',this.closest('.offer-item'))" style="pointer-events:none;"/>
+      <img src="${thumb}" style="width:44px;height:44px;object-fit:cover;border:1px solid rgba(201,168,76,0.2);flex-shrink:0;" onerror="this.src='https://placehold.co/44x44/f0ebe0/8B6914?text=RR'"/>
+      <div class="flex-1 min-w-0">
+        <p style="font-size:0.8rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</p>
+        <p style="font-size:0.65rem;color:rgba(15,15,15,0.4);">${p.category||''} ${p.brand?'· '+p.brand:''}</p>
+      </div>
+      <p style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;color:var(--gold-dark);white-space:nowrap;flex-shrink:0;">${fmt(p.price)}</p>
+    </div>`;
+  }).join('');
+  updatePromoBadge();
+}
+
+function togglePromoProduct(id, el) {
+  const sid = String(id);
+  const cb = el.querySelector('.promo-check');
+  if (selectedPromoIds.has(sid)) {
+    selectedPromoIds.delete(sid);
+    el.classList.remove('selected');
+    if (cb) cb.checked = false;
+  } else {
+    if (selectedPromoIds.size >= 4) { toast('Máximo 4 productos en oferta.',false); return; }
+    selectedPromoIds.add(sid);
+    el.classList.add('selected');
+    if (cb) cb.checked = true;
+  }
+  updatePromoBadge();
+}
+
+function updatePromoBadge() {
+  document.getElementById('promo-count-badge').textContent = `${selectedPromoIds.size}/4`;
+}
+
+async function savePromoProducts() {
+  const ids = [...selectedPromoIds];
+  const { error } = await db.from('config').upsert({key:'promo_products',value:JSON.stringify(ids)},{onConflict:'key'});
+  if (error) {
+    // Si no existe tabla config, guardar en localStorage como fallback
+    localStorage.setItem('rr_promo_products', JSON.stringify(ids));
+    toast('✓ Selección guardada localmente');
+  } else {
+    toast('✓ Selección de productos guardada');
+  }
+  renderList(); // actualizar badges "En Oferta"
+}
+
+// ═══ PROMO CONFIG ═══
+async function loadPromoConfig() {
+  // Intentar cargar desde Supabase config table
+  try {
+    const { data: promoData } = await db.from('config').select('value').eq('key','promo_config').single();
+    if (promoData) {
+      const cfg = JSON.parse(promoData.value);
+      if (cfg.title) document.getElementById('promo-title').value = cfg.title;
+      if (cfg.desc)  document.getElementById('promo-desc').value  = cfg.desc;
+      if (cfg.start) document.getElementById('promo-start').value = cfg.start;
+      if (cfg.end)   document.getElementById('promo-end').value   = cfg.end;
+      document.getElementById('promo-active').checked = !!cfg.active;
+    }
+    const { data: prodsData } = await db.from('config').select('value').eq('key','promo_products').single();
+    if (prodsData) {
+      const ids = JSON.parse(prodsData.value);
+      selectedPromoIds = new Set(ids.map(String));
+    }
+  } catch(e) {
+    // Fallback localStorage
+    const local = localStorage.getItem('rr_promo_products');
+    if (local) selectedPromoIds = new Set(JSON.parse(local).map(String));
   }
 
-  function updateStats() {
-    const sold = allProducts.filter(p => p.sold).length;
-    const cats = [...new Set(allProducts.map(p => p.category))].filter(Boolean);
-    document.getElementById('st-total').textContent = allProducts.length;
-    document.getElementById('st-cats').textContent  = cats.length;
-    document.getElementById('st-sold').textContent  = sold;
-    document.getElementById('st-avail').textContent = allProducts.length - sold;
+  // Start preview countdown if end date exists
+  startPreviewCountdown();
+  updatePromoBadge();
+  updatePromoStatus();
+}
+
+async function savePromo() {
+  const cfg = {
+    title:  document.getElementById('promo-title').value.trim(),
+    desc:   document.getElementById('promo-desc').value.trim(),
+    start:  document.getElementById('promo-start').value,
+    end:    document.getElementById('promo-end').value,
+    active: document.getElementById('promo-active').checked
+  };
+
+  if (!cfg.end) { toast('La fecha de fin es obligatoria.',false); return; }
+  if (cfg.start && cfg.end && new Date(cfg.start) >= new Date(cfg.end)) {
+    toast('La fecha de fin debe ser posterior al inicio.',false); return;
   }
 
-  function updateDataLists() {
-    const cats   = [...new Set(allProducts.map(p => p.category))].filter(Boolean);
-    const brands = [...new Set(allProducts.map(p => p.brand))].filter(Boolean);
-    document.getElementById('cat-dl').innerHTML   = cats.map(c => `<option value="${c}"/>`).join('');
-    document.getElementById('brand-dl').innerHTML = brands.map(b => `<option value="${b}"/>`).join('');
-    const sc = document.getElementById('s-cat'), scv = sc.value;
-    sc.innerHTML = '<option value="">Categoría</option>' + cats.map(c => `<option value="${c}" ${c===scv?'selected':''}>${c}</option>`).join('');
-    const sb = document.getElementById('s-brand'), sbv = sb.value;
-    sb.innerHTML = '<option value="">Marca</option>' + brands.map(b => `<option value="${b}" ${b===sbv?'selected':''}>${b}</option>`).join('');
+  const btn = document.getElementById('promo-save-btn');
+  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+  btn.disabled = true;
+
+  try {
+    const { error } = await db.from('config').upsert({key:'promo_config',value:JSON.stringify(cfg)},{onConflict:'key'});
+    if (error) {
+      localStorage.setItem('rr_promo_config', JSON.stringify(cfg));
+      toast('✓ Configuración guardada localmente');
+    } else {
+      toast('✓ Configuración de oferta guardada');
+    }
+    startPreviewCountdown();
+    updatePromoStatus();
+  } catch(err) {
+    toast('Error: '+err.message, false);
+  } finally {
+    btn.innerHTML = 'Guardar Configuración de Oferta';
+    btn.disabled = false;
   }
+}
+
+function startPreviewCountdown() {
+  const endVal = document.getElementById('promo-end').value;
+  const preview = document.getElementById('promo-preview');
+  if (!endVal) { preview.style.display='none'; return; }
+
+  preview.style.display='block';
+  if (promoCountdownInterval) clearInterval(promoCountdownInterval);
+
+  function update() {
+    const diff = new Date(endVal) - new Date();
+    if (diff <= 0) {
+      ['prev-d','prev-h','prev-m','prev-s'].forEach(id => document.getElementById(id).textContent='00');
+      clearInterval(promoCountdownInterval);
+      return;
+    }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('prev-d').textContent = pad(d);
+    document.getElementById('prev-h').textContent = pad(h);
+    document.getElementById('prev-m').textContent = pad(m);
+    document.getElementById('prev-s').textContent = pad(s);
+  }
+  update();
+  promoCountdownInterval = setInterval(update, 1000);
+}
+
+// Update countdown when end date changes
+document.addEventListener('DOMContentLoaded', () => {
+  const endInput = document.getElementById('promo-end');
+  if (endInput) endInput.addEventListener('change', startPreviewCountdown);
+});
+
+function updatePromoStatus() {
+  const card = document.getElementById('promo-status-card');
+  const dot  = document.getElementById('promo-status-dot');
+  const text = document.getElementById('promo-status-text');
+  const endVal = document.getElementById('promo-end').value;
+  const active = document.getElementById('promo-active').checked;
+
+  card.classList.remove('hidden');
+  if (!active) {
+    dot.style.background='#9ca3af';
+    text.textContent='La oferta está desactivada. No se muestra en la tienda.';
+    return;
+  }
+  if (!endVal) {
+    dot.style.background='#f59e0b';
+    text.textContent='Oferta activa sin fecha de fin configurada.';
+    return;
+  }
+  const now = new Date(), end = new Date(endVal);
+  if (now > end) {
+    dot.style.background='#ef4444';
+    text.textContent='La oferta ya expiró. Actualizá la fecha de fin para reactivarla.';
+  } else {
+    dot.style.background='#22c55e';
+    const diff = end - now;
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    text.textContent=`Oferta activa — quedan ${d} días y ${h} horas. Termina el ${end.toLocaleDateString('es-CR',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}.`;
+  }
+}
 </script>
 </body>
 </html>
