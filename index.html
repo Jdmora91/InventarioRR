@@ -7,23 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet"/>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            gold: { light: '#C9A84C', DEFAULT: '#8B6914', dark: '#5a4409' },
-            ink: '#0F0F0F', cream: '#FAF7F2', warm: '#F0E8D8'
-          },
-          fontFamily: {
-            display: ['Playfair Display', 'serif'],
-            body: ['Inter', 'sans-serif'],
-            script: ['Cormorant Garamond', 'serif']
-          }
-        }
-      }
-    }
-  </script>
+  <script>tailwind.config={theme:{extend:{colors:{gold:{light:'#C9A84C',DEFAULT:'#8B6914',dark:'#5a4409'},ink:'#0F0F0F',cream:'#FAF7F2',warm:'#F0E8D8'},fontFamily:{display:['Playfair Display','serif'],body:['Inter','sans-serif']}}}}</script>
   <style>
     :root{--gold:#C9A84C;--gold-dark:#8B6914;--ink:#0F0F0F;--cream:#FAF7F2;--warm:#F0E8D8;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -32,114 +16,121 @@
     ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--gold);}
 
     /* NAV */
-    #navbar{background:rgba(250,247,242,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.15);transition:all .3s;}
-    #navbar.scrolled{box-shadow:0 4px 40px rgba(139,105,20,.08);}
-    .nav-link{position:relative;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(15,15,15,.45);transition:color .2s;}
+    #navbar{background:rgba(250,247,242,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.12);transition:all .3s;}
+    #navbar.scrolled{box-shadow:0 4px 32px rgba(139,105,20,.08);}
+    .nav-link{position:relative;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(15,15,15,.4);transition:color .2s;}
     .nav-link::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
     .nav-link:hover{color:var(--gold-dark);}.nav-link:hover::after{width:100%;}
+    .nav-promo-pill{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.35);color:var(--gold-dark);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;transition:all .2s;display:none;}
+    .nav-promo-pill:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
+    .nav-promo-pulse{display:inline-block;width:5px;height:5px;background:#ef4444;border-radius:50%;animation:pulse-red 1.2s ease-in-out infinite;margin-right:4px;vertical-align:middle;}
 
     /* HERO */
     .hero-bg{background:linear-gradient(135deg,#f7f0e4 0%,#faf7f2 40%,#ede3cc 100%);min-height:100vh;position:relative;overflow:hidden;}
-    .hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(201,168,76,.08) 0%,transparent 70%);pointer-events:none;}
-    .hero-grain{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,7.5rem);line-height:.92;letter-spacing:-.02em;font-weight:700;}
+    .hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 65% 50%,rgba(201,168,76,.07) 0%,transparent 70%);pointer-events:none;}
+    .hero-grain{position:absolute;inset:0;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7.5vw,7rem);line-height:.92;letter-spacing:-.02em;font-weight:700;}
     .hero-title em{font-style:italic;font-weight:400;color:var(--gold-dark);}
-    .orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;animation:drift 12s ease-in-out infinite alternate;}
-    .orb-1{width:500px;height:500px;background:rgba(201,168,76,.12);top:-100px;right:-100px;}
-    .orb-2{width:300px;height:300px;background:rgba(201,168,76,.07);bottom:50px;left:-50px;animation-delay:-4s;}
-    @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,30px) scale(1.05);}}
+    .orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;animation:drift 14s ease-in-out infinite alternate;}
+    .orb-1{width:450px;height:450px;background:rgba(201,168,76,.1);top:-80px;right:-80px;}
+    .orb-2{width:280px;height:280px;background:rgba(201,168,76,.06);bottom:60px;left:-40px;animation-delay:-5s;}
+    @keyframes drift{from{transform:translate(0,0);}to{transform:translate(16px,24px);}}
 
     /* MARQUEE */
-    .marquee-wrap{overflow:hidden;background:var(--ink);}
-    .marquee-inner{display:flex;animation:mscroll 32s linear infinite;white-space:nowrap;}
-    .marquee-inner:hover{animation-play-state:paused;}
-    @keyframes mscroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-    .marquee-item{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:0 24px;}
-    .marquee-dot{color:var(--gold);font-size:.45rem;}
+    .mq-wrap{overflow:hidden;background:var(--ink);}
+    .mq-inner{display:flex;animation:mq 30s linear infinite;white-space:nowrap;}
+    .mq-inner:hover{animation-play-state:paused;}
+    @keyframes mq{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+    .mq-item{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:0 22px;}
+    .mq-dot{color:var(--gold);font-size:.4rem;}
 
-    /* PROMO */
-    .promo-section{background:linear-gradient(135deg,#0f0800 0%,#1a1100 50%,#0f0800 100%);position:relative;overflow:hidden;}
-    .promo-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(201,168,76,.12) 0%,transparent 70%);pointer-events:none;}
-    .promo-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;}
-    .urgency-pulse{display:inline-block;width:7px;height:7px;background:#ef4444;border-radius:50%;animation:pulse-red 1.2s ease-in-out infinite;}
-    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6);}50%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}
+    /* ══ PROMO SECTION ══ */
+    #promo-section{display:none;position:relative;overflow:hidden;}
+    .promo-bg{background:linear-gradient(160deg,#0d0800 0%,#1c1000 40%,#120b00 100%);}
+    .promo-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,.18) 0%,transparent 70%);top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;}
+    .promo-glow-2{position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(201,168,76,.1) 0%,transparent 70%);bottom:-60px;right:10%;pointer-events:none;}
+
+    /* PROMO HEADER */
+    .promo-live-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:5px 14px;}
+    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5);}50%{box-shadow:0 0 0 7px rgba(239,68,68,0);}}
+    .live-dot{width:6px;height:6px;background:#ef4444;border-radius:50%;animation:pulse-red 1.3s infinite;}
 
     /* COUNTDOWN */
-    .timer-box{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);padding:12px 16px;text-align:center;min-width:64px;}
-    .timer-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#fff;line-height:1;font-variant-numeric:tabular-nums;display:block;}
-    .timer-label{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px;display:block;}
-    .timer-sep{color:var(--gold);font-size:1.8rem;font-weight:300;padding:0 4px;align-self:center;margin-bottom:20px;}
+    .cd-wrap{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);padding:12px 20px;}
+    .cd-box{text-align:center;min-width:52px;}
+    .cd-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#fff;line-height:1;display:block;font-variant-numeric:tabular-nums;}
+    .cd-lbl{font-size:.45rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:3px;display:block;}
+    .cd-sep{color:rgba(201,168,76,.6);font-size:1.4rem;font-weight:300;padding:0 2px;margin-bottom:18px;}
 
-    /* PROMO PRODUCTS */
-    .promo-item{position:relative;overflow:hidden;cursor:pointer;aspect-ratio:1;}
-    .promo-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(15,15,15,.8) 0%,rgba(15,15,15,.2) 50%,transparent 100%);}
-    .promo-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
-    .promo-item:hover img{transform:scale(1.08);}
-    .promo-item-info{position:absolute;bottom:0;left:0;right:0;z-index:1;padding:16px;}
-    .promo-item:hover .promo-cta{opacity:1;transform:translateY(0);}
-    .promo-cta{opacity:0;transform:translateY(8px);transition:all .3s;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.5);padding:4px 10px;display:inline-block;margin-top:6px;}
+    /* PROMO CARDS */
+    .promo-cards-wrap{display:grid;gap:12px;}
+    .promo-card{position:relative;overflow:hidden;cursor:pointer;border:1px solid rgba(201,168,76,.1);transition:all .35s cubic-bezier(.25,.8,.25,1);}
+    .promo-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4);}
+    .promo-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+    .promo-card:hover img{transform:scale(1.08);}
+    .promo-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.2) 55%,transparent 100%);}
+    .promo-card-info{position:absolute;bottom:0;left:0;right:0;padding:16px 14px;z-index:1;}
+    .promo-card-badge{position:absolute;top:10px;left:10px;z-index:1;background:var(--gold-dark);color:#fff;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;padding:3px 8px;}
+    .promo-card-cta{display:inline-block;margin-top:8px;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:4px 10px;opacity:0;transform:translateY(6px);transition:all .3s;}
+    .promo-card:hover .promo-card-cta{opacity:1;transform:translateY(0);}
+    .promo-price-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.25);padding:3px 10px;margin-top:5px;}
 
-    /* SOCIAL PROOF */
-    .proof-bar{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.12);padding:16px 24px;}
-    .stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1;}
+    /* SCARCITY BAR */
+    .scarcity-row{display:flex;align-items:center;gap:8px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);padding:8px 14px;}
+    .scarcity-dot{width:5px;height:5px;background:#ef4444;border-radius:50%;animation:pulse-red 1.3s infinite;flex-shrink:0;}
 
     /* PRODUCTS */
     .product-card{background:#fff;transition:all .4s cubic-bezier(.25,.8,.25,1);cursor:pointer;position:relative;overflow:hidden;}
-    .product-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(139,105,20,.14);}
-    .product-card .card-img{transition:transform .6s cubic-bezier(.25,.8,.25,1);}
-    .product-card:hover .card-img{transform:scale(1.06);}
-    .card-action{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:#fff;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;padding:12px;text-align:center;transform:translateY(100%);transition:transform .3s ease;}
+    .product-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(139,105,20,.13);}
+    .product-card .card-img{transition:transform .6s ease;}
+    .product-card:hover .card-img{transform:scale(1.05);}
+    .card-action{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:#fff;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:11px;text-align:center;transform:translateY(100%);transition:transform .3s;}
     .product-card:hover .card-action{transform:translateY(0);}
-    .badge-sold{background:var(--ink);color:#fff;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;}
+    .badge-sold{background:var(--ink);color:#fff;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;}
 
     /* FILTERS */
-    .filter-pill{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(201,168,76,.3);color:rgba(15,15,15,.5);padding:7px 16px;transition:all .2s;white-space:nowrap;cursor:pointer;}
+    .filter-pill{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(201,168,76,.28);color:rgba(15,15,15,.5);padding:6px 14px;transition:all .2s;white-space:nowrap;cursor:pointer;}
     .filter-pill:hover,.filter-pill.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-    .filter-tab{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;border-bottom:2px solid transparent;padding-bottom:8px;color:rgba(15,15,15,.35);transition:all .2s;cursor:pointer;}
+    .filter-tab{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;border-bottom:2px solid transparent;padding-bottom:7px;color:rgba(15,15,15,.32);transition:all .2s;cursor:pointer;}
     .filter-tab.active{border-color:var(--gold);color:var(--gold-dark);}
-    .search-input{border:1px solid rgba(201,168,76,.2);background:#fff;transition:all .2s;}
-    .search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.08);}
+    .search-inp{border:1px solid rgba(201,168,76,.18);background:#fff;transition:all .2s;}
+    .search-inp:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.07);}
 
     /* MODAL */
-    .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .3s;pointer-events:none;}
-    .modal-overlay.open{opacity:1;pointer-events:all;}
-    .modal-panel{background:var(--cream);width:100%;max-width:860px;max-height:92vh;overflow-y:auto;position:relative;transform:translateY(24px) scale(.98);transition:all .35s cubic-bezier(.25,.8,.25,1);}
-    .modal-overlay.open .modal-panel{transform:translateY(0) scale(1);}
-    .modal-thumb{width:60px;height:60px;object-fit:cover;opacity:.5;border:2px solid transparent;cursor:pointer;transition:all .2s;}
+    .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .3s;pointer-events:none;}
+    .modal-ov.open{opacity:1;pointer-events:all;}
+    .modal-pn{background:var(--cream);width:100%;max-width:860px;max-height:92vh;overflow-y:auto;position:relative;transform:translateY(20px) scale(.98);transition:all .35s cubic-bezier(.25,.8,.25,1);}
+    .modal-ov.open .modal-pn{transform:translateY(0) scale(1);}
+    .modal-thumb{width:58px;height:58px;object-fit:cover;opacity:.5;border:2px solid transparent;cursor:pointer;transition:all .2s;}
     .modal-thumb.active,.modal-thumb:hover{opacity:1;border-color:var(--gold);}
 
     /* BRAND */
-    .brand-card{transition:all .3s;filter:grayscale(1);opacity:.4;}
+    .brand-card{transition:all .3s;filter:grayscale(1);opacity:.38;}
     .brand-card:hover{filter:grayscale(0);opacity:1;transform:translateY(-3px);}
 
     /* STEPS */
     .step-num{width:40px;height:40px;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold-dark);flex-shrink:0;}
 
     /* PAYMENT */
-    .payment-card{border:1px solid rgba(201,168,76,.2);transition:all .2s;}
-    .payment-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,105,20,.1);}
+    .pay-card{border:1px solid rgba(201,168,76,.18);transition:all .2s;}
+    .pay-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,105,20,.1);}
 
     /* BUTTONS */
-    .btn-primary{background:var(--ink);color:#fff;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:14px 32px;transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
-    .btn-primary:hover{background:var(--gold-dark);transform:translateY(-1px);}
-    .btn-outline{border:1px solid rgba(15,15,15,.3);color:var(--ink);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:14px 32px;transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
-    .btn-outline:hover{border-color:var(--gold-dark);color:var(--gold-dark);transform:translateY(-1px);}
+    .btn-ink{background:var(--ink);color:#fff;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:14px 32px;transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
+    .btn-ink:hover{background:var(--gold-dark);}
     .btn-wa{background:linear-gradient(135deg,#25d366,#1aad4b);transition:all .25s;}
-    .btn-wa:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,211,102,.3);}
+    .btn-wa:hover{filter:brightness(1.1);box-shadow:0 8px 24px rgba(37,211,102,.3);}
     .gold-line{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent);}
 
     /* SKELETON */
-    .skeleton{background:linear-gradient(90deg,#ede8e0 25%,#e4ddd3 50%,#ede8e0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
-    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .skel{background:linear-gradient(90deg,#ede8e0 25%,#e4ddd3 50%,#ede8e0 75%);background-size:200% 100%;animation:sh 1.5s infinite;}
+    @keyframes sh{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
     /* REVEAL */
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
     .reveal.visible{opacity:1;transform:translateY(0);}
 
-    /* URGENCY SCARCITY */
-    .scarcity-tag{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#dc2626;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;}
-
-    @media(prefers-reduced-motion:reduce){*,.orb,.marquee-inner{animation:none!important;transition:none!important;}}
+    @media(prefers-reduced-motion:reduce){*,.orb,.mq-inner{animation:none!important;transition:none!important;}}
   </style>
 </head>
 <body>
@@ -151,21 +142,23 @@
       <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 rounded-full object-contain border border-gold/20" onerror="this.style.display='none'"/>
       <div class="leading-none">
         <p style="font-family:'Playfair Display',serif;font-size:15px;color:#5a4409;letter-spacing:.05em;">RR Joyería</p>
-        <p style="font-size:8px;letter-spacing:.3em;color:rgba(201,168,76,.7);text-transform:uppercase;">Fina &amp; Vintage</p>
+        <p style="font-size:7.5px;letter-spacing:.32em;color:rgba(201,168,76,.65);text-transform:uppercase;">Fina &amp; Vintage</p>
       </div>
     </a>
-    <div class="hidden lg:flex items-center gap-8">
+    <div class="hidden lg:flex items-center gap-7">
       <a href="#coleccion" class="nav-link">Colección</a>
-      <a href="#promociones" class="nav-link" id="nav-promo" style="display:none;">Promociones</a>
+      <a href="#promo-section" class="nav-promo-pill" id="nav-promo">
+        <span class="nav-promo-pulse"></span>Promociones
+      </a>
       <a href="#marcas" class="nav-link">Marcas</a>
       <a href="#como-comprar" class="nav-link">Cómo Comprar</a>
     </div>
     <div class="flex items-center gap-3">
-      <a href="https://wa.me/50683049209" target="_blank" class="hidden sm:flex items-center gap-2 text-white px-4 py-2 btn-wa" style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;">
+      <a href="https://wa.me/50683049209" target="_blank" class="hidden sm:flex items-center gap-2 text-white px-4 py-2 btn-wa" style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;">
         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         WhatsApp
       </a>
-      <a href="dashboard.html" style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid #5a4409;color:#5a4409;padding:8px 16px;transition:all .2s;" onmouseover="this.style.background='#5a4409';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#5a4409'">Ingresar</a>
+      <a href="dashboard.html" style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid #5a4409;color:#5a4409;padding:8px 16px;transition:all .2s;" onmouseover="this.style.background='#5a4409';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#5a4409'">Ingresar</a>
     </div>
   </div>
 </nav>
@@ -179,46 +172,45 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
       <div>
         <div class="flex items-center gap-3 mb-8">
-          <div style="height:1px;width:40px;background:var(--gold);"></div>
-          <span style="font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);">Colección Exclusiva · Costa Rica</span>
+          <div style="height:1px;width:36px;background:var(--gold);"></div>
+          <span style="font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);">Colección Exclusiva · Costa Rica</span>
         </div>
         <h1 class="hero-title mb-5">
           Joyería<br/><em>que cuenta</em><br/><span style="color:var(--ink);">tu historia</span>
         </h1>
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(15,15,15,.45);margin-bottom:16px;">Piezas únicas seleccionadas con elegancia.</p>
-        <p style="font-size:.8rem;color:rgba(15,15,15,.45);line-height:1.7;max-width:400px;margin-bottom:36px;">Desde collares vintage hasta joyas de marcas exclusivas, cada pieza que encontrás aquí tiene alma propia.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.45rem);color:rgba(15,15,15,.42);margin-bottom:14px;">Piezas únicas seleccionadas con elegancia.</p>
+        <p style="font-size:.78rem;color:rgba(15,15,15,.42);line-height:1.75;max-width:380px;margin-bottom:36px;">Desde collares vintage hasta joyas de marcas exclusivas, cada pieza que encontrás aquí tiene alma propia.</p>
         <div class="flex items-center gap-8 mb-10 flex-wrap">
           <div>
-            <p style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold-dark);line-height:1;" id="hero-count">—</p>
-            <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-top:2px;">Piezas únicas</p>
+            <p style="font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold-dark);line-height:1;" id="hero-count">—</p>
+            <p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-top:2px;">Piezas únicas</p>
           </div>
-          <div style="width:1px;height:40px;background:rgba(201,168,76,.3);"></div>
+          <div style="width:1px;height:36px;background:rgba(201,168,76,.28);"></div>
           <div>
-            <p style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold-dark);line-height:1;">9+</p>
-            <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-top:2px;">Marcas exclusivas</p>
+            <p style="font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold-dark);line-height:1;">9+</p>
+            <p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-top:2px;">Marcas exclusivas</p>
           </div>
-          <div style="width:1px;height:40px;background:rgba(201,168,76,.3);"></div>
+          <div style="width:1px;height:36px;background:rgba(201,168,76,.28);"></div>
           <div>
-            <p style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold-dark);line-height:1;">★</p>
-            <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-top:2px;">Calidad garantizada</p>
+            <p style="font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold-dark);line-height:1;">★</p>
+            <p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-top:2px;">Calidad garantizada</p>
           </div>
         </div>
         <div class="flex flex-wrap gap-3">
-          <a href="#coleccion" class="btn-primary">Ver Colección <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
-          <a href="#promociones" class="btn-outline" id="hero-promo-btn" style="display:none;">Ver Ofertas <span style="color:var(--gold);">🏷</span></a>
+          <a href="#coleccion" class="btn-ink">Ver Colección <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
+          <a href="#promo-section" id="hero-promo-btn" style="display:none;border:1px solid rgba(201,168,76,.4);color:var(--gold-dark);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:14px 28px;display:none;align-items:center;gap:8px;transition:all .25s;" onmouseover="this.style.borderColor='var(--gold-dark)'" onmouseout="this.style.borderColor='rgba(201,168,76,.4)'">Ver Oferta <span class="nav-promo-pulse" style="margin-left:2px;"></span></a>
         </div>
       </div>
-      <!-- HERO VISUAL — solo joyas, no muestra archivos del sistema -->
+      <!-- HERO VISUAL: solo muestra productos reales de la tienda -->
       <div class="hidden lg:flex justify-center">
-        <div style="position:relative;width:100%;max-width:380px;">
-          <div style="position:absolute;inset:-16px;border:1px solid rgba(201,168,76,.15);pointer-events:none;"></div>
-          <div id="hero-featured" style="aspect-ratio:3/4;background:linear-gradient(135deg,#ede3cc,#faf7f2);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:16px;">
-            <img src="assets/logo.jpg" alt="RR Joyería" style="width:100px;opacity:.12;" onerror="this.style.display='none'"/>
-            <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(139,105,20,.4);letter-spacing:.05em;">Cargando pieza...</p>
+        <div style="position:relative;width:100%;max-width:360px;">
+          <div style="position:absolute;inset:-16px;border:1px solid rgba(201,168,76,.14);pointer-events:none;"></div>
+          <div id="hero-featured" style="aspect-ratio:3/4;background:linear-gradient(135deg,#ede3cc,#faf7f2);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="assets/logo.jpg" alt="RR" style="width:90px;opacity:.12;" onerror="this.style.display='none'"/>
           </div>
-          <div style="position:absolute;bottom:-16px;right:-16px;background:var(--ink);color:#fff;padding:14px 20px;min-width:130px;">
-            <p style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold);" id="hero-badge-count">—</p>
-            <p style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:2px;">disponibles hoy</p>
+          <div style="position:absolute;bottom:-14px;right:-14px;background:var(--ink);padding:14px 18px;min-width:120px;">
+            <p style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--gold);" id="hero-badge-count">—</p>
+            <p style="font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:2px;">disponibles hoy</p>
           </div>
         </div>
       </div>
@@ -227,109 +219,84 @@
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-wrap py-3">
-  <div class="marquee-inner">
-    <span class="marquee-item">Joyería Fina</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Vintage</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Collares</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Anillos</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Pulseras</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Aretes</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Broches</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Marcas Exclusivas</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Envío a todo CR</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Joyería Fina</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Vintage</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Collares</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Anillos</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Pulseras</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Aretes</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Broches</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Marcas Exclusivas</span><span class="marquee-dot">✦</span>
-    <span class="marquee-item">Envío a todo CR</span><span class="marquee-dot">✦</span>
+<div class="mq-wrap py-2.5">
+  <div class="mq-inner">
+    <span class="mq-item">Joyería Fina</span><span class="mq-dot">✦</span><span class="mq-item">Vintage</span><span class="mq-dot">✦</span><span class="mq-item">Collares</span><span class="mq-dot">✦</span><span class="mq-item">Anillos</span><span class="mq-dot">✦</span><span class="mq-item">Pulseras</span><span class="mq-dot">✦</span><span class="mq-item">Aretes</span><span class="mq-dot">✦</span><span class="mq-item">Broches</span><span class="mq-dot">✦</span><span class="mq-item">Marcas Exclusivas</span><span class="mq-dot">✦</span><span class="mq-item">Envío a todo CR</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Joyería Fina</span><span class="mq-dot">✦</span><span class="mq-item">Vintage</span><span class="mq-dot">✦</span><span class="mq-item">Collares</span><span class="mq-dot">✦</span><span class="mq-item">Anillos</span><span class="mq-dot">✦</span><span class="mq-item">Pulseras</span><span class="mq-dot">✦</span><span class="mq-item">Aretes</span><span class="mq-dot">✦</span><span class="mq-item">Broches</span><span class="mq-dot">✦</span><span class="mq-item">Marcas Exclusivas</span><span class="mq-dot">✦</span><span class="mq-item">Envío a todo CR</span><span class="mq-dot">✦</span>
   </div>
 </div>
 
-<!-- PROMOCIONES — oculto por defecto, JS lo muestra si hay oferta activa -->
-<section id="promociones" style="display:none;">
-  <div class="promo-section py-16 sm:py-20 px-5 sm:px-8">
+<!-- ══════════ SECCIÓN PROMOCIONES ══════════ -->
+<section id="promo-section">
+  <div class="promo-bg py-14 sm:py-16 px-5 sm:px-8">
+    <div class="promo-glow"></div>
+    <div class="promo-glow-2"></div>
     <div class="max-w-7xl mx-auto" style="position:relative;z-index:10;">
 
-      <!-- HEADER -->
-      <div class="text-center mb-12">
-        <div class="promo-badge mb-5 mx-auto" style="width:fit-content;">
-          <span class="urgency-pulse"></span>
-          <span id="promo-badge-text">Oferta limitada</span>
+      <!-- TOP ROW: badge + countdown -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
+        <div>
+          <div class="promo-live-badge mb-4">
+            <span class="live-dot"></span>
+            <span id="promo-badge-text">Oferta activa</span>
+          </div>
+          <h2 id="promo-title-el" style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:700;color:#fff;line-height:1.08;">
+            Piezas <em style="color:var(--gold);font-style:italic;">en oferta</em>
+          </h2>
+          <p id="promo-desc-el" style="font-size:.78rem;color:rgba(255,255,255,.42);margin-top:8px;max-width:380px;line-height:1.65;"></p>
         </div>
-        <h2 id="promo-section-title" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:#fff;line-height:1.05;margin-bottom:12px;">
-          Piezas seleccionadas<br/><em style="color:var(--gold);font-style:italic;">con precio especial</em>
-        </h2>
-        <p id="promo-section-desc" style="font-size:.85rem;color:rgba(255,255,255,.5);max-width:500px;margin:0 auto 32px;line-height:1.7;">Aprovechá estas joyas únicas a precios que solo existen esta semana. Cuando se va, se va.</p>
 
-        <!-- COUNTDOWN — el más importante, centrado y grande -->
-        <div class="flex items-end justify-center gap-2 sm:gap-3 mb-10">
-          <div class="timer-box">
-            <span class="timer-num" id="timer-d">00</span>
-            <span class="timer-label">días</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-h">00</span>
-            <span class="timer-label">horas</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-m">00</span>
-            <span class="timer-label">min</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-s">00</span>
-            <span class="timer-label">seg</span>
+        <!-- COUNTDOWN COMPACTO -->
+        <div style="flex-shrink:0;">
+          <p style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,.55);margin-bottom:8px;text-align:center;">La oferta termina en</p>
+          <div class="cd-wrap">
+            <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-lbl">días</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-box"><span class="cd-num" id="cd-h">00</span><span class="cd-lbl">horas</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-box"><span class="cd-num" id="cd-m">00</span><span class="cd-lbl">min</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-box"><span class="cd-num" id="cd-s">00</span><span class="cd-lbl">seg</span></div>
           </div>
         </div>
       </div>
 
-      <!-- PRODUCTOS EN OFERTA -->
-      <div id="promo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-        <!-- Se llena con JS -->
-        <div class="skeleton" style="aspect-ratio:1;"></div>
-        <div class="skeleton" style="aspect-ratio:1;"></div>
-        <div class="skeleton" style="aspect-ratio:1;"></div>
-        <div class="skeleton" style="aspect-ratio:1;"></div>
+      <!-- PRODUCT CARDS -->
+      <div id="promo-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
+        <!-- Skeletons mientras carga -->
+        <div class="skel" style="aspect-ratio:3/4;opacity:.15;"></div>
+        <div class="skel" style="aspect-ratio:3/4;opacity:.15;"></div>
+        <div class="skel" style="aspect-ratio:3/4;opacity:.15;"></div>
+        <div class="skel" style="aspect-ratio:3/4;opacity:.15;"></div>
       </div>
 
-      <!-- CTA -->
-      <div class="text-center">
-        <a href="https://wa.me/50683049209?text=Hola!%20Vi%20las%20promociones%20y%20quisiera%20más%20información." target="_blank" class="btn-wa inline-flex items-center gap-3 text-white px-8 py-4" style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          Quiero aprovechar esta oferta
+      <!-- BOTTOM ROW: scarcity + CTA -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="scarcity-row flex-1">
+          <span class="scarcity-dot"></span>
+          <p style="font-size:.68rem;color:rgba(255,200,200,.75);line-height:1.5;">Cada pieza es <strong style="color:#fca5a5;">única e irrepetible</strong> — cuando se vende, no vuelve a estar disponible.</p>
+        </div>
+        <a href="https://wa.me/50683049209?text=Hola!%20Vi%20las%20promociones%20y%20quisiera%20más%20información." target="_blank" class="btn-wa flex items-center gap-3 text-white px-7 py-3.5 flex-shrink-0" style="font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Aprovechar oferta
         </a>
-        <p style="font-size:.65rem;color:rgba(255,255,255,.3);margin-top:12px;">Contactanos directamente · Respuesta inmediata</p>
       </div>
     </div>
   </div>
-
-  <!-- TRUST BADGES -->
-  <div class="py-8 px-5 sm:px-8" style="background:var(--warm);">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;background:#fff;" class="flex items-center gap-4">
-        <div style="width:40px;height:40px;background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg class="w-5 h-5" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        </div>
-        <div><p style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;margin-bottom:2px;">Envío a todo el país</p><p style="font-size:.7rem;color:rgba(15,15,15,.45);">Solo ₡3.750 adicionales</p></div>
+  <!-- TRUST STRIP -->
+  <div style="background:rgba(201,168,76,.06);border-top:1px solid rgba(201,168,76,.12);border-bottom:1px solid rgba(201,168,76,.12);">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex flex-wrap items-center justify-center gap-6 sm:gap-12">
+      <div class="flex items-center gap-2.5">
+        <svg class="w-4 h-4" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        <p style="font-size:.65rem;color:rgba(15,15,15,.55);">Envío a todo el país · ₡3.750</p>
       </div>
-      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;background:#fff;" class="flex items-center gap-4">
-        <div style="width:40px;height:40px;background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg class="w-5 h-5" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        </div>
-        <div><p style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;margin-bottom:2px;">Garantía de autenticidad</p><p style="font-size:.7rem;color:rgba(15,15,15,.45);">Cada pieza verificada</p></div>
+      <div class="flex items-center gap-2.5">
+        <svg class="w-4 h-4" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <p style="font-size:.65rem;color:rgba(15,15,15,.55);">Autenticidad garantizada</p>
       </div>
-      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;background:#fff;" class="flex items-center gap-4">
-        <div style="width:40px;height:40px;background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg class="w-5 h-5" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-        </div>
-        <div><p style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;margin-bottom:2px;">Piezas irrepetibles</p><p style="font-size:.7rem;color:rgba(15,15,15,.45);">Solo una de cada una</p></div>
+      <div class="flex items-center gap-2.5">
+        <svg class="w-4 h-4" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <p style="font-size:.65rem;color:rgba(15,15,15,.55);">Respuesta inmediata por WhatsApp</p>
       </div>
     </div>
   </div>
@@ -340,25 +307,25 @@
   <div class="max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 reveal">
       <div>
-        <p style="font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Explorar</p>
+        <p style="font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Explorar</p>
         <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--ink);line-height:1.1;">Nuestra Colección</h2>
       </div>
-      <p style="font-size:.75rem;color:rgba(15,15,15,.4);max-width:260px;line-height:1.6;">Cada pieza es seleccionada personalmente. Calidad que se nota.</p>
+      <p style="font-size:.73rem;color:rgba(15,15,15,.38);max-width:250px;line-height:1.65;">Cada pieza es seleccionada personalmente. Calidad que se nota.</p>
     </div>
-    <div style="background:#fff;padding:20px 24px;margin-bottom:32px;" class="reveal">
+    <div style="background:#fff;padding:20px 24px;margin-bottom:28px;" class="reveal">
       <div class="flex flex-col sm:flex-row gap-3 mb-5">
         <div style="position:relative;flex:1;">
-          <input id="search-pub" type="text" onkeyup="applyFilters()" placeholder="Buscar joya, marca, descripción..." class="search-input w-full py-3 px-4 pl-10" style="font-size:.8rem;"/>
-          <svg class="w-4 h-4" style="position:absolute;left:12px;top:14px;color:rgba(201,168,76,.5);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="search-pub" type="text" onkeyup="applyFilters()" placeholder="Buscar joya, marca, descripción..." class="search-inp w-full py-3 px-4 pl-10" style="font-size:.78rem;"/>
+          <svg class="w-4 h-4" style="position:absolute;left:12px;top:14px;color:rgba(201,168,76,.45);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
-        <select id="sort-pub" onchange="applyFilters()" class="search-input px-4 py-3" style="font-size:.75rem;color:rgba(15,15,15,.5);min-width:180px;">
+        <select id="sort-pub" onchange="applyFilters()" class="search-inp px-4 py-3" style="font-size:.73rem;color:rgba(15,15,15,.5);min-width:175px;">
           <option value="">Ordenar por...</option>
           <option value="price-asc">Precio: menor a mayor</option>
           <option value="price-desc">Precio: mayor a menor</option>
           <option value="new">Más recientes</option>
         </select>
       </div>
-      <div class="flex gap-6 mb-4" style="border-bottom:1px solid rgba(201,168,76,.15);">
+      <div class="flex gap-5 mb-4" style="border-bottom:1px solid rgba(201,168,76,.12);">
         <button onclick="switchFilterMode('category')" id="tab-cat" class="filter-tab active">Categoría</button>
         <button onclick="switchFilterMode('brand')" id="tab-brand" class="filter-tab">Marca</button>
       </div>
@@ -367,14 +334,14 @@
       </div>
     </div>
     <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-      <div style="background:#fff;"><div class="aspect-square skeleton"></div><div style="padding:16px;" class="space-y-2"><div class="skeleton" style="height:8px;width:60px;"></div><div class="skeleton" style="height:16px;width:100%;"></div><div class="skeleton" style="height:12px;width:75%;"></div><div class="skeleton" style="height:20px;width:80px;margin-top:8px;"></div></div></div>
-      <div style="background:#fff;"><div class="aspect-square skeleton"></div><div style="padding:16px;" class="space-y-2"><div class="skeleton" style="height:8px;width:60px;"></div><div class="skeleton" style="height:16px;width:100%;"></div><div class="skeleton" style="height:12px;width:75%;"></div><div class="skeleton" style="height:20px;width:80px;margin-top:8px;"></div></div></div>
-      <div style="background:#fff;"><div class="aspect-square skeleton"></div><div style="padding:16px;" class="space-y-2"><div class="skeleton" style="height:8px;width:60px;"></div><div class="skeleton" style="height:16px;width:100%;"></div><div class="skeleton" style="height:12px;width:75%;"></div><div class="skeleton" style="height:20px;width:80px;margin-top:8px;"></div></div></div>
-      <div style="background:#fff;"><div class="aspect-square skeleton"></div><div style="padding:16px;" class="space-y-2"><div class="skeleton" style="height:8px;width:60px;"></div><div class="skeleton" style="height:16px;width:100%;"></div><div class="skeleton" style="height:12px;width:75%;"></div><div class="skeleton" style="height:20px;width:80px;margin-top:8px;"></div></div></div>
+      <div style="background:#fff;"><div class="aspect-square skel"></div><div style="padding:16px;" class="space-y-2"><div class="skel" style="height:8px;width:60px;"></div><div class="skel" style="height:15px;width:100%;"></div><div class="skel" style="height:12px;width:70%;"></div><div class="skel" style="height:18px;width:75px;margin-top:8px;"></div></div></div>
+      <div style="background:#fff;"><div class="aspect-square skel"></div><div style="padding:16px;" class="space-y-2"><div class="skel" style="height:8px;width:60px;"></div><div class="skel" style="height:15px;width:100%;"></div><div class="skel" style="height:12px;width:70%;"></div><div class="skel" style="height:18px;width:75px;margin-top:8px;"></div></div></div>
+      <div style="background:#fff;"><div class="aspect-square skel"></div><div style="padding:16px;" class="space-y-2"><div class="skel" style="height:8px;width:60px;"></div><div class="skel" style="height:15px;width:100%;"></div><div class="skel" style="height:12px;width:70%;"></div><div class="skel" style="height:18px;width:75px;margin-top:8px;"></div></div></div>
+      <div style="background:#fff;"><div class="aspect-square skel"></div><div style="padding:16px;" class="space-y-2"><div class="skel" style="height:8px;width:60px;"></div><div class="skel" style="height:15px;width:100%;"></div><div class="skel" style="height:12px;width:70%;"></div><div class="skel" style="height:18px;width:75px;margin-top:8px;"></div></div></div>
     </div>
     <div id="empty-state" class="hidden text-center py-24" style="background:#fff;">
-      <p style="font-family:'Playfair Display',serif;font-size:2.5rem;font-style:italic;color:rgba(201,168,76,.2);margin-bottom:8px;">Sin resultados</p>
-      <p style="font-size:.75rem;color:rgba(15,15,15,.3);">No hay productos que coincidan con tu búsqueda.</p>
+      <p style="font-family:'Playfair Display',serif;font-size:2.5rem;font-style:italic;color:rgba(201,168,76,.18);margin-bottom:8px;">Sin resultados</p>
+      <p style="font-size:.73rem;color:rgba(15,15,15,.28);">No hay productos que coincidan con tu búsqueda.</p>
     </div>
   </div>
 </section>
@@ -383,46 +350,19 @@
 <section id="marcas" class="py-20 px-5 sm:px-8" style="background:var(--ink);">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-14 reveal">
-      <p style="font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,168,76,.5);margin-bottom:10px;">Trabajamos con</p>
+      <p style="font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(201,168,76,.48);margin-bottom:10px;">Trabajamos con</p>
       <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;line-height:1.1;">Marcas de Prestigio</h2>
     </div>
     <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4 items-center reveal">
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/Avon.png" alt="Avon" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Avon</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/Daus.avif" alt="Daus" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Daus</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/Emmons.jpg" alt="Emmons" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Emmons</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/HeidiDaus.jpg" alt="Heidi Daus" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Heidi Daus</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/joanR.jpg" alt="Joan R." style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Joan R.</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/joanRivers.webp" alt="Joan Rivers" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Joan Rivers</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/monet.png" alt="Monet" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Monet</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/pilgrim.webp" alt="Pilgrim" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Pilgrim</p>
-      </div>
-      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);">
-        <img src="assets/trifari.jpg" alt="Trifari" style="height:48px;object-fit:contain;" onerror="this.style.display='none'"/>
-        <p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);">Trifari</p>
-      </div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/Avon.png" alt="Avon" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Avon</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/Daus.avif" alt="Daus" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Daus</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/Emmons.jpg" alt="Emmons" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Emmons</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/HeidiDaus.jpg" alt="Heidi Daus" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Heidi Daus</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/joanR.jpg" alt="Joan R." style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Joan R.</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/joanRivers.webp" alt="Joan Rivers" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Joan Rivers</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/monet.png" alt="Monet" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Monet</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/pilgrim.webp" alt="Pilgrim" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Pilgrim</p></div>
+      <div class="brand-card flex flex-col items-center gap-3 p-5" style="border:1px solid rgba(255,255,255,.05);"><img src="assets/trifari.jpg" alt="Trifari" style="height:46px;object-fit:contain;" onerror="this.style.display='none'"/><p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);">Trifari</p></div>
     </div>
   </div>
 </section>
@@ -431,84 +371,34 @@
 <section id="como-comprar" class="py-20 px-5 sm:px-8" style="background:var(--cream);">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-16 reveal">
-      <p style="font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Guía rápida</p>
+      <p style="font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Guía rápida</p>
       <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--ink);line-height:1.1;margin-bottom:10px;">Cómo Podés Comprar</h2>
-      <p style="font-size:.8rem;color:rgba(15,15,15,.4);">Simple, rápido y seguro desde cualquier parte de Costa Rica.</p>
+      <p style="font-size:.78rem;color:rgba(15,15,15,.38);">Simple, rápido y seguro desde cualquier parte de Costa Rica.</p>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
       <div class="reveal">
         <div class="space-y-6">
-          <div class="flex gap-5 items-start">
-            <div class="step-num">1</div>
-            <div style="padding-top:8px;">
-              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Elegí tu pieza</p>
-              <p style="font-size:.78rem;color:rgba(15,15,15,.5);line-height:1.6;">Explorá la colección y tomá una captura de lo que te enamora.</p>
-            </div>
-          </div>
+          <div class="flex gap-5 items-start"><div class="step-num">1</div><div style="padding-top:8px;"><p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Elegí tu pieza</p><p style="font-size:.76rem;color:rgba(15,15,15,.48);line-height:1.65;">Explorá la colección y tomá una captura de lo que te enamora.</p></div></div>
           <div class="gold-line" style="margin-left:60px;"></div>
-          <div class="flex gap-5 items-start">
-            <div class="step-num">2</div>
-            <div style="padding-top:8px;">
-              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Consultá disponibilidad</p>
-              <p style="font-size:.78rem;color:rgba(15,15,15,.5);line-height:1.6;">Escribinos por <strong>WhatsApp, Facebook o Instagram</strong> con tu captura.</p>
-            </div>
-          </div>
+          <div class="flex gap-5 items-start"><div class="step-num">2</div><div style="padding-top:8px;"><p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Consultá disponibilidad</p><p style="font-size:.76rem;color:rgba(15,15,15,.48);line-height:1.65;">Escribinos por <strong>WhatsApp, Facebook o Instagram</strong> con tu captura.</p></div></div>
           <div class="gold-line" style="margin-left:60px;"></div>
-          <div class="flex gap-5 items-start">
-            <div class="step-num">3</div>
-            <div style="padding-top:8px;">
-              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Coordinamos el pago</p>
-              <p style="font-size:.78rem;color:rgba(15,15,15,.5);line-height:1.6;">Precio de tu joya + <strong>₡3.750 de envío</strong> a todo el país.</p>
-            </div>
-          </div>
+          <div class="flex gap-5 items-start"><div class="step-num">3</div><div style="padding-top:8px;"><p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Coordinamos el pago</p><p style="font-size:.76rem;color:rgba(15,15,15,.48);line-height:1.65;">Precio de tu joya + <strong>₡3.750 de envío</strong> a todo el país.</p></div></div>
           <div class="gold-line" style="margin-left:60px;"></div>
-          <div class="flex gap-5 items-start">
-            <div class="step-num">4</div>
-            <div style="padding-top:8px;">
-              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Recibís tu pedido</p>
-              <p style="font-size:.78rem;color:rgba(15,15,15,.5);line-height:1.6;">Tu joya llega a la puerta de tu casa, empacada con cuidado.</p>
-            </div>
-          </div>
+          <div class="flex gap-5 items-start"><div class="step-num">4</div><div style="padding-top:8px;"><p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:4px;">Recibís tu pedido</p><p style="font-size:.76rem;color:rgba(15,15,15,.48);line-height:1.65;">Tu joya llega a la puerta de tu casa, empacada con cuidado.</p></div></div>
         </div>
       </div>
       <div class="reveal">
-        <p style="font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(15,15,15,.35);margin-bottom:20px;">Medios de pago</p>
+        <p style="font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(15,15,15,.32);margin-bottom:20px;">Medios de pago</p>
         <div class="space-y-3 mb-6">
-          <div class="payment-card p-5 flex items-center gap-4">
-            <div style="width:44px;height:44px;background:#dc2626;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:.6rem;font-weight:700;color:#fff;">SINPE</span>
-            </div>
-            <div class="flex-1">
-              <p style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-bottom:2px;">SINPE Móvil</p>
-              <p style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--ink);">8304-9209</p>
-              <p style="font-size:.65rem;color:rgba(15,15,15,.4);">A nombre de: <strong>Jency Alpízar Rodríguez</strong></p>
-            </div>
-          </div>
-          <div class="payment-card p-5 flex items-center gap-4">
-            <div style="width:44px;height:44px;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg>
-            </div>
-            <div class="flex-1">
-              <p style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-bottom:2px;">Banco Nacional</p>
-              <p style="font-size:.85rem;color:var(--ink);font-weight:500;">200-01-004-055933-7</p>
-              <p style="font-size:.65rem;color:rgba(15,15,15,.4);">IBAN: CR660151002010559337</p>
-            </div>
-          </div>
-          <div class="payment-card p-5 flex items-center gap-4">
-            <div style="width:44px;height:44px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg>
-            </div>
-            <div class="flex-1">
-              <p style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.4);margin-bottom:2px;">Banco de Costa Rica</p>
-              <p style="font-size:.78rem;color:var(--ink);font-weight:500;word-break:break-all;">CR38015202010373417​1</p>
-            </div>
-          </div>
+          <div class="pay-card p-5 flex items-center gap-4"><div style="width:44px;height:44px;background:#dc2626;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:.58rem;font-weight:700;color:#fff;">SINPE</span></div><div class="flex-1"><p style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-bottom:2px;">SINPE Móvil</p><p style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--ink);">8304-9209</p><p style="font-size:.62rem;color:rgba(15,15,15,.38);">A nombre de: <strong>Jency Alpízar Rodríguez</strong></p></div></div>
+          <div class="pay-card p-5 flex items-center gap-4"><div style="width:44px;height:44px;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg></div><div class="flex-1"><p style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-bottom:2px;">Banco Nacional</p><p style="font-size:.83rem;color:var(--ink);font-weight:500;">200-01-004-055933-7</p><p style="font-size:.62rem;color:rgba(15,15,15,.38);">IBAN: CR660151002010559337</p></div></div>
+          <div class="pay-card p-5 flex items-center gap-4"><div style="width:44px;height:44px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20v-2H2v2zm10-20L2 8v2h20V8L12 2zm0 2.24L17.76 8H6.24L12 4.24zM4 10h2v8H4v-8zm6 0h2v8h-2v-8zm6 0h2v8h-2v-8z"/></svg></div><div class="flex-1"><p style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.38);margin-bottom:2px;">Banco de Costa Rica</p><p style="font-size:.76rem;color:var(--ink);font-weight:500;word-break:break-all;">CR38015202010373417​1</p></div></div>
         </div>
-        <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);padding:16px;display:flex;align-items:start;gap:12px;margin-bottom:12px;">
+        <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);padding:14px;display:flex;align-items:start;gap:10px;margin-bottom:12px;">
           <svg class="w-4 h-4 flex-shrink-0" style="color:var(--gold);margin-top:2px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <p style="font-size:.72rem;color:rgba(15,15,15,.6);line-height:1.6;">¿Dudas? Envíanos un mensaje privado. <strong style="color:var(--gold-dark);">¡Con gusto te ayudamos!</strong></p>
+          <p style="font-size:.7rem;color:rgba(15,15,15,.58);line-height:1.6;">¿Dudas? Envíanos un mensaje privado. <strong style="color:var(--gold-dark);">¡Con gusto te ayudamos!</strong></p>
         </div>
-        <a href="https://wa.me/50683049209?text=Hola!%20Quisiera%20hacer%20una%20consulta%20sobre%20sus%20joyas." target="_blank" class="btn-wa flex items-center justify-center gap-3 text-white w-full py-4" style="font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;">
+        <a href="https://wa.me/50683049209?text=Hola!%20Quisiera%20hacer%20una%20consulta%20sobre%20sus%20joyas." target="_blank" class="btn-wa flex items-center justify-center gap-3 text-white w-full py-4" style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Escribinos por WhatsApp
         </a>
@@ -518,49 +408,49 @@
 </section>
 
 <!-- FOOTER -->
-<footer style="background:var(--ink);padding:60px 20px 40px;text-align:center;">
-  <img src="assets/logo.jpg" alt="RR" style="height:48px;width:48px;border-radius:50%;object-fit:contain;opacity:.5;margin:0 auto 16px;border:1px solid rgba(201,168,76,.2);" onerror="this.style.display='none'"/>
-  <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;color:rgba(201,168,76,.7);margin-bottom:4px;">RR Joyería Fina y Vintage</p>
-  <p style="font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:24px;">© 2025 · Todos los derechos reservados</p>
-  <div class="gold-line" style="max-width:200px;margin:0 auto 20px;"></div>
-  <div class="flex justify-center gap-6 flex-wrap">
-    <a href="https://wa.me/50683049209" target="_blank" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.25)'">WhatsApp</a>
+<footer style="background:var(--ink);padding:56px 20px 36px;text-align:center;">
+  <img src="assets/logo.jpg" alt="RR" style="height:44px;width:44px;border-radius:50%;object-fit:contain;opacity:.45;margin:0 auto 14px;border:1px solid rgba(201,168,76,.18);" onerror="this.style.display='none'"/>
+  <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:rgba(201,168,76,.65);margin-bottom:4px;">RR Joyería Fina y Vintage</p>
+  <p style="font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:22px;">© 2025 · Todos los derechos reservados</p>
+  <div class="gold-line" style="max-width:180px;margin:0 auto 18px;"></div>
+  <div class="flex justify-center gap-5 flex-wrap">
+    <a href="https://wa.me/50683049209" target="_blank" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.22)'">WhatsApp</a>
     <span style="color:rgba(255,255,255,.1);">·</span>
-    <a href="#coleccion" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.25)'">Colección</a>
+    <a href="#coleccion" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.22)'">Colección</a>
     <span style="color:rgba(255,255,255,.1);">·</span>
-    <a href="#marcas" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.25)'">Marcas</a>
+    <a href="#marcas" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.22)'">Marcas</a>
     <span style="color:rgba(255,255,255,.1);">·</span>
-    <a href="#como-comprar" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.25)'">Cómo Comprar</a>
+    <a href="#como-comprar" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.22)'">Cómo Comprar</a>
   </div>
 </footer>
 
 <!-- MODAL -->
-<div id="modal" class="modal-overlay" role="dialog" aria-modal="true">
-  <div class="modal-panel">
-    <button onclick="closeModal()" style="position:absolute;top:12px;right:12px;z-index:10;width:36px;height:36px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:background .2s;border:none;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">✕</button>
+<div id="modal" class="modal-ov" role="dialog" aria-modal="true">
+  <div class="modal-pn">
+    <button onclick="closeModal()" style="position:absolute;top:12px;right:12px;z-index:10;width:36px;height:36px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border:none;transition:background .2s;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">✕</button>
     <div class="flex flex-col md:flex-row">
       <div style="flex:0 0 45%;background:var(--warm);padding:24px;display:flex;flex-direction:column;gap:12px;">
-        <div style="aspect-ratio:1;overflow:hidden;background:#fff;border:1px solid rgba(201,168,76,.15);">
+        <div style="aspect-ratio:1;overflow:hidden;background:#fff;border:1px solid rgba(201,168,76,.12);">
           <img id="modal-main-img" style="width:100%;height:100%;object-fit:contain;" alt=""/>
         </div>
         <div id="modal-thumbs" class="flex gap-2 flex-wrap"></div>
       </div>
-      <div style="flex:1;padding:32px;display:flex;flex-direction:column;justify-content:space-between;">
+      <div style="flex:1;padding:30px;display:flex;flex-direction:column;justify-content:space-between;">
         <div>
           <div class="flex items-center gap-3 flex-wrap mb-3">
-            <span id="modal-category" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);"></span>
-            <span style="color:rgba(201,168,76,.3);">·</span>
-            <span id="modal-brand" style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.35);"></span>
+            <span id="modal-category" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);"></span>
+            <span style="color:rgba(201,168,76,.28);">·</span>
+            <span id="modal-brand" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(15,15,15,.32);"></span>
           </div>
-          <h3 id="modal-name" style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:12px;"></h3>
+          <h3 id="modal-name" style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:12px;"></h3>
           <div id="modal-sold-badge" class="hidden mb-4"><span class="badge-sold">Agotado</span></div>
-          <p id="modal-desc" style="font-size:.8rem;color:rgba(15,15,15,.5);line-height:1.7;margin-bottom:24px;"></p>
+          <p id="modal-desc" style="font-size:.78rem;color:rgba(15,15,15,.48);line-height:1.72;margin-bottom:22px;"></p>
           <div class="gold-line mb-5"></div>
-          <p id="modal-price" style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold-dark);margin-bottom:4px;"></p>
-          <p style="font-size:.7rem;color:rgba(15,15,15,.35);margin-bottom:20px;">+ ₡3.750 envío a todo el país</p>
-          <div class="scarcity-tag mb-6" id="modal-scarcity">
-            <span class="urgency-pulse"></span>
-            Pieza única — solo 1 disponible
+          <p id="modal-price" style="font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold-dark);margin-bottom:4px;"></p>
+          <p style="font-size:.68rem;color:rgba(15,15,15,.32);margin-bottom:20px;">+ ₡3.750 envío a todo el país</p>
+          <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;" id="modal-scarcity">
+            <span class="scarcity-dot" style="width:5px;height:5px;background:#ef4444;border-radius:50%;animation:pulse-red 1.3s infinite;flex-shrink:0;"></span>
+            <p style="font-size:.68rem;color:rgba(220,80,80,.85);">Pieza única — solo 1 disponible</p>
           </div>
         </div>
         <div id="modal-wa-btn"></div>
@@ -570,10 +460,10 @@
 </div>
 
 <script>
-  const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
-  const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
+  const SB_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
+  const SB_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
   const { createClient } = supabase;
-  const db = createClient(SUPA_URL, SUPA_KEY);
+  const db = createClient(SB_URL, SB_KEY);
   const WA = '50683049209';
 
   let allProducts = [];
@@ -581,14 +471,21 @@
   let activeFilter = 'Todos';
   let promoConfig = null;
   let promoProductIds = [];
-  let countdownInterval = null;
+  let cdInterval = null;
 
-  function fmt(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
+  const fmt = p => new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p);
 
   function getImages(p) {
     if (!p.images) return [];
     if (Array.isArray(p.images)) return p.images;
     try { return JSON.parse(p.images); } catch { return [p.images]; }
+  }
+
+  // Solo imágenes que son claramente fotos de joyas (URLs de Supabase Storage)
+  function isJewelryImage(url) {
+    if (!url) return false;
+    // Excluir imágenes que no son de Supabase storage o que parecen documentos/certificados
+    return url.includes('supabase.co/storage') || url.startsWith('http');
   }
 
   // NAV SCROLL
@@ -597,12 +494,12 @@
   });
 
   // REVEAL
-  const revealObs = new IntersectionObserver(entries => {
+  const revObs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, {threshold:.1});
-  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  }, {threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-  // ══ INIT ══
+  // ═══ INIT ═══
   async function init() {
     await Promise.all([loadProducts(), loadPromoConfig()]);
     updateHeroCount();
@@ -614,173 +511,153 @@
 
   async function loadProducts() {
     const { data, error } = await db.from('productos').select('*').order('created_at', {ascending:false});
-    if (error) { console.error('Error cargando productos:', error); return; }
+    if (error) { console.error(error); return; }
     allProducts = data || [];
   }
 
   async function loadPromoConfig() {
     try {
       const { data: cfg } = await db.from('config').select('value').eq('key','promo_config').single();
-      if (cfg && cfg.value) promoConfig = JSON.parse(cfg.value);
+      if (cfg?.value) promoConfig = JSON.parse(cfg.value);
       const { data: prd } = await db.from('config').select('value').eq('key','promo_products').single();
-      if (prd && prd.value) promoProductIds = JSON.parse(prd.value).map(String);
-    } catch(e) {
-      console.log('Sin config de promo o tabla config no existe:', e.message);
-    }
+      if (prd?.value) promoProductIds = JSON.parse(prd.value).map(String);
+    } catch(e) { /* sin config */ }
   }
 
-  // ══ HERO ══
+  // ═══ HERO ═══
   function updateHeroCount() {
     const n = allProducts.filter(p => !p.sold).length;
-    const el1 = document.getElementById('hero-count');
-    const el2 = document.getElementById('hero-badge-count');
-    if (el1) el1.textContent = n + '+';
-    if (el2) el2.textContent = n + '+';
+    ['hero-count','hero-badge-count'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = n + '+';
+    });
   }
 
   function setHeroFeatured() {
-    // Solo mostrar productos de la tienda, NUNCA archivos del sistema
-    const available = allProducts.filter(p => !p.sold && getImages(p).length > 0);
-    if (!available.length) return;
-    // Rotar aleatoriamente entre los primeros 5
+    // SOLO mostrar productos con fotos reales de la tienda
+    const available = allProducts.filter(p => {
+      if (p.sold) return false;
+      const imgs = getImages(p);
+      // Filtrar productos que tengan imágenes reales (de Supabase storage)
+      return imgs.length > 0 && imgs.some(img => img && img.includes('supabase.co/storage'));
+    });
+
+    if (!available.length) {
+      // Si no hay productos con fotos de storage, mostrar placeholder elegante
+      const el = document.getElementById('hero-featured');
+      if (el) el.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;">
+        <img src="assets/logo.jpg" alt="RR" style="width:100px;opacity:.2;" onerror="this.style.display='none'"/>
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(139,105,20,.35);text-align:center;">Colección disponible en la tienda</p>
+      </div>`;
+      return;
+    }
+
     const featured = available[Math.floor(Math.random() * Math.min(available.length, 5))];
-    const imgs = getImages(featured);
+    const imgs = getImages(featured).filter(img => img && img.includes('supabase.co/storage'));
     const el = document.getElementById('hero-featured');
     if (el && imgs[0]) {
-      el.innerHTML = `
-        <div style="position:relative;width:100%;height:100%;overflow:hidden;">
-          <img src="${imgs[0]}" alt="${featured.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:rgba(139,105,20,0.4)>RR Joyería</div>'"/>
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,15,15,.3) 0%,transparent 50%);"></div>
-          <div style="position:absolute;bottom:20px;left:20px;right:20px;">
-            <p style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:4px;">${featured.category||''}</p>
-            <p style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-weight:600;">${featured.name}</p>
-            <p style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-top:4px;">${fmt(featured.price)}</p>
-          </div>
-        </div>`;
+      el.innerHTML = `<div style="position:relative;width:100%;height:100%;">
+        <img src="${imgs[0]}" alt="${featured.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;>RR Joyería</div>'"/>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 55%);"></div>
+        <div style="position:absolute;bottom:18px;left:18px;right:18px;">
+          <p style="font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px;">${featured.category||''}</p>
+          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;color:#fff;font-weight:600;line-height:1.2;">${featured.name}</p>
+          <p style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);margin-top:5px;">${fmt(featured.price)}</p>
+        </div>
+      </div>`;
     }
   }
 
-  // ══ PROMO ══
+  // ═══ PROMO ═══
   function setupPromo() {
-    const section = document.getElementById('promociones');
+    const section = document.getElementById('promo-section');
     const navPromo = document.getElementById('nav-promo');
     const heroBtn = document.getElementById('hero-promo-btn');
 
-    // Ocultar si no hay config o no está activa
-    if (!promoConfig || !promoConfig.active) {
-      section.style.display = 'none';
-      return;
-    }
+    if (!promoConfig?.active) { section.style.display = 'none'; return; }
 
     const now = new Date();
     const end = promoConfig.end ? new Date(promoConfig.end) : null;
     const start = promoConfig.start ? new Date(promoConfig.start) : null;
 
-    // Ocultar si ya expiró
-    if (end && now > end) {
-      section.style.display = 'none';
-      return;
-    }
+    if (end && now > end) { section.style.display = 'none'; return; }
+    if (start && now < start) { section.style.display = 'none'; return; }
 
-    // Ocultar si todavía no empezó
-    if (start && now < start) {
-      section.style.display = 'none';
-      return;
-    }
-
-    // MOSTRAR sección
+    // MOSTRAR
     section.style.display = 'block';
-    if (navPromo) navPromo.style.display = '';
-    if (heroBtn) heroBtn.style.display = '';
+    if (navPromo) navPromo.style.display = 'inline-flex';
+    if (heroBtn) { heroBtn.style.display = 'inline-flex'; }
 
-    // Actualizar título y descripción
+    // Actualizar textos
     if (promoConfig.title) {
-      const el = document.getElementById('promo-section-title');
+      const el = document.getElementById('promo-title-el');
       if (el) el.innerHTML = promoConfig.title + '<br/><em style="color:var(--gold);font-style:italic;">con precio especial</em>';
     }
     if (promoConfig.desc) {
-      const el = document.getElementById('promo-section-desc');
+      const el = document.getElementById('promo-desc-el');
       if (el) el.textContent = promoConfig.desc;
     }
 
-    // Iniciar countdown
     if (end) startCountdown(end);
-
-    // Renderizar productos en oferta
     renderPromoGrid();
   }
 
   function startCountdown(endDate) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
+    if (cdInterval) clearInterval(cdInterval);
     function tick() {
-      const now = new Date();
-      const diff = endDate - now;
-
+      const diff = endDate - new Date();
       if (diff <= 0) {
-        clearInterval(countdownInterval);
-        // Ocultar sección cuando expire
-        const section = document.getElementById('promociones');
-        if (section) section.style.display = 'none';
+        clearInterval(cdInterval);
+        document.getElementById('promo-section').style.display = 'none';
         return;
       }
-
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      const pad = n => String(n).padStart(2, '0');
-
-      const td = document.getElementById('timer-d'); if(td) td.textContent = pad(d);
-      const th = document.getElementById('timer-h'); if(th) th.textContent = pad(h);
-      const tm = document.getElementById('timer-m'); if(tm) tm.textContent = pad(m);
-      const ts = document.getElementById('timer-s'); if(ts) ts.textContent = pad(s);
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor((diff%86400000)/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      const s = Math.floor((diff%60000)/1000);
+      const pad = n => String(n).padStart(2,'0');
+      const ids = {d:'cd-d',h:'cd-h',m:'cd-m',s:'cd-s'};
+      Object.entries({d,h,m,s}).forEach(([k,v]) => {
+        const el = document.getElementById(ids[k]);
+        if (el) el.textContent = pad(v);
+      });
     }
-
-    tick(); // ejecutar inmediatamente
-    countdownInterval = setInterval(tick, 1000);
+    tick();
+    cdInterval = setInterval(tick, 1000);
   }
 
   function renderPromoGrid() {
     const grid = document.getElementById('promo-grid');
     if (!grid) return;
 
-    // Buscar los productos seleccionados en el dashboard
     let items = [];
-    if (promoProductIds.length > 0) {
-      items = promoProductIds
-        .map(id => allProducts.find(p => String(p.id) === id))
-        .filter(Boolean)
-        .slice(0, 4);
+    if (promoProductIds.length) {
+      items = promoProductIds.map(id => allProducts.find(p => String(p.id) === id)).filter(Boolean);
     }
+    if (!items.length) items = allProducts.filter(p => !p.sold).slice(0, 4);
+    if (!items.length) { grid.innerHTML = ''; return; }
 
-    // Si no hay seleccionados, mostrar los 4 más recientes disponibles
-    if (!items.length) {
-      items = allProducts.filter(p => !p.sold).slice(0, 4);
-    }
-
-    if (!items.length) {
-      grid.innerHTML = '<p style="color:rgba(255,255,255,.3);text-align:center;padding:40px;grid-column:1/-1;">No hay productos disponibles.</p>';
-      return;
-    }
-
-    const ph = 'https://placehold.co/400x400/1a1100/C9A84C?text=RR';
-    grid.innerHTML = items.map(p => {
+    const ph = 'https://placehold.co/300x400/1c1000/C9A84C?text=RR';
+    grid.innerHTML = items.map((p,i) => {
       const imgs = getImages(p);
       const img = imgs[0] || ph;
-      return `<div class="promo-item" onclick="openModal('${p.id}')">
+      return `<div class="promo-card" style="aspect-ratio:3/4;" onclick="openModal('${p.id}')">
         <img src="${img}" alt="${p.name}" onerror="this.src='${ph}'"/>
-        <div class="promo-item-info">
-          <p style="font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:3px;">${p.category||''}</p>
-          <p style="font-family:'Playfair Display',serif;font-size:.95rem;color:#fff;font-weight:600;line-height:1.2;">${p.name}</p>
-          <p style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);margin-top:5px;">${fmt(p.price)}</p>
-          <span class="promo-cta">Ver pieza →</span>
+        <div class="promo-card-overlay"></div>
+        <div class="promo-card-badge">${p.category||'Joya'}</div>
+        <div class="promo-card-info">
+          ${imgs.length>1?`<p style="font-size:.5rem;color:rgba(255,255,255,.5);margin-bottom:2px;">+${imgs.length} fotos</p>`:''}
+          <p style="font-family:'Playfair Display',serif;font-size:.92rem;color:#fff;font-weight:600;line-height:1.25;margin-bottom:6px;">${p.name}</p>
+          <div class="promo-price-tag">
+            <p style="font-family:'Playfair Display',serif;font-size:.95rem;color:var(--gold);font-weight:700;">${fmt(p.price)}</p>
+          </div>
+          <span class="promo-card-cta">Ver pieza →</span>
         </div>
       </div>`;
     }).join('');
   }
 
-  // ══ FILTERS ══
+  // ═══ FILTERS ═══
   function switchFilterMode(mode) {
     filterMode = mode; activeFilter = 'Todos';
     document.getElementById('tab-cat').classList.toggle('active', mode==='category');
@@ -789,14 +666,12 @@
   }
 
   function renderFilterPills() {
-    const values = filterMode==='category'
+    const vals = filterMode==='category'
       ? [...new Set(allProducts.map(p=>p.category))].filter(Boolean)
       : [...new Set(allProducts.map(p=>p.brand))].filter(Boolean);
     const c = document.getElementById('filter-pills');
     c.innerHTML = `<button onclick="setFilter('Todos')" class="filter-pill ${activeFilter==='Todos'?'active':''}">Todos</button>`;
-    values.forEach(v => {
-      c.innerHTML += `<button onclick="setFilter('${v.replace(/'/g,"\\'")}')" class="filter-pill ${activeFilter===v?'active':''}">${v}</button>`;
-    });
+    vals.forEach(v => { c.innerHTML += `<button onclick="setFilter('${v.replace(/'/g,"\\'")}')" class="filter-pill ${activeFilter===v?'active':''}">${v}</button>`; });
   }
 
   function setFilter(val) { activeFilter = val; renderFilterPills(); applyFilters(); }
@@ -823,7 +698,7 @@
   }
 
   function renderProducts(products) {
-    const grid  = document.getElementById('products-grid');
+    const grid = document.getElementById('products-grid');
     const empty = document.getElementById('empty-state');
     if (!products.length) { grid.innerHTML=''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
@@ -835,24 +710,24 @@
         <div style="position:relative;aspect-ratio:1;overflow:hidden;background:#f5f0e8;">
           <img src="${img}" alt="${p.name}" class="card-img" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='${ph}'"/>
           ${p.sold?`<div style="position:absolute;inset:0;background:rgba(15,15,15,.5);display:flex;align-items:center;justify-content:center;"><span class="badge-sold">Agotado</span></div>`:''}
-          ${imgs.length>1?`<div style="position:absolute;bottom:8px;right:8px;background:rgba(15,15,15,.65);color:#fff;font-size:.58rem;padding:3px 8px;letter-spacing:.1em;">+${imgs.length} fotos</div>`:''}
-          ${p.brand?`<div style="position:absolute;top:8px;left:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;">${p.brand}</div>`:''}
+          ${imgs.length>1?`<div style="position:absolute;bottom:7px;right:7px;background:rgba(15,15,15,.65);color:#fff;font-size:.55rem;padding:3px 7px;letter-spacing:.1em;">+${imgs.length}</div>`:''}
+          ${p.brand?`<div style="position:absolute;top:7px;left:7px;background:rgba(255,255,255,.92);color:var(--ink);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;">${p.brand}</div>`:''}
           <div class="card-action">Ver pieza completa →</div>
         </div>
-        <div style="padding:16px 16px 20px;">
-          <p style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">${p.category||''}</p>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${p.name}</h3>
-          <p style="font-size:.7rem;color:rgba(15,15,15,.35);line-height:1.5;margin-bottom:12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.description||''}</p>
+        <div style="padding:14px 14px 18px;">
+          <p style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">${p.category||''}</p>
+          <h3 style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${p.name}</h3>
+          <p style="font-size:.68rem;color:rgba(15,15,15,.32);line-height:1.5;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.description||''}</p>
           <div class="flex items-center justify-between">
-            <p style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--gold-dark);">${fmt(p.price)}</p>
-            <span style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:4px 10px;">Ver más</span>
+            <p style="font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:700;color:var(--gold-dark);">${fmt(p.price)}</p>
+            <span style="font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.28);padding:4px 9px;">Ver más</span>
           </div>
         </div>
       </div>`;
     }).join('');
   }
 
-  // ══ MODAL ══
+  // ═══ MODAL ═══
   function openModal(id) {
     const p = allProducts.find(x => String(x.id) === String(id));
     if (!p) return;
@@ -869,7 +744,7 @@
     const sb = document.getElementById('modal-sold-badge');
     const sc = document.getElementById('modal-scarcity');
     if (p.sold) { sb.classList.remove('hidden'); if(sc) sc.style.display='none'; }
-    else { sb.classList.add('hidden'); if(sc) sc.style.display=''; }
+    else { sb.classList.add('hidden'); if(sc) sc.style.display='flex'; }
 
     document.getElementById('modal-thumbs').innerHTML = imgs.length > 1
       ? imgs.map((img,i) => `<img src="${img}" onclick="switchImg(this,'${img}')" class="modal-thumb ${i===0?'active':''}" onerror="this.style.display='none'"/>`).join('')
@@ -877,8 +752,8 @@
 
     const waText = `Hola! Me interesa esta joya: *${p.name}* - ${fmt(p.price)}`;
     document.getElementById('modal-wa-btn').innerHTML = p.sold
-      ? `<div style="text-align:center;border:1px solid rgba(15,15,15,.1);padding:16px;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.3);">Producto Agotado</div>`
-      : `<a href="https://wa.me/${WA}?text=${encodeURIComponent(waText)}" target="_blank" class="btn-wa w-full flex items-center justify-center gap-3 text-white py-4" style="font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;">
+      ? `<div style="text-align:center;border:1px solid rgba(15,15,15,.1);padding:14px;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.28);">Producto Agotado</div>`
+      : `<a href="https://wa.me/${WA}?text=${encodeURIComponent(waText)}" target="_blank" class="btn-wa w-full flex items-center justify-center gap-3 text-white py-4" style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Consultar por WhatsApp
         </a>`;
