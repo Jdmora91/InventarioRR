@@ -1,3 +1,6 @@
+Exit code: 0
+Wall time: 0.5 seconds
+Output:
 -- RR Joyería: catálogo público y administración autenticada.
 create table if not exists public.config (
   key text primary key,
@@ -8,6 +11,7 @@ create table if not exists public.config (
 alter table public.productos add column if not exists description text;
 alter table public.productos add column if not exists sold boolean not null default false;
 alter table public.productos add column if not exists images jsonb not null default '[]'::jsonb;
+alter table public.productos add column if not exists sale_price double precision;
 alter table public.productos enable row level security;
 alter table public.config enable row level security;
 
@@ -50,3 +54,4 @@ insert into public.config(key,value) values
  ('promo_config','{"active":false,"title":"Selección especial","desc":"","start":"","end":""}'),
  ('promo_products','[]')
 on conflict (key) do nothing;
+
