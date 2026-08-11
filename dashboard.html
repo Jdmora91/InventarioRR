@@ -6,7 +6,7 @@
   <title>Dashboard — RR Joyería</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <script>tailwind.config={theme:{extend:{colors:{gold:{light:'#C9A84C',DEFAULT:'#8B6914',dark:'#5a4409'},ink:'#0F0F0F',cream:'#FAF7F2'},fontFamily:{display:['Playfair Display','serif'],body:['Inter','sans-serif']}}}}</script>
   <style>
     :root{--gold:#C9A84C;--gold-dark:#8B6914;--ink:#0F0F0F;--cream:#FAF7F2;}
@@ -116,6 +116,18 @@
       #product-list>.card>div:first-child{width:62px!important;height:76px!important;border-radius:10px}
       .offer-item{padding:9px!important}
     }
+    h1,h2,h3,.display-type{font-family:'Cormorant Garamond',serif!important}
+    .card{background:rgba(255,255,255,.92);backdrop-filter:blur(12px)}
+    #form-sidebar .card{border-top:3px solid #cbaa67}
+    #product-list>.card{background:#fff}
+    #product-list button{border-radius:999px}
+    #tab-ofertas .card{overflow:hidden}
+    #tab-ofertas h2{font-style:normal!important;font-size:1.55rem!important;color:#4c3920!important}
+    @media(max-width:640px){
+      #form-sidebar{order:2}#tab-productos>.flex{display:flex;flex-direction:column}
+      #product-list{gap:8px}.inp-label{font-size:.56rem}.inp{font-size:.74rem}
+      #tab-ofertas .grid{grid-template-columns:1fr!important}
+    }
     h1,h2,h3,.display-type{font-family:'Bodoni Moda',serif!important;letter-spacing:-.025em;}
     .price-stack{display:flex;align-items:baseline;justify-content:flex-end;gap:7px;flex-wrap:wrap;}
     .price-old{font-size:.67rem;color:rgba(15,15,15,.36);text-decoration:line-through;text-decoration-thickness:1px;}
@@ -178,7 +190,7 @@
         <img src="assets/logo.jpg" alt="RR" class="h-8 w-8 rounded-full object-contain border border-white/10 opacity-80" onerror="this.style.display='none'"/>
         <div>
           <p style="font-family:'Playfair Display',serif;font-size:0.85rem;color:rgba(201,168,76,0.8);">RR Joyería</p>
-          <p style="font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.25);">Panel de Administración</p>
+          <p style="font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);">Atelier · Gestión de catálogo</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -216,8 +228,8 @@
     <!-- TABS -->
     <div class="card mb-0" style="border-bottom:none;">
       <div class="flex overflow-x-auto" style="border-bottom:1px solid rgba(201,168,76,0.1);">
-        <button class="tab-btn active" onclick="switchTab('productos')">📦 Productos</button>
-        <button class="tab-btn" onclick="switchTab('ofertas')">🏷️ Ofertas & Promociones</button>
+        <button class="tab-btn active" onclick="switchTab('productos')">Inventario</button>
+        <button class="tab-btn" onclick="switchTab('ofertas')">Campañas & Ofertas</button>
       </div>
     </div>
 
@@ -229,7 +241,7 @@
         <div id="form-sidebar">
           <div class="card p-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
-              <h2 id="form-title" style="font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;color:var(--gold-dark);">Agregar Producto</h2>
+              <h2 id="form-title" style="font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;color:var(--gold-dark);">Nueva pieza</h2>
               <button id="cancel-btn" onclick="clearForm()" class="hidden" style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:4px 10px;cursor:pointer;">Cancelar</button>
             </div>
             <input type="hidden" id="eid"/>
@@ -276,7 +288,7 @@
         <!-- PRODUCT LIST -->
         <div class="flex-1 min-w-0">
           <div class="flex flex-col sm:flex-row gap-3 mb-4 items-start sm:items-center justify-between">
-            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--gold-dark);">Productos</h2>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--gold-dark);">Catálogo publicado</h2>
             <div class="flex gap-2 w-full sm:w-auto flex-wrap">
               <div class="relative flex-1 sm:flex-none">
                 <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..." class="inp pl-7" style="padding-top:8px;padding-bottom:8px;width:100%;min-width:120px;"/>
@@ -588,7 +600,7 @@ function clearForm() {
   ['eid','fn','fcat','fbrand','fprice','fsale','fdesc'].forEach(id => document.getElementById(id).value='');
   document.getElementById('fsold').checked = false;
   newFiles = []; existingUrls = []; originalUrls = []; renderPH();
-  document.getElementById('form-title').textContent = 'Agregar Producto';
+  document.getElementById('form-title').textContent = 'Nueva pieza';
   document.getElementById('cancel-btn').classList.add('hidden');
 }
 
