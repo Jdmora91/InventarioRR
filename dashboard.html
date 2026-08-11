@@ -257,7 +257,277 @@
             <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--gold-dark);">Productos</h2>
             <div class="flex gap-2 w-full sm:w-auto flex-wrap">
               <div class="relative flex-1 sm:flex-none">
-                <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar...…3887 tokens truncated… return null; }
+                <input id="s-search" type="text" onkeyup="renderList()" placeholder="Buscar..." class="inp pl-7" style="padding-top:8px;padding-bottom:8px;width:100%;min-width:120px;"/>
+                <svg class="w-3.5 h-3.5 absolute left-2 top-2.5" style="color:rgba(15,15,15,0.25);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <select id="s-cat" onchange="renderList()" class="inp" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Categoría</option></select>
+              <select id="s-brand" onchange="renderList()" class="inp" style="padding-top:8px;padding-bottom:8px;width:auto;"><option value="">Marca</option></select>
+            </div>
+          </div>
+          <div id="product-list" class="space-y-3"></div>
+          <div id="list-empty" class="hidden card text-center py-20">
+            <p style="font-family:'Playfair Display',serif;font-size:2rem;font-style:italic;color:rgba(201,168,76,0.2);margin-bottom:8px;">Sin productos</p>
+            <p style="font-size:0.75rem;color:rgba(15,15,15,0.3);">Agrega tu primer producto con el formulario.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: OFERTAS -->
+    <div id="tab-ofertas" class="tab-content pt-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- CONFIGURAR OFERTA -->
+        <div class="card p-6">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:var(--gold-dark);margin-bottom:4px;">Configurar Oferta Especial</h2>
+          <p style="font-size:0.7rem;color:rgba(15,15,15,0.4);margin-bottom:24px;">El contador en la tienda se ajustará automáticamente a estas fechas.</p>
+
+          <div class="space-y-5">
+            <!-- TITULO -->
+            <div>
+              <label class="inp-label">Título de la Oferta</label>
+              <input id="promo-title" type="text" class="inp" placeholder="Ej: Especial de Fin de Mes"/>
+            </div>
+
+            <!-- DESCRIPCION -->
+            <div>
+              <label class="inp-label">Descripción (opcional)</label>
+              <textarea id="promo-desc" rows="2" class="inp resize-none" placeholder="Ej: Aprovechá estas joyas únicas a precios especiales..."></textarea>
+            </div>
+
+            <!-- FECHAS -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="inp-label">Fecha de inicio</label>
+                <input id="promo-start" type="datetime-local" class="inp"/>
+              </div>
+              <div>
+                <label class="inp-label">Fecha de fin</label>
+                <input id="promo-end" type="datetime-local" class="inp"/>
+              </div>
+            </div>
+
+            <!-- ESTADO -->
+            <div class="flex items-center justify-between py-3" style="border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);">
+              <div>
+                <p style="font-size:0.75rem;font-weight:500;color:rgba(15,15,15,0.7);">Oferta activa en la tienda</p>
+                <p style="font-size:0.65rem;color:rgba(15,15,15,0.35);margin-top:2px;">Mostrar sección de promociones en el index</p>
+              </div>
+              <label class="tog flex items-center gap-2 cursor-pointer"><input type="checkbox" id="promo-active" class="hidden"/><div class="ttrack"></div></label>
+            </div>
+
+            <!-- PREVIEW COUNTDOWN -->
+            <div id="promo-preview" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:16px;display:none;">
+              <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:8px;">Vista previa del contador:</p>
+              <div class="flex items-center gap-3">
+                <div style="text-align:center;"><p id="prev-d" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">días</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-h" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">horas</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-m" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">min</p></div>
+                <p style="color:var(--gold);font-size:1.2rem;">:</p>
+                <div style="text-align:center;"><p id="prev-s" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1;">00</p><p style="font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.35);">seg</p></div>
+              </div>
+            </div>
+
+            <button onclick="savePromo()" id="promo-save-btn" style="width:100%;background:var(--gold-dark);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--ink)'" onmouseout="this.style.background='var(--gold-dark)'">
+              Guardar Configuración de Oferta
+            </button>
+          </div>
+        </div>
+
+        <!-- SELECCIONAR PRODUCTOS EN OFERTA -->
+        <div class="card p-6">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:var(--gold-dark);margin-bottom:4px;">Productos en Oferta</h2>
+          <p style="font-size:0.7rem;color:rgba(15,15,15,0.4);margin-bottom:16px;">Seleccioná cuáles aparecerán en la sección de promociones de la tienda.</p>
+
+          <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:between;gap:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+            <p style="font-size:0.7rem;color:rgba(15,15,15,0.6);flex:1;">Máximo 4 productos se muestran en la sección de ofertas.</p>
+            <span id="promo-count-badge" style="font-size:0.6rem;letter-spacing:0.1em;background:var(--gold-dark);color:#fff;padding:3px 10px;border-radius:2px;">0/4</span>
+          </div>
+
+          <div id="promo-product-list" class="space-y-2" style="max-height:400px;overflow-y:auto;padding-right:4px;">
+            <p style="font-size:0.75rem;color:rgba(15,15,15,0.3);text-align:center;padding:24px;">Cargando productos...</p>
+          </div>
+
+          <button onclick="savePromoProducts()" style="width:100%;background:var(--ink);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;cursor:pointer;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">
+            Guardar Selección
+          </button>
+        </div>
+      </div>
+
+      <!-- OFERTA ACTIVA INFO -->
+      <div id="promo-status-card" class="card p-5 mt-6 hidden">
+        <div class="flex items-center gap-3 mb-3">
+          <div id="promo-status-dot" style="width:10px;height:10px;border-radius:50%;background:#ddd;flex-shrink:0;"></div>
+          <h3 style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(15,15,15,0.5);">Estado de la Oferta</h3>
+        </div>
+        <p id="promo-status-text" style="font-size:0.85rem;color:var(--ink);"></p>
+      </div>
+    </div>
+
+  </div><!-- end main content -->
+</div><!-- end dashboard -->
+
+<div id="toast"></div>
+
+<script>
+const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
+const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
+const { createClient } = supabase;
+const INITIAL_SETUP_LINK = location.hash.includes('type=invite')||location.hash.includes('type=recovery')||location.search.includes('type=invite')||location.search.includes('type=recovery');
+const db = createClient(SUPA_URL, SUPA_KEY);
+const BUCKET = 'fotos-joyas';
+const MAX_PHOTOS = 6;
+const MAX_SOURCE_MB = 15;
+
+let allProducts = [];
+let newFiles = [];
+let existingUrls = [];
+let originalUrls = [];
+let selectedPromoIds = new Set();
+let promoCountdownInterval = null;
+
+// ═══ AUTH ═══
+async function doLogin() {
+  const email = document.getElementById('lu').value.trim();
+  const password = document.getElementById('lp').value;
+  const err = document.getElementById('lerr');
+  err.classList.add('hidden');
+  if (!email || !password) { err.textContent='Ingresá tu correo y contraseña.'; err.classList.remove('hidden'); return; }
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent='No pudimos iniciar sesión. Verificá tus datos.'; err.classList.remove('hidden'); return; }
+  showDashboard();
+}
+async function doLogout() { await db.auth.signOut(); location.reload(); }
+
+async function requestPasswordReset() {
+  const email=document.getElementById('lu').value.trim();
+  const err=document.getElementById('lerr');
+  if (!email) { err.textContent='Escribí primero tu correo administrativo.'; err.classList.remove('hidden'); return; }
+  const redirectTo=`${location.origin}${location.pathname}`;
+  const { error }=await db.auth.resetPasswordForEmail(email,{redirectTo});
+  err.textContent=error?'No se pudo enviar el enlace. Intentá nuevamente.':'Revisá tu correo: enviamos un enlace seguro.';
+  err.style.color=error?'#ef4444':'#15803d'; err.classList.remove('hidden');
+}
+
+function showPasswordReset() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('reset-screen').classList.remove('hidden');
+}
+
+async function saveNewPassword() {
+  const p=document.getElementById('new-password').value;
+  const c=document.getElementById('new-password-confirm').value;
+  const err=document.getElementById('reset-error');
+  if (p.length<10 || p!==c) { err.textContent=p!==c?'Las contraseñas no coinciden.':'Usá al menos 10 caracteres.'; err.classList.remove('hidden'); return; }
+  const { error }=await db.auth.updateUser({password:p});
+  if (error) { err.textContent='No se pudo guardar la contraseña. Solicitá otro enlace.'; err.classList.remove('hidden'); return; }
+  await db.auth.signOut();
+  history.replaceState({},document.title,location.pathname);
+  location.reload();
+}
+
+// ═══ INIT ═══
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadProducts();
+  await loadPromoConfig();
+  document.getElementById('loading-overlay').style.display = 'none';
+  const { data:{ session } } = await db.auth.getSession();
+  if (session && INITIAL_SETUP_LINK) showPasswordReset();
+  else if (session) showDashboard();
+  else document.getElementById('login-screen').classList.remove('hidden');
+});
+
+async function loadProducts() {
+  const { data, error } = await db.from('productos').select('*').order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  allProducts = data || [];
+}
+
+function showDashboard() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  renderList(); updateStats(); updateDataLists(); renderPromoProductList();
+}
+
+// ═══ TABS ═══
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['productos','ofertas'][i] === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ═══ UTILS ═══
+function fmt(p) { return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p); }
+function hasSale(p) { const regular=Number(p.price), sale=Number(p.sale_price); return p.sale_price!==null&&p.sale_price!==''&&Number.isFinite(sale)&&sale>=0&&sale<regular; }
+function priceHtml(p) {
+  if (!hasSale(p)) return `<span class="price-sale" style="color:var(--gold-dark)">${fmt(p.price)}</span>`;
+  const pct=Math.round((1-Number(p.sale_price)/Number(p.price))*100);
+  return `<span class="price-old">${fmt(p.price)}</span><span class="price-sale">${fmt(p.sale_price)}</span><span class="discount-chip">-${pct}%</span>`;
+}
+
+function getImages(p) {
+  if (!p.images) return [];
+  if (Array.isArray(p.images)) return p.images;
+  try { return JSON.parse(p.images); } catch { return [p.images]; }
+}
+
+function esc(value='') {
+  return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+let toastT;
+function toast(msg, ok=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 20px;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;font-family:'Inter',sans-serif;display:block;background:${ok?'var(--ink)':'#ef4444'};color:#fff;`;
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.style.display='none', 2800);
+}
+
+// ═══ FOTOS ═══
+async function addImages(inp) {
+  const available = MAX_PHOTOS - existingUrls.length - newFiles.length;
+  if (available <= 0) { toast(`Máximo ${MAX_PHOTOS} fotos por producto.`, false); inp.value=''; return; }
+  for (const file of Array.from(inp.files).slice(0, available)) {
+    if (!file.type.startsWith('image/')) { toast('Solo se permiten imágenes.', false); continue; }
+    if (file.size > MAX_SOURCE_MB*1024*1024) { toast(`La foto ${file.name} supera ${MAX_SOURCE_MB} MB.`, false); continue; }
+    try { newFiles.push(await compressImage(file)); }
+    catch { toast(`No se pudo procesar ${file.name}.`, false); }
+  }
+  inp.value = '';
+  renderPH();
+}
+
+function compressImage(file) {
+  return new Promise((resolve,reject) => {
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const max=1600, scale=Math.min(1,max/Math.max(img.width,img.height));
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.round(img.width*scale); canvas.height=Math.round(img.height*scale);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      canvas.toBlob(blob=>{
+        URL.revokeObjectURL(url);
+        blob ? resolve(new File([blob],file.name.replace(/\.[^.]+$/,'.webp'),{type:'image/webp'})) : reject();
+      },'image/webp',.82);
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(); };
+    img.src=url;
+  });
+}
+
+function storagePathFromUrl(url) {
+  try {
+    const marker=`/storage/v1/object/public/${BUCKET}/`;
+    const path=new URL(url).pathname;
+    return path.includes(marker) ? decodeURIComponent(path.split(marker)[1]) : null;
+  } catch { return null; }
 }
 
 function renderPH() {
@@ -645,4 +915,3 @@ function updatePromoStatus() {
 </script>
 </body>
 </html>
-
