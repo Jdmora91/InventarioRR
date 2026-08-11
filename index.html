@@ -315,6 +315,12 @@
     .viewer-thumbs{display:flex;gap:7px;overflow-x:auto}.viewer-thumb{width:48px;height:58px;object-fit:cover;border:2px solid transparent;border-radius:7px;opacity:.55;cursor:pointer}.viewer-thumb.active{border-color:#cbaa67;opacity:1}
     .promo-announcement-inner{padding:9px 13px 9px 17px}.promo-copy{display:flex;flex-direction:column;min-width:0}.promo-announcement-status{font-size:.52rem;color:rgba(255,255,255,.54);letter-spacing:.06em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.promo-mini-clock strong{color:#e1bf77;font-weight:700}
     @media(max-width:767px){.card-img-wrap:after{opacity:1;width:27px;height:27px;right:7px;bottom:7px}.image-viewer{padding:10px}.image-viewer-card{width:100%;height:86svh;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;border-radius:18px}.image-viewer-stage{padding:12px}.image-viewer-info{padding:13px 15px;border-left:0;border-top:1px solid rgba(255,255,255,.08)}.image-viewer-info>div:first-child p:nth-child(2){font-size:1.15rem!important}.viewer-close{width:36px;height:36px;right:9px;top:9px}.viewer-nav{width:36px;height:36px}.viewer-prev{left:8px}.viewer-next{right:8px}.promo-announcement-inner{padding:9px 11px}.promo-announcement-status{font-size:.47rem;max-width:175px}.promo-mini-clock{font-size:.54rem;line-height:1.3;text-align:right}}
+    #hero-featured{position:relative;background:radial-gradient(circle at 50% 36%,rgba(203,170,103,.18),transparent 38%),linear-gradient(160deg,#fffdfa,#eee8df)!important}
+    #hero-featured:after{content:'';position:absolute;inset:16px;border:1px solid rgba(121,92,40,.13);pointer-events:none}
+    .hero-brand-card{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:42px;text-align:center}
+    .hero-brand-card img{width:min(82%,270px);height:auto;max-height:62%;object-fit:contain;mix-blend-mode:multiply}
+    .hero-brand-line{width:34px;height:1px;background:#bd9852;margin:24px auto 14px}
+    .hero-brand-card p{font-size:.57rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(23,20,17,.48)}
   </style>
 </head>
 <body>
@@ -772,38 +778,13 @@
   }
 
   function setHeroFeatured() {
-    // SOLO mostrar productos con fotos reales de la tienda
-    const available = allProducts.filter(p => {
-      if (p.sold) return false;
-      const imgs = getImages(p);
-      // Filtrar productos que tengan imágenes reales (de Supabase storage)
-      return imgs.length > 0 && imgs.some(img => img && img.includes('supabase.co/storage'));
-    });
-
-    if (!available.length) {
-      // Si no hay productos con fotos de storage, mostrar placeholder elegante
-      const el = document.getElementById('hero-featured');
-      if (el) el.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;">
-        <img src="assets/logo.jpg" alt="RR" style="width:100px;opacity:.2;" onerror="this.style.display='none'"/>
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(139,105,20,.35);text-align:center;">Colección disponible en la tienda</p>
-      </div>`;
-      return;
-    }
-
-    const featured = available[Math.floor(Math.random() * Math.min(available.length, 5))];
-    const imgs = getImages(featured).filter(img => img && img.includes('supabase.co/storage'));
     const el = document.getElementById('hero-featured');
-    if (el && imgs[0]) {
-      el.innerHTML = `<div style="position:relative;width:100%;height:100%;">
-        <img src="${esc(imgs[0])}" alt="${esc(featured.name)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;>RR Joyería</div>'"/>
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 55%);"></div>
-        <div style="position:absolute;bottom:18px;left:18px;right:18px;">
-          <p style="font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px;">${featured.category||''}</p>
-          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;color:#fff;font-weight:600;line-height:1.2;">${esc(featured.name)}</p>
-          <div style="margin-top:5px;">${priceHtml(featured,true)}</div>
-        </div>
-      </div>`;
-    }
+    if (!el) return;
+    el.innerHTML=`<div class="hero-brand-card">
+      <img src="assets/logo.jpg" alt="RR Joyería Fina y Vintage" onerror="this.style.display='none'"/>
+      <span class="hero-brand-line"></span>
+      <p>Joyería fina · Piezas vintage · Costa Rica</p>
+    </div>`;
   }
 
   // ═══ PROMO ═══
