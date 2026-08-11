@@ -70,6 +70,19 @@
     .offer-item{transition:all .2s;border:2px solid transparent;}
     .offer-item.selected{border-color:var(--gold);background:rgba(201,168,76,0.04);}
     .offer-item:hover{background:rgba(201,168,76,0.03);}
+    /* 2026 professional admin refresh */
+    body{background:linear-gradient(180deg,#f7f2e9 0,#fbfaf7 38%,#f2eadf 100%);}
+    .card{border-radius:18px;border:1px solid rgba(139,105,20,.10);box-shadow:0 12px 42px rgba(45,32,7,.055);}
+    .stat-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#fff,#fdfaf5);}
+    .stat-card:after{content:'';position:absolute;width:70px;height:70px;border-radius:50%;right:-30px;top:-30px;background:rgba(201,168,76,.08);}
+    .inp{border-radius:10px;background:rgba(255,255,255,.9);min-height:43px;}
+    .inp:focus{box-shadow:0 0 0 4px rgba(201,168,76,.10);}
+    #form-sidebar .card{position:sticky;top:78px;}
+    #product-list>.card{transition:transform .22s,box-shadow .22s,border-color .22s;}
+    #product-list>.card:hover{transform:translateY(-2px);border-color:rgba(139,105,20,.25);box-shadow:0 16px 40px rgba(45,32,7,.08);}
+    .tab-btn{padding:16px 22px;}
+    #login-screen>div{border-radius:24px!important;box-shadow:0 30px 90px rgba(70,48,8,.15)!important;}
+    @media(max-width:640px){.card{border-radius:14px}#form-sidebar .card{position:static}.tab-btn{padding:14px 16px}}
   </style>
 </head>
 <body class="min-h-screen">
@@ -91,12 +104,28 @@
       <p style="font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(15,15,15,0.3);margin-top:4px;">RR Joyería Fina y Vintage</p>
     </div>
     <div class="space-y-4">
-      <div><label class="inp-label">Usuario</label><input id="lu" type="text" class="inp" placeholder="admin"/></div>
+      <div><label class="inp-label">Correo administrativo</label><input id="lu" type="email" autocomplete="username" class="inp" placeholder="tu@correo.com"/></div>
       <div><label class="inp-label">Contraseña</label><input id="lp" type="password" class="inp" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-      <p id="lerr" class="hidden" style="font-size:0.7rem;color:#ef4444;letter-spacing:0.05em;">Usuario o contraseña incorrectos.</p>
+      <p id="lerr" class="hidden" style="font-size:0.7rem;color:#ef4444;letter-spacing:0.05em;">No pudimos iniciar sesión. Verificá el correo y la contraseña.</p>
       <button onclick="doLogin()" style="width:100%;background:var(--ink);color:#fff;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:14px;transition:background .2s;cursor:pointer;" onmouseover="this.style.background=getComputedStyle(document.documentElement).getPropertyValue('--gold-dark').trim()" onmouseout="this.style.background='var(--ink)'">
         Ingresar
       </button>
+      <button onclick="requestPasswordReset()" style="width:100%;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(15,15,15,.42);padding:7px;">Olvidé mi contraseña</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD SETUP -->
+<div id="reset-screen" class="hidden min-h-screen flex items-center justify-center px-4" style="background:linear-gradient(145deg,#f9f2e2,#faf7f2 60%,#f0e8d8)">
+  <div class="card p-8 sm:p-10 w-full max-w-md">
+    <p class="inp-label">Acceso administrativo</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold-dark);margin:5px 0 10px;">Definí tu contraseña</h1>
+    <p style="font-size:.72rem;color:rgba(15,15,15,.45);line-height:1.6;margin-bottom:20px;">Usá al menos 10 caracteres. Esta contraseña se guarda de forma segura en Supabase.</p>
+    <div class="space-y-4">
+      <input id="new-password" type="password" autocomplete="new-password" class="inp" placeholder="Nueva contraseña"/>
+      <input id="new-password-confirm" type="password" autocomplete="new-password" class="inp" placeholder="Confirmar contraseña"/>
+      <p id="reset-error" class="hidden" style="font-size:.7rem;color:#ef4444;"></p>
+      <button onclick="saveNewPassword()" style="width:100%;background:var(--ink);color:#fff;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:14px;border-radius:999px;">Guardar contraseña</button>
     </div>
   </div>
 </div>
@@ -328,31 +357,68 @@
 const SUPA_URL = 'https://flezhddsyrdlyzixuifk.supabase.co';
 const SUPA_KEY = 'sb_publishable_lASisNS6cgiWOUgyVtOkzA_9A7viwTQ';
 const { createClient } = supabase;
+const INITIAL_SETUP_LINK = location.hash.includes('type=invite')||location.hash.includes('type=recovery')||location.search.includes('type=invite')||location.search.includes('type=recovery');
 const db = createClient(SUPA_URL, SUPA_KEY);
 const BUCKET = 'fotos-joyas';
-const AU = 'admin', AP = 'rr2025';
+const MAX_PHOTOS = 6;
+const MAX_SOURCE_MB = 15;
 
 let allProducts = [];
 let newFiles = [];
 let existingUrls = [];
+let originalUrls = [];
 let selectedPromoIds = new Set();
 let promoCountdownInterval = null;
 
 // ═══ AUTH ═══
-function doLogin() {
-  const u = document.getElementById('lu').value.trim();
-  const p = document.getElementById('lp').value.trim();
-  if (u === AU && p === AP) { sessionStorage.setItem('rr_auth','1'); showDashboard(); }
-  else document.getElementById('lerr').classList.remove('hidden');
+async function doLogin() {
+  const email = document.getElementById('lu').value.trim();
+  const password = document.getElementById('lp').value;
+  const err = document.getElementById('lerr');
+  err.classList.add('hidden');
+  if (!email || !password) { err.textContent='Ingresá tu correo y contraseña.'; err.classList.remove('hidden'); return; }
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent='No pudimos iniciar sesión. Verificá tus datos.'; err.classList.remove('hidden'); return; }
+  showDashboard();
 }
-function doLogout() { sessionStorage.removeItem('rr_auth'); location.reload(); }
+async function doLogout() { await db.auth.signOut(); location.reload(); }
+
+async function requestPasswordReset() {
+  const email=document.getElementById('lu').value.trim();
+  const err=document.getElementById('lerr');
+  if (!email) { err.textContent='Escribí primero tu correo administrativo.'; err.classList.remove('hidden'); return; }
+  const redirectTo=`${location.origin}${location.pathname}`;
+  const { error }=await db.auth.resetPasswordForEmail(email,{redirectTo});
+  err.textContent=error?'No se pudo enviar el enlace. Intentá nuevamente.':'Revisá tu correo: enviamos un enlace seguro.';
+  err.style.color=error?'#ef4444':'#15803d'; err.classList.remove('hidden');
+}
+
+function showPasswordReset() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('reset-screen').classList.remove('hidden');
+}
+
+async function saveNewPassword() {
+  const p=document.getElementById('new-password').value;
+  const c=document.getElementById('new-password-confirm').value;
+  const err=document.getElementById('reset-error');
+  if (p.length<10 || p!==c) { err.textContent=p!==c?'Las contraseñas no coinciden.':'Usá al menos 10 caracteres.'; err.classList.remove('hidden'); return; }
+  const { error }=await db.auth.updateUser({password:p});
+  if (error) { err.textContent='No se pudo guardar la contraseña. Solicitá otro enlace.'; err.classList.remove('hidden'); return; }
+  await db.auth.signOut();
+  history.replaceState({},document.title,location.pathname);
+  location.reload();
+}
 
 // ═══ INIT ═══
 window.addEventListener('DOMContentLoaded', async () => {
   await loadProducts();
   await loadPromoConfig();
   document.getElementById('loading-overlay').style.display = 'none';
-  if (sessionStorage.getItem('rr_auth') === '1') showDashboard();
+  const { data:{ session } } = await db.auth.getSession();
+  if (session && INITIAL_SETUP_LINK) showPasswordReset();
+  else if (session) showDashboard();
   else document.getElementById('login-screen').classList.remove('hidden');
 });
 
@@ -386,6 +452,10 @@ function getImages(p) {
   try { return JSON.parse(p.images); } catch { return [p.images]; }
 }
 
+function esc(value='') {
+  return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
 let toastT;
 function toast(msg, ok=true) {
   const t = document.getElementById('toast');
@@ -396,10 +466,43 @@ function toast(msg, ok=true) {
 }
 
 // ═══ FOTOS ═══
-function addImages(inp) {
-  Array.from(inp.files).forEach(f => newFiles.push(f));
+async function addImages(inp) {
+  const available = MAX_PHOTOS - existingUrls.length - newFiles.length;
+  if (available <= 0) { toast(`Máximo ${MAX_PHOTOS} fotos por producto.`, false); inp.value=''; return; }
+  for (const file of Array.from(inp.files).slice(0, available)) {
+    if (!file.type.startsWith('image/')) { toast('Solo se permiten imágenes.', false); continue; }
+    if (file.size > MAX_SOURCE_MB*1024*1024) { toast(`La foto ${file.name} supera ${MAX_SOURCE_MB} MB.`, false); continue; }
+    try { newFiles.push(await compressImage(file)); }
+    catch { toast(`No se pudo procesar ${file.name}.`, false); }
+  }
   inp.value = '';
   renderPH();
+}
+
+function compressImage(file) {
+  return new Promise((resolve,reject) => {
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const max=1600, scale=Math.min(1,max/Math.max(img.width,img.height));
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.round(img.width*scale); canvas.height=Math.round(img.height*scale);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      canvas.toBlob(blob=>{
+        URL.revokeObjectURL(url);
+        blob ? resolve(new File([blob],file.name.replace(/\.[^.]+$/,'.webp'),{type:'image/webp'})) : reject();
+      },'image/webp',.82);
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(); };
+    img.src=url;
+  });
+}
+
+function storagePathFromUrl(url) {
+  try {
+    const marker=`/storage/v1/object/public/${BUCKET}/`;
+    const path=new URL(url).pathname;
+    return path.includes(marker) ? decodeURIComponent(path.split(marker)[1]) : null;
+  } catch { return null; }
 }
 
 function renderPH() {
@@ -424,9 +527,9 @@ function rmImg(idx,type) {
 async function uploadFiles(productId) {
   const urls = [];
   for (const file of newFiles) {
-    const ext = file.name.split('.').pop();
+    const ext = 'webp';
     const path = `${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await db.storage.from(BUCKET).upload(path, file, {upsert:true});
+    const { error } = await db.storage.from(BUCKET).upload(path, file, {upsert:false,contentType:'image/webp',cacheControl:'31536000'});
     if (error) { toast('Error subiendo foto: '+error.message, false); continue; }
     const { data } = db.storage.from(BUCKET).getPublicUrl(path);
     urls.push(data.publicUrl);
@@ -437,7 +540,7 @@ async function uploadFiles(productId) {
 function clearForm() {
   ['eid','fn','fcat','fbrand','fprice','fdesc'].forEach(id => document.getElementById(id).value='');
   document.getElementById('fsold').checked = false;
-  newFiles = []; existingUrls = []; renderPH();
+  newFiles = []; existingUrls = []; originalUrls = []; renderPH();
   document.getElementById('form-title').textContent = 'Agregar Producto';
   document.getElementById('cancel-btn').classList.add('hidden');
 }
@@ -452,7 +555,7 @@ async function saveProduct() {
   const desc  = document.getElementById('fdesc').value.trim();
   const sold  = document.getElementById('fsold').checked;
 
-  if (!name||!cat||isNaN(price)) { toast('Nombre, categoría y precio son obligatorios.',false); return; }
+  if (!name||!cat||isNaN(price)||price<0) { toast('Nombre, categoría y un precio válido son obligatorios.',false); return; }
 
   const btn = document.getElementById('save-btn');
   btn.innerHTML = '<span class="spinner"></span> Guardando...';
@@ -466,6 +569,8 @@ async function saveProduct() {
         name, category:cat, brand:brand||null, price, description:desc||null, sold, images:finalImages
       }).eq('id',id);
       if (error) throw error;
+      const removed = originalUrls.filter(url => !finalImages.includes(url)).map(storagePathFromUrl).filter(Boolean);
+      if (removed.length) await db.storage.from(BUCKET).remove(removed);
       toast('✓ Producto actualizado');
     } else {
       const { data, error } = await db.from('productos').insert({
@@ -495,7 +600,7 @@ function editProduct(id) {
   document.getElementById('fprice').value = p.price;
   document.getElementById('fdesc').value  = p.description||'';
   document.getElementById('fsold').checked = !!p.sold;
-  existingUrls = getImages(p); newFiles = []; renderPH();
+  existingUrls = getImages(p); originalUrls = [...existingUrls]; newFiles = []; renderPH();
   document.getElementById('form-title').textContent = 'Editar Producto';
   document.getElementById('cancel-btn').classList.remove('hidden');
   switchTab('productos');
@@ -544,21 +649,21 @@ function renderList() {
     const isPromo = selectedPromoIds.has(String(p.id));
     return `<div class="card flex gap-3 p-3 sm:p-4 fade-up ${p.sold?'opacity-50':''}">
       <div style="position:relative;width:72px;height:72px;flex-shrink:0;overflow:hidden;background:#f5f0e8;border:1px solid rgba(201,168,76,0.1);">
-        <img src="${thumb}" style="width:100%;height:100%;object-fit:cover;"/>
+        <img src="${esc(thumb)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"/>
         ${imgs.length>1?`<div style="position:absolute;bottom:0;right:0;background:rgba(0,0,0,0.5);color:#fff;font-size:7px;padding:2px 5px;">+${imgs.length}</div>`:''}
       </div>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 justify-between mb-1 flex-wrap">
           <div class="flex items-center gap-2 flex-wrap">
-            <span style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">${p.category||''}</span>
-            ${p.brand?`<span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(15,15,15,0.35);border:1px solid rgba(15,15,15,0.1);padding:1px 6px;">${p.brand}</span>`:''}
+            <span style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">${esc(p.category||'')}</span>
+            ${p.brand?`<span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(15,15,15,0.35);border:1px solid rgba(15,15,15,0.1);padding:1px 6px;">${esc(p.brand)}</span>`:''}
             ${p.sold?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;">Agotado</span>':'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:2px 7px;">Disponible</span>'}
             ${isPromo?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:var(--gold-dark);border:1px solid rgba(201,168,76,0.3);padding:2px 7px;">En Oferta</span>':''}
           </div>
           <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold-dark);white-space:nowrap;flex-shrink:0;">${fmt(p.price)}</p>
         </div>
-        <p style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">${p.name}</p>
-        <p style="font-size:0.7rem;color:rgba(15,15,15,0.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:10px;">${p.description||''}</p>
+        <p style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">${esc(p.name)}</p>
+        <p style="font-size:0.7rem;color:rgba(15,15,15,0.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:10px;">${esc(p.description||'')}</p>
         <div class="flex gap-2 flex-wrap">
           <button onclick="editProduct('${p.id}')" style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-dark);padding:5px 12px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='var(--gold-dark)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--gold-dark)'">Editar</button>
           <button onclick="toggleSold('${p.id}')" style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid ${p.sold?'#16a34a':'rgba(15,15,15,0.15)'};color:${p.sold?'#16a34a':'rgba(15,15,15,0.4)'};padding:5px 12px;cursor:pointer;transition:all .2s;">${p.sold?'Disponible':'Agotado'}</button>
@@ -602,10 +707,10 @@ function renderPromoProductList() {
     const checked = selectedPromoIds.has(String(p.id));
     return `<div class="offer-item ${checked?'selected':''} flex items-center gap-3 p-3 cursor-pointer" onclick="togglePromoProduct('${p.id}',this)" id="promo-item-${p.id}">
       <input type="checkbox" class="promo-check" ${checked?'checked':''} onchange="togglePromoProduct('${p.id}',this.closest('.offer-item'))" style="pointer-events:none;"/>
-      <img src="${thumb}" style="width:44px;height:44px;object-fit:cover;border:1px solid rgba(201,168,76,0.2);flex-shrink:0;" onerror="this.src='https://placehold.co/44x44/f0ebe0/8B6914?text=RR'"/>
+      <img src="${esc(thumb)}" loading="lazy" style="width:44px;height:44px;object-fit:cover;border:1px solid rgba(201,168,76,0.2);flex-shrink:0;" onerror="this.src='https://placehold.co/44x44/f0ebe0/8B6914?text=RR'"/>
       <div class="flex-1 min-w-0">
-        <p style="font-size:0.8rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</p>
-        <p style="font-size:0.65rem;color:rgba(15,15,15,0.4);">${p.category||''} ${p.brand?'· '+p.brand:''}</p>
+        <p style="font-size:0.8rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</p>
+        <p style="font-size:0.65rem;color:rgba(15,15,15,0.4);">${esc(p.category||'')} ${p.brand?'· '+esc(p.brand):''}</p>
       </div>
       <p style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;color:var(--gold-dark);white-space:nowrap;flex-shrink:0;">${fmt(p.price)}</p>
     </div>`;
