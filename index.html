@@ -176,6 +176,105 @@
     #coleccion{scroll-margin-top:76px;}
     #products-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));}
     @media(max-width:640px){.price-current{font-size:1rem}.sale-badge{top:7px;right:7px;padding:5px 7px}.product-card .card-action{display:none}}
+
+    /* 2026 LUXE COMMERCE — mobile first catalog */
+    :root{--onyx:#0b0b0c;--ivory:#f7f3eb;--champagne:#d7b56d;--wine:#721b2b;--mist:#e9e2d7;}
+    html{scroll-behavior:smooth;background:var(--ivory)}
+    body{background:var(--ivory);color:var(--onyx);overflow-x:hidden}
+    #navbar{background:rgba(247,243,235,.78);backdrop-filter:blur(18px) saturate(135%);border-bottom:1px solid rgba(11,11,12,.07)}
+    #navbar.scrolled{background:rgba(247,243,235,.94);box-shadow:0 12px 35px rgba(15,12,8,.08)}
+    #navbar>div{max-width:1440px}
+    .hero-bg{min-height:76svh;background:radial-gradient(circle at 78% 26%,rgba(215,181,109,.25),transparent 28%),radial-gradient(circle at 12% 88%,rgba(114,27,43,.07),transparent 31%),linear-gradient(135deg,#f9f5ed 0%,#eee3cf 100%)}
+    .hero-bg:after{content:'RR';position:absolute;right:-.03em;bottom:-.28em;font-family:'Bodoni Moda',serif;font-size:min(35vw,31rem);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(124,91,30,.055);pointer-events:none}
+    .hero-title{font-size:clamp(3.2rem,7vw,7.3rem);line-height:.87;font-weight:500}
+    .btn-ink{background:var(--onyx);padding:13px 25px;box-shadow:0 14px 28px rgba(11,11,12,.14)}
+    .mq-wrap{background:var(--onyx)}
+    #promo-section .promo-bg{padding-top:36px!important;padding-bottom:34px!important;background:radial-gradient(circle at 90% 5%,rgba(215,181,109,.18),transparent 30%),linear-gradient(120deg,#0b0b0c,#18120d 64%,#21160a)}
+    #promo-section .max-w-7xl{max-width:1180px}
+    #promo-section .promo-card{aspect-ratio:4/5!important;border:1px solid rgba(215,181,109,.14);background:#151515}
+    #promo-section .promo-card-info{padding:12px}
+    #promo-section .promo-card-cta{display:none}
+    #promo-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px!important;max-width:820px}
+    .cd-wrap{transform:scale(.9);transform-origin:right center}
+    #coleccion{background:#f5f0e7!important;padding-top:64px!important;padding-bottom:80px!important}
+    #coleccion>.max-w-7xl{max-width:1440px}
+    #coleccion .reveal{margin-bottom:24px!important}
+    #coleccion .reveal+div[style*="background:#fff"]{border:1px solid rgba(11,11,12,.06);border-radius:18px;box-shadow:0 15px 44px rgba(43,32,12,.045)}
+    #products-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .product-card{border:0;border-radius:18px;background:#fff;box-shadow:0 8px 28px rgba(36,27,12,.065);transform:translateZ(0)}
+    .product-card>div:first-child{aspect-ratio:4/5!important;border-radius:18px 18px 0 0;background:#eee8de!important}
+    .product-card .card-img{transition:transform .75s cubic-bezier(.2,.7,.2,1),filter .4s}
+    .product-card:hover .card-img{transform:scale(1.045);filter:saturate(1.06)}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 24px 55px rgba(36,27,12,.13)}
+    .product-meta{padding:15px 15px 17px!important}
+    .product-name{font-size:1.02rem!important;line-height:1.25!important;margin-bottom:6px!important}
+    .product-desc{font-size:.69rem!important;min-height:2.1em;margin-bottom:12px!important}
+    .product-card-footer{gap:6px}
+    .product-view{border:0!important;background:#f5f0e7;border-radius:999px;padding:5px 9px!important;color:#70531c!important}
+    .sale-badge{background:var(--wine);box-shadow:none}
+    .filter-pill{background:#fff;border-color:rgba(11,11,12,.08);padding:7px 15px}
+    .filter-pill.active{background:var(--onyx)}
+    .search-inp{border-color:rgba(11,11,12,.09);min-height:44px}
+    .mobile-dock{display:none}
+    @media(min-width:1280px){#products-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+    @media(max-width:767px){
+      body{padding-bottom:67px}
+      #navbar>div{padding:11px 14px}
+      #navbar img{width:30px;height:30px}
+      #navbar a[href="dashboard.html"]{display:none}
+      .hero-bg{min-height:auto;padding-top:62px!important}
+      .hero-bg>.max-w-7xl{padding:58px 18px 45px!important}
+      .hero-bg .grid{gap:0}
+      .hero-title{font-size:clamp(3.15rem,16vw,5.2rem);line-height:.86;margin-bottom:17px!important}
+      .hero-title+ p{font-size:1.08rem!important}
+      .hero-title+ p + p{font-size:.72rem!important;margin-bottom:22px!important;max-width:310px!important}
+      .hero-bg .flex.items-center.gap-8{gap:16px!important;margin-bottom:25px!important}
+      .hero-bg .flex.items-center.gap-8>div:nth-child(n+4){display:none}
+      .hero-bg .flex.items-center.gap-8 p[id="hero-count"],.hero-bg .flex.items-center.gap-8 p{font-size:1.55rem!important}
+      .btn-ink{padding:12px 19px;font-size:.58rem}
+      .promo-announcement{top:59px;width:calc(100% - 20px)}
+      .promo-announcement-inner{min-height:42px}
+      #promo-section .promo-bg{padding:28px 14px 24px!important}
+      #promo-section .flex.flex-col.sm\:flex-row.items-start{gap:16px!important;margin-bottom:20px!important}
+      #promo-title-el{font-size:1.65rem!important}
+      #promo-desc-el{font-size:.68rem!important;margin-top:5px!important}
+      .cd-wrap{transform:none}
+      .cd-box{min-width:47px!important;padding:8px 6px!important}
+      .cd-num{font-size:1.05rem!important}
+      #promo-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-right:-14px!important;padding-right:14px;padding-bottom:4px;max-width:none}
+      #promo-grid::-webkit-scrollbar{display:none}
+      #promo-grid .promo-card{min-width:42vw;max-width:175px;scroll-snap-align:start}
+      #promo-section .scarcity-row{display:none}
+      #promo-section .btn-wa{width:100%;justify-content:center;padding:12px 18px!important}
+      #promo-section+*{border-top:0}
+      #promo-section>div:last-child>div{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;padding:11px 14px!important;gap:22px!important}
+      #promo-section>div:last-child>div>div{flex:0 0 auto}
+      #coleccion{padding:45px 12px 62px!important}
+      #coleccion .flex.flex-col.sm\:flex-row.sm\:items-end{padding:0 4px;margin-bottom:23px!important}
+      #coleccion h2{font-size:2.25rem!important}
+      #coleccion .reveal+div[style*="background:#fff"]{padding:12px!important;border-radius:15px;margin-bottom:16px!important}
+      #coleccion .reveal+div .flex.flex-col{gap:8px}
+      #filter-pills{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:3px;margin-right:-12px}
+      #filter-pills::-webkit-scrollbar{display:none}
+      #filter-pills .filter-pill{flex:0 0 auto}
+      #products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .product-card{border-radius:14px;box-shadow:0 5px 18px rgba(36,27,12,.07)}
+      .product-card>div:first-child{border-radius:14px 14px 0 0}
+      .product-meta{padding:10px 10px 12px!important}
+      .product-name{font-size:.82rem!important;white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;min-height:2.05em}
+      .product-desc{display:none!important}
+      .product-card-footer{align-items:flex-end!important}
+      .product-view{font-size:0!important;width:28px;height:28px;padding:0!important;display:grid;place-items:center}
+      .product-view:after{content:'→';font-size:.72rem}
+      .price-current{font-size:.88rem}
+      .price-original{font-size:.56rem}
+      .sale-badge{font-size:.47rem}
+      .mobile-dock{position:fixed;display:grid;grid-template-columns:repeat(4,1fr);left:10px;right:10px;bottom:9px;z-index:90;background:rgba(11,11,12,.94);border:1px solid rgba(215,181,109,.2);border-radius:18px;padding:8px 5px;box-shadow:0 18px 45px rgba(0,0,0,.28);backdrop-filter:blur(18px)}
+      .mobile-dock a{display:flex;flex-direction:column;align-items:center;gap:3px;color:rgba(255,255,255,.7);font-size:.45rem;letter-spacing:.08em;text-transform:uppercase}
+      .mobile-dock svg{width:16px;height:16px;color:var(--champagne)}
+      .modal-ov{padding:0;align-items:flex-end}
+      .modal-pn{border-radius:22px 22px 0 0;max-height:94svh}
+    }
   </style>
 </head>
 <body>
@@ -207,6 +306,13 @@
     </div>
   </div>
 </nav>
+
+<div class="mobile-dock" aria-label="Navegación móvil">
+  <a href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Inicio</a>
+  <a href="#coleccion"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 7h16l-1 14H5L4 7zm4 0a4 4 0 018 0"/></svg>Catálogo</a>
+  <a href="#promo-section"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M20 12l-8 8-9-9V4h7l10 8zM7 8h.01"/></svg>Ofertas</a>
+  <a href="https://wa.me/50683049209" target="_blank"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.7 14.2c-.2.6-1.2 1.1-1.7 1.2-.5.1-1.1.2-3.6-.8-3-1.2-5-4.3-5.1-4.5-.2-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .5 0 .7.6.2.6.8 2 .9 2.1.1.2.1.4 0 .6-.1.2-.2.4-.4.6l-.5.6c-.2.2-.3.4-.1.7.2.3.8 1.3 1.8 2.1 1.2 1.1 2.3 1.4 2.6 1.6.3.1.5.1.7-.1.2-.2.8-1 1-1.4.2-.3.4-.3.7-.2l2 .9c.3.2.5.2.6.4.1.1.1.7-.1 1.3z"/></svg>WhatsApp</a>
+</div>
 
 <!-- PROMO ANNOUNCEMENT: visible inmediatamente al activar una oferta -->
 <a id="promo-announcement" class="promo-announcement" href="#promo-section" aria-label="Ver promoción activa">
@@ -807,13 +913,13 @@
           ${p.brand?`<div style="position:absolute;top:7px;left:7px;background:rgba(255,255,255,.92);color:var(--ink);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;">${esc(p.brand)}</div>`:''}
           <div class="card-action">Ver pieza completa →</div>
         </div>
-        <div style="padding:14px 14px 18px;">
+        <div class="product-meta" style="padding:14px 14px 18px;">
           <p style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">${esc(p.category||'')}</p>
-          <h3 style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${esc(p.name)}</h3>
-          <p style="font-size:.68rem;color:rgba(15,15,15,.32);line-height:1.5;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(p.description||'')}</p>
-          <div class="flex items-center justify-between">
+          <h3 class="product-name" style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${esc(p.name)}</h3>
+          <p class="product-desc" style="font-size:.68rem;color:rgba(15,15,15,.32);line-height:1.5;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(p.description||'')}</p>
+          <div class="product-card-footer flex items-center justify-between">
             ${priceHtml(p)}
-            <span style="font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.28);padding:4px 9px;">Ver más</span>
+            <span class="product-view" style="font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.28);padding:4px 9px;">Ver más</span>
           </div>
         </div>
       </div>`;
