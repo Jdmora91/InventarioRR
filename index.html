@@ -148,7 +148,19 @@
     .filter-pill,.search-inp,select.search-inp{border-radius:999px;}
     .modal-pn{border-radius:18px;box-shadow:0 40px 100px rgba(0,0,0,.35);}
     .btn-ink,.btn-wa{border-radius:999px;}
+    .promo-announcement{position:fixed;top:65px;left:50%;transform:translateX(-50%) translateY(-18px);z-index:49;width:min(94%,920px);opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.8,.2,1);}
+    .promo-announcement.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+    .promo-announcement-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px 11px 18px;border:1px solid rgba(201,168,76,.35);background:linear-gradient(110deg,rgba(10,10,10,.96),rgba(34,23,5,.95));box-shadow:0 18px 60px rgba(0,0,0,.22);border-radius:999px;backdrop-filter:blur(20px);}
+    .promo-kicker{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:#e8c96e;white-space:nowrap;}
+    .promo-announcement-title{font-family:'Playfair Display',serif;font-size:.9rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .promo-mini-clock{font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.12em;color:#fff;border-left:1px solid rgba(255,255,255,.13);padding-left:14px;white-space:nowrap;}
+    #promo-section .promo-bg{background:radial-gradient(circle at 20% 10%,rgba(201,168,76,.17),transparent 28%),radial-gradient(circle at 80% 80%,rgba(89,62,9,.2),transparent 35%),linear-gradient(145deg,#080808,#171005 56%,#090909);}
+    #promo-section .promo-card{border-radius:16px;}
+    #promo-section .promo-card img{border-radius:15px;}
+    .promo-stage-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.08);color:#e8c96e;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;}
+    .product-card:focus-visible,.promo-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
     @media(max-width:640px){.product-card{border-radius:12px}.modal-pn{border-radius:14px}.hero-bg{min-height:auto}.hero-title{font-size:clamp(2.8rem,15vw,4.6rem)}}
+    @media(max-width:640px){.promo-announcement{top:68px}.promo-announcement-inner{border-radius:14px;padding:10px 12px}.promo-kicker{display:none}.promo-mini-clock{font-size:.6rem;padding-left:9px}.promo-announcement-title{font-size:.78rem}}
   </style>
 </head>
 <body>
@@ -180,6 +192,18 @@
     </div>
   </div>
 </nav>
+
+<!-- PROMO ANNOUNCEMENT: visible inmediatamente al activar una oferta -->
+<a id="promo-announcement" class="promo-announcement" href="#promo-section" aria-label="Ver promoción activa">
+  <div class="promo-announcement-inner">
+    <div class="flex items-center gap-3 min-w-0">
+      <span class="nav-promo-pulse"></span>
+      <span id="promo-announcement-kicker" class="promo-kicker">Oferta especial</span>
+      <span id="promo-announcement-title" class="promo-announcement-title">Selección RR</span>
+    </div>
+    <span id="promo-mini-clock" class="promo-mini-clock">00D · 00H · 00M</span>
+  </div>
+</a>
 
 <!-- HERO -->
 <section class="hero-bg flex items-center pt-20">
@@ -266,7 +290,7 @@
 
         <!-- COUNTDOWN COMPACTO -->
         <div style="flex-shrink:0;">
-          <p style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,.55);margin-bottom:8px;text-align:center;">La oferta termina en</p>
+          <p id="promo-countdown-label" style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,.55);margin-bottom:8px;text-align:center;">La oferta termina en</p>
           <div class="cd-wrap">
             <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-lbl">días</span></div>
             <span class="cd-sep">:</span>
@@ -350,6 +374,10 @@
       <div id="filter-pills" class="flex flex-wrap gap-2">
         <button onclick="setFilter('Todos')" class="filter-pill active">Todos</button>
       </div>
+      <div class="flex items-center justify-between mt-5 pt-4" style="border-top:1px solid rgba(201,168,76,.1);">
+        <p id="results-count" style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(15,15,15,.36);">Cargando colección…</p>
+        <p style="font-size:.6rem;color:rgba(15,15,15,.3);">Piezas únicas · inventario en tiempo real</p>
+      </div>
     </div>
     <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
       <div style="background:#fff;"><div class="aspect-square skel"></div><div style="padding:16px;" class="space-y-2"><div class="skel" style="height:8px;width:60px;"></div><div class="skel" style="height:15px;width:100%;"></div><div class="skel" style="height:12px;width:70%;"></div><div class="skel" style="height:18px;width:75px;margin-top:8px;"></div></div></div>
@@ -429,7 +457,7 @@
 <footer style="background:var(--ink);padding:56px 20px 36px;text-align:center;">
   <img src="assets/logo.jpg" alt="RR" style="height:44px;width:44px;border-radius:50%;object-fit:contain;opacity:.45;margin:0 auto 14px;border:1px solid rgba(201,168,76,.18);" onerror="this.style.display='none'"/>
   <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:rgba(201,168,76,.65);margin-bottom:4px;">RR Joyería Fina y Vintage</p>
-  <p style="font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:22px;">© 2025 · Todos los derechos reservados</p>
+  <p style="font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:22px;">© 2026 · Todos los derechos reservados</p>
   <div class="gold-line" style="max-width:180px;margin:0 auto 18px;"></div>
   <div class="flex justify-center gap-5 flex-wrap">
     <a href="https://wa.me/50683049209" target="_blank" style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.22);" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(255,255,255,.22)'">WhatsApp</a>
@@ -526,6 +554,8 @@
     renderFilterPills();
     applyFilters();
     setupPromo();
+    const directProduct = new URLSearchParams(location.search).get('producto');
+    if (directProduct) openModal(directProduct, false);
   }
 
   async function loadProducts() {
@@ -592,42 +622,57 @@
     const section = document.getElementById('promo-section');
     const navPromo = document.getElementById('nav-promo');
     const heroBtn = document.getElementById('hero-promo-btn');
+    const announcement = document.getElementById('promo-announcement');
 
-    if (!promoConfig?.active) { section.style.display = 'none'; return; }
+    if (!promoConfig?.active) { section.style.display = 'none'; announcement?.classList.remove('show'); return; }
 
     const now = new Date();
     const end = promoConfig.end ? new Date(promoConfig.end) : null;
     const start = promoConfig.start ? new Date(promoConfig.start) : null;
 
-    if (end && now > end) { section.style.display = 'none'; return; }
-    if (start && now < start) { section.style.display = 'none'; return; }
+    if (end && now > end) { section.style.display = 'none'; announcement?.classList.remove('show'); return; }
+    const upcoming = !!(start && now < start);
 
     // MOSTRAR
     section.style.display = 'block';
     if (navPromo) navPromo.style.display = 'inline-flex';
     if (heroBtn) { heroBtn.style.display = 'inline-flex'; }
+    announcement?.classList.add('show');
+    const badge=document.getElementById('promo-badge-text');
+    const label=document.getElementById('promo-countdown-label');
+    const kicker=document.getElementById('promo-announcement-kicker');
+    if (badge) badge.textContent=upcoming?'Próximamente':'Oferta activa';
+    if (label) label.textContent=upcoming?'La oferta comienza en':'La oferta termina en';
+    if (kicker) kicker.textContent=upcoming?'Próximamente':'Oferta en vivo';
 
     // Actualizar textos
     if (promoConfig.title) {
       const el = document.getElementById('promo-title-el');
-      if (el) el.innerHTML = esc(promoConfig.title) + '<br/><em style="color:var(--gold);font-style:italic;">con precio especial</em>';
+      if (el) el.innerHTML = esc(promoConfig.title) + `<br/><em style="color:var(--gold);font-style:italic;">${upcoming?'muy pronto':'con precio especial'}</em>`;
+      const announcementTitle=document.getElementById('promo-announcement-title');
+      if (announcementTitle) announcementTitle.textContent=promoConfig.title;
     }
     if (promoConfig.desc) {
       const el = document.getElementById('promo-desc-el');
       if (el) el.textContent = promoConfig.desc;
     }
 
-    if (end) startCountdown(end);
+    if (upcoming) startCountdown(start,'upcoming');
+    else if (end) startCountdown(end,'live');
     renderPromoGrid();
   }
 
-  function startCountdown(endDate) {
+  function startCountdown(targetDate, phase='live') {
     if (cdInterval) clearInterval(cdInterval);
     function tick() {
-      const diff = endDate - new Date();
+      const diff = targetDate - new Date();
       if (diff <= 0) {
         clearInterval(cdInterval);
-        document.getElementById('promo-section').style.display = 'none';
+        if (phase==='upcoming') setupPromo();
+        else {
+          document.getElementById('promo-section').style.display = 'none';
+          document.getElementById('promo-announcement')?.classList.remove('show');
+        }
         return;
       }
       const d = Math.floor(diff/86400000);
@@ -640,6 +685,8 @@
         const el = document.getElementById(ids[k]);
         if (el) el.textContent = pad(v);
       });
+      const mini=document.getElementById('promo-mini-clock');
+      if (mini) mini.textContent=`${pad(d)}D · ${pad(h)}H · ${pad(m)}M`;
     }
     tick();
     cdInterval = setInterval(tick, 1000);
@@ -660,7 +707,7 @@
     grid.innerHTML = items.map((p,i) => {
       const imgs = getImages(p);
       const img = imgs[0] || ph;
-      return `<div class="promo-card" style="aspect-ratio:3/4;" onclick="openModal('${p.id}')">
+      return `<div class="promo-card" role="button" tabindex="0" aria-label="Ver ${esc(p.name)}" style="aspect-ratio:3/4;" onclick="openModal('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${p.id}')">
         <img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="this.src='${ph}'"/>
         <div class="promo-card-overlay"></div>
         <div class="promo-card-badge">${esc(p.category||'Joya')}</div>
@@ -685,9 +732,8 @@
   }
 
   function renderFilterPills() {
-    const vals = filterMode==='category'
-      ? [...new Set(allProducts.map(p=>p.category))].filter(Boolean)
-      : [...new Set(allProducts.map(p=>p.brand))].filter(Boolean);
+    const source = filterMode==='category' ? allProducts.map(p=>p.category) : allProducts.map(p=>p.brand);
+    const vals = [...new Map(source.filter(Boolean).map(v=>[String(v).trim().toLocaleLowerCase('es'),String(v).trim()])).values()];
     const c = document.getElementById('filter-pills');
     c.innerHTML = `<button onclick="setFilter('Todos')" class="filter-pill ${activeFilter==='Todos'?'active':''}">Todos</button>`;
     vals.forEach(v => { c.innerHTML += `<button data-filter="${esc(v)}" class="filter-pill ${activeFilter===v?'active':''}">${esc(v)}</button>`; });
@@ -701,9 +747,10 @@
     const sort = document.getElementById('sort-pub').value;
     let products = [...allProducts];
     if (activeFilter !== 'Todos') {
+      const normalized=String(activeFilter).toLocaleLowerCase('es');
       products = filterMode==='category'
-        ? products.filter(p=>p.category===activeFilter)
-        : products.filter(p=>p.brand===activeFilter);
+        ? products.filter(p=>String(p.category||'').toLocaleLowerCase('es')===normalized)
+        : products.filter(p=>String(p.brand||'').toLocaleLowerCase('es')===normalized);
     }
     if (search) products = products.filter(p=>
       p.name.toLowerCase().includes(search)||
@@ -720,13 +767,15 @@
   function renderProducts(products) {
     const grid = document.getElementById('products-grid');
     const empty = document.getElementById('empty-state');
+    const count = document.getElementById('results-count');
+    if (count) count.textContent=`${products.length} ${products.length===1?'pieza encontrada':'piezas encontradas'}`;
     if (!products.length) { grid.innerHTML=''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
     const ph = 'https://placehold.co/400x400/f0e8d8/8B6914?text=RR';
     grid.innerHTML = products.map((p,i) => {
       const imgs = getImages(p);
       const img = imgs[0]||ph;
-      return `<div class="product-card" onclick="openModal('${p.id}')">
+      return `<div class="product-card" role="button" tabindex="0" aria-label="Ver ${esc(p.name)}" onclick="openModal('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${p.id}')">
         <div style="position:relative;aspect-ratio:1;overflow:hidden;background:#f5f0e8;">
           <img src="${esc(img)}" alt="${esc(p.name)}" class="card-img" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='${ph}'"/>
           ${p.sold?`<div style="position:absolute;inset:0;background:rgba(15,15,15,.5);display:flex;align-items:center;justify-content:center;"><span class="badge-sold">Agotado</span></div>`:''}
@@ -748,7 +797,31 @@
   }
 
   // ═══ MODAL ═══
-  function openModal(id) {
+  function productUrl(id) {
+    const url=new URL(location.origin+location.pathname);
+    url.searchParams.set('producto',id);
+    return url.toString();
+  }
+
+  async function shareProduct(id) {
+    const p=allProducts.find(x=>String(x.id)===String(id));
+    if (!p) return;
+    const url=productUrl(id);
+    try {
+      if (navigator.share) await navigator.share({title:p.name,text:`Mirá esta pieza de RR Joyería: ${p.name}`,url});
+      else { await navigator.clipboard.writeText(url); showPublicToast('Enlace copiado'); }
+    } catch(e) { if (e?.name!=='AbortError') showPublicToast('No se pudo compartir'); }
+  }
+
+  function showPublicToast(message) {
+    let toast=document.getElementById('public-toast');
+    if (!toast) { toast=document.createElement('div'); toast.id='public-toast'; document.body.appendChild(toast); }
+    toast.textContent=message;
+    toast.style.cssText='position:fixed;z-index:9999;bottom:24px;left:50%;transform:translateX(-50%);background:#0f0f0f;color:#fff;padding:11px 20px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 18px 50px rgba(0,0,0,.25)';
+    clearTimeout(window.__publicToastTimer); window.__publicToastTimer=setTimeout(()=>toast.remove(),2600);
+  }
+
+  function openModal(id, updateUrl=true) {
     const p = allProducts.find(x => String(x.id) === String(id));
     if (!p) return;
     const imgs = getImages(p);
@@ -771,16 +844,18 @@
       : '';
     document.querySelectorAll('#modal-thumbs .modal-thumb').forEach(el=>el.addEventListener('click',()=>switchImg(el,el.dataset.src)));
 
-    const waText = `Hola! Me interesa esta joya: *${p.name}* - ${fmt(p.price)}`;
+    const directUrl=productUrl(p.id);
+    const waText = `Hola! Me interesa esta joya: *${p.name}* - ${fmt(p.price)}\n${directUrl}`;
     document.getElementById('modal-wa-btn').innerHTML = p.sold
       ? `<div style="text-align:center;border:1px solid rgba(15,15,15,.1);padding:14px;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(15,15,15,.28);">Producto Agotado</div>`
-      : `<a href="https://wa.me/${WA}?text=${encodeURIComponent(waText)}" target="_blank" class="btn-wa w-full flex items-center justify-center gap-3 text-white py-4" style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;">
+      : `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;"><a href="https://wa.me/${WA}?text=${encodeURIComponent(waText)}" target="_blank" rel="noopener" class="btn-wa w-full flex items-center justify-center gap-3 text-white py-4" style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.526 5.858L.057 23.857a.5.5 0 00.611.61l6.089-1.44A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.51-5.26-1.395l-.376-.225-3.894.921.958-3.805-.247-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Consultar por WhatsApp
-        </a>`;
+        </a><button onclick="shareProduct('${p.id}')" aria-label="Compartir enlace de ${esc(p.name)}" style="width:52px;border:1px solid rgba(139,105,20,.25);border-radius:999px;color:var(--gold-dark);font-size:1rem;">↗</button></div>`;
 
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (updateUrl) history.replaceState({},'',productUrl(p.id));
   }
 
   function switchImg(el, src) {
@@ -792,6 +867,7 @@
   function closeModal() {
     document.getElementById('modal').classList.remove('open');
     document.body.style.overflow = '';
+    if (new URLSearchParams(location.search).has('producto')) history.replaceState({},'',location.pathname+location.hash);
   }
 
   document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
