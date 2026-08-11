@@ -94,6 +94,28 @@
     button:active{transform:scale(.98);}
     #login-screen>div{border-radius:24px!important;box-shadow:0 30px 90px rgba(70,48,8,.15)!important;}
     @media(max-width:640px){.card{border-radius:14px}#form-sidebar .card{position:static}.tab-btn{padding:14px 16px}}
+    /* Luxe commerce admin refinement */
+    :root{--onyx:#0b0b0c;--champagne:#d7b56d;--ivory:#f7f3eb;--wine:#721b2b;}
+    body{background:radial-gradient(circle at 90% 5%,rgba(215,181,109,.12),transparent 27%),linear-gradient(180deg,#f7f3eb,#efe7dc);font-family:'Manrope',sans-serif}
+    header{background:rgba(11,11,12,.96)!important;backdrop-filter:blur(18px)}
+    .card{border-color:rgba(11,11,12,.07);box-shadow:0 12px 38px rgba(42,30,10,.06)}
+    .stat-card{border-left:0;border-top:3px solid var(--champagne)}
+    .tab-btn.active{color:#70531c;border-color:var(--champagne);background:rgba(215,181,109,.08)}
+    .inp{border-color:rgba(11,11,12,.11);min-height:45px}
+    .inp:focus{border-color:#a17c35;box-shadow:0 0 0 4px rgba(215,181,109,.12)}
+    #product-list>.card{border-radius:16px}
+    @media(max-width:640px){
+      #dashboard header .max-w-7xl{padding:10px 12px}
+      #dashboard header a[href="index.html"]{font-size:0!important;width:36px;height:36px;padding:0!important;display:grid;place-items:center;border-radius:50%}
+      #dashboard header button{border-radius:999px;padding:8px 11px!important}
+      #dashboard>.max-w-7xl{padding:14px 10px 35px}
+      .stat-card{padding:14px!important}
+      .stat-card p:first-child{font-size:2rem!important}
+      .tab-btn{flex:1;padding:13px 8px;font-size:.55rem;letter-spacing:.1em}
+      #product-list>.card{padding:10px!important;gap:9px!important}
+      #product-list>.card>div:first-child{width:62px!important;height:76px!important;border-radius:10px}
+      .offer-item{padding:9px!important}
+    }
     h1,h2,h3,.display-type{font-family:'Bodoni Moda',serif!important;letter-spacing:-.025em;}
     .price-stack{display:flex;align-items:baseline;justify-content:flex-end;gap:7px;flex-wrap:wrap;}
     .price-old{font-size:.67rem;color:rgba(15,15,15,.36);text-decoration:line-through;text-decoration-thickness:1px;}
