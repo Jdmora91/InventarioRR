@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.4 seconds
-Output:
 -- Precio especial opcional por producto. No modifica precios actuales.
 alter table public.productos add column if not exists sale_price double precision;
 do $$
