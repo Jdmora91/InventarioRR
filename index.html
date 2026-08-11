@@ -303,6 +303,18 @@
       #modal-name{font-size:1.42rem!important;margin-bottom:7px!important}#modal-desc{font-size:.7rem!important;line-height:1.5!important;margin-bottom:10px!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
       #modal-price{margin-bottom:2px!important}#modal-scarcity{margin-bottom:11px!important;padding:7px 10px!important}#modal-thumbs{flex-wrap:nowrap!important;overflow-x:auto}.modal-thumb{width:45px;height:45px}
     }
+    /* Product image viewer + richer campaign status */
+    .card-img-wrap{cursor:zoom-in}.card-img-wrap:after{content:'⌕';position:absolute;right:10px;bottom:10px;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:rgba(251,248,242,.9);color:#171411;font-size:1rem;opacity:0;transform:translateY(4px);transition:.25s;box-shadow:0 7px 18px rgba(0,0,0,.13)}
+    .card-img-wrap:hover:after{opacity:1;transform:none}
+    .image-viewer{position:fixed;inset:0;z-index:500;background:rgba(10,9,8,.94);backdrop-filter:blur(16px);display:grid;place-items:center;padding:22px;opacity:0;pointer-events:none;transition:.25s}
+    .image-viewer.open{opacity:1;pointer-events:auto}.image-viewer-card{position:relative;width:min(94vw,980px);height:min(88svh,820px);display:grid;grid-template-columns:minmax(0,1fr) 220px;background:#11100f;border:1px solid rgba(203,170,103,.24);border-radius:22px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.45)}
+    .image-viewer-stage{position:relative;min-height:0;display:grid;place-items:center;background:radial-gradient(circle,#292622,#0d0c0b 68%);padding:24px}.image-viewer-stage img{width:100%;height:100%;object-fit:contain;max-height:80svh}
+    .image-viewer-info{padding:28px 22px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;border-left:1px solid rgba(255,255,255,.08)}
+    .viewer-close{position:absolute;right:14px;top:14px;z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(251,248,242,.94);color:#171411;font-size:1.15rem;box-shadow:0 8px 25px rgba(0,0,0,.22)}
+    .viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(251,248,242,.9);color:#171411;font-size:1.2rem;box-shadow:0 8px 20px rgba(0,0,0,.18)}.viewer-prev{left:14px}.viewer-next{right:14px}
+    .viewer-thumbs{display:flex;gap:7px;overflow-x:auto}.viewer-thumb{width:48px;height:58px;object-fit:cover;border:2px solid transparent;border-radius:7px;opacity:.55;cursor:pointer}.viewer-thumb.active{border-color:#cbaa67;opacity:1}
+    .promo-announcement-inner{padding:9px 13px 9px 17px}.promo-copy{display:flex;flex-direction:column;min-width:0}.promo-announcement-status{font-size:.52rem;color:rgba(255,255,255,.54);letter-spacing:.06em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.promo-mini-clock strong{color:#e1bf77;font-weight:700}
+    @media(max-width:767px){.card-img-wrap:after{opacity:1;width:27px;height:27px;right:7px;bottom:7px}.image-viewer{padding:10px}.image-viewer-card{width:100%;height:86svh;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;border-radius:18px}.image-viewer-stage{padding:12px}.image-viewer-info{padding:13px 15px;border-left:0;border-top:1px solid rgba(255,255,255,.08)}.image-viewer-info>div:first-child p:nth-child(2){font-size:1.15rem!important}.viewer-close{width:36px;height:36px;right:9px;top:9px}.viewer-nav{width:36px;height:36px}.viewer-prev{left:8px}.viewer-next{right:8px}.promo-announcement-inner{padding:9px 11px}.promo-announcement-status{font-size:.47rem;max-width:175px}.promo-mini-clock{font-size:.54rem;line-height:1.3;text-align:right}}
   </style>
 </head>
 <body>
@@ -352,9 +364,9 @@
     <div class="flex items-center gap-3 min-w-0">
       <span class="nav-promo-pulse"></span>
       <span id="promo-announcement-kicker" class="promo-kicker">Oferta especial</span>
-      <span id="promo-announcement-title" class="promo-announcement-title">Selección RR</span>
+      <span class="promo-copy"><span id="promo-announcement-title" class="promo-announcement-title">Selección RR</span><span id="promo-announcement-status" class="promo-announcement-status">Consultando fechas…</span></span>
     </div>
-    <span id="promo-mini-clock" class="promo-mini-clock">00D · 00H · 00M</span>
+    <span id="promo-mini-clock" class="promo-mini-clock"><strong>00D · 00H · 00M</strong><br/>restantes</span>
   </div>
 </a>
 
@@ -624,6 +636,19 @@
 </footer>
 
 <!-- MODAL -->
+<div id="image-viewer" class="image-viewer" role="dialog" aria-modal="true" aria-label="Visor de fotografía" onclick="if(event.target===this)closeLightbox()">
+  <div class="image-viewer-card">
+    <button class="viewer-close" onclick="closeLightbox()" aria-label="Cerrar fotografía">×</button>
+    <div class="image-viewer-stage">
+      <button id="viewer-prev" class="viewer-nav viewer-prev" onclick="stepLightbox(-1)" aria-label="Foto anterior">‹</button>
+      <img id="viewer-image" alt="Fotografía ampliada del producto"/>
+      <button id="viewer-next" class="viewer-nav viewer-next" onclick="stepLightbox(1)" aria-label="Foto siguiente">›</button>
+    </div>
+    <div class="image-viewer-info"><div><p id="viewer-category" style="font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:#cbaa67;margin-bottom:6px;"></p><p id="viewer-name" style="font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1.1;"></p><p id="viewer-counter" style="font-size:.6rem;color:rgba(255,255,255,.45);margin-top:8px;"></p></div><div id="viewer-thumbs" class="viewer-thumbs"></div></div>
+  </div>
+</div>
+
+<!-- MODAL -->
 <div id="modal" class="modal-ov" role="dialog" aria-modal="true">
   <div class="modal-pn">
     <button onclick="closeModal()" style="position:absolute;top:12px;right:12px;z-index:10;width:36px;height:36px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border:none;transition:background .2s;" onmouseover="this.style.background='var(--gold-dark)'" onmouseout="this.style.background='var(--ink)'">✕</button>
@@ -671,6 +696,8 @@
   let promoConfig = null;
   let promoProductIds = [];
   let cdInterval = null;
+  let viewerProduct = null;
+  let viewerIndex = 0;
 
   const fmt = p => new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',minimumFractionDigits:0}).format(p);
   const esc = (value='') => String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
@@ -803,9 +830,14 @@
     const badge=document.getElementById('promo-badge-text');
     const label=document.getElementById('promo-countdown-label');
     const kicker=document.getElementById('promo-announcement-kicker');
+    const announcementStatus=document.getElementById('promo-announcement-status');
     if (badge) badge.textContent=upcoming?'Próximamente':'Oferta activa';
     if (label) label.textContent=upcoming?'La oferta comienza en':'La oferta termina en';
     if (kicker) kicker.textContent=upcoming?'Próximamente':'Oferta en vivo';
+    const dateFmt=new Intl.DateTimeFormat('es-CR',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+    if (announcementStatus) announcementStatus.textContent=upcoming&&start
+      ? `Inicia ${dateFmt.format(start)}`
+      : end ? `Activa ahora · finaliza ${dateFmt.format(end)}` : 'Oferta activa por tiempo limitado';
 
     // Actualizar textos
     if (promoConfig.title) {
@@ -848,7 +880,7 @@
         if (el) el.textContent = pad(v);
       });
       const mini=document.getElementById('promo-mini-clock');
-      if (mini) mini.textContent=`${pad(d)}D · ${pad(h)}H · ${pad(m)}M`;
+      if (mini) mini.innerHTML=`<strong>${pad(d)}D · ${pad(h)}H · ${pad(m)}M</strong><br>${phase==='upcoming'?'para iniciar':'para finalizar'}`;
     }
     tick();
     cdInterval = setInterval(tick, 1000);
@@ -870,7 +902,7 @@
       const imgs = getImages(p);
       const img = imgs[0] || ph;
       return `<div class="promo-card" role="button" tabindex="0" aria-label="Ver ${esc(p.name)}" style="aspect-ratio:3/4;" onclick="openModal('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${p.id}')">
-        <img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onerror="this.src='${ph}'"/>
+        <img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onclick="event.stopPropagation();openLightbox('${p.id}',0)" style="cursor:zoom-in" onerror="this.src='${ph}'"/>
         ${hasSale(p)?`<span class="sale-badge">-${discountPercent(p)}%</span>`:''}
         <div class="promo-card-overlay"></div>
         <div class="promo-card-badge">${esc(p.category||'Joya')}</div>
@@ -937,7 +969,7 @@
       const imgs = getImages(p);
       const img = imgs[0]||ph;
       return `<div class="product-card" role="button" tabindex="0" aria-label="Ver ${esc(p.name)}" onclick="openModal('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${p.id}')">
-        <div style="position:relative;aspect-ratio:1;overflow:hidden;background:#f5f0e8;">
+        <div class="card-img-wrap" style="position:relative;aspect-ratio:1;overflow:hidden;background:#f5f0e8;" onclick="event.stopPropagation();openLightbox('${p.id}',0)">
           <img src="${esc(img)}" alt="${esc(p.name)}" class="card-img" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='${ph}'"/>
           ${hasSale(p)?`<span class="sale-badge">-${discountPercent(p)}%</span>`:''}
           ${p.sold?`<div style="position:absolute;inset:0;background:rgba(15,15,15,.5);display:flex;align-items:center;justify-content:center;"><span class="badge-sold">Agotado</span></div>`:''}
@@ -990,6 +1022,31 @@
   }
   function assistantGo(target) { toggleAssistant(false); document.querySelector(target)?.scrollIntoView({behavior:'smooth',block:'start'}); }
 
+  function openLightbox(id,index=0) {
+    viewerProduct=allProducts.find(p=>String(p.id)===String(id));
+    if (!viewerProduct) return;
+    const images=getImages(viewerProduct);
+    if (!images.length) return;
+    viewerIndex=Math.max(0,Math.min(Number(index)||0,images.length-1));
+    renderLightbox();
+    document.getElementById('image-viewer').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function renderLightbox() {
+    if (!viewerProduct) return;
+    const images=getImages(viewerProduct);
+    document.getElementById('viewer-image').src=images[viewerIndex];
+    document.getElementById('viewer-image').alt=`${viewerProduct.name} · foto ${viewerIndex+1}`;
+    document.getElementById('viewer-category').textContent=viewerProduct.category||'Joyería RR';
+    document.getElementById('viewer-name').textContent=viewerProduct.name;
+    document.getElementById('viewer-counter').textContent=`Foto ${viewerIndex+1} de ${images.length}`;
+    document.getElementById('viewer-prev').style.display=images.length>1?'block':'none';
+    document.getElementById('viewer-next').style.display=images.length>1?'block':'none';
+    document.getElementById('viewer-thumbs').innerHTML=images.length>1?images.map((src,i)=>`<img src="${esc(src)}" alt="Vista ${i+1}" class="viewer-thumb ${i===viewerIndex?'active':''}" onclick="viewerIndex=${i};renderLightbox()">`).join(''):'';
+  }
+  function stepLightbox(delta) { const images=viewerProduct?getImages(viewerProduct):[]; if(!images.length)return; viewerIndex=(viewerIndex+delta+images.length)%images.length; renderLightbox(); }
+  function closeLightbox() { document.getElementById('image-viewer').classList.remove('open'); viewerProduct=null; document.body.style.overflow=''; }
+
   function openModal(id, updateUrl=true) {
     const p = allProducts.find(x => String(x.id) === String(id));
     if (!p) return;
@@ -1001,7 +1058,10 @@
     document.getElementById('modal-name').textContent     = p.name;
     document.getElementById('modal-desc').textContent     = p.description||'Sin descripción disponible.';
     document.getElementById('modal-price').innerHTML     = priceHtml(p);
-    document.getElementById('modal-main-img').src         = imgs[0]||ph;
+    const modalMain=document.getElementById('modal-main-img');
+    modalMain.src=imgs[0]||ph;
+    modalMain.style.cursor=imgs.length?'zoom-in':'default';
+    modalMain.onclick=imgs.length?()=>openLightbox(p.id,Math.max(0,imgs.indexOf(modalMain.src))):null;
 
     const sb = document.getElementById('modal-sold-badge');
     const sc = document.getElementById('modal-scarcity');
@@ -1041,7 +1101,10 @@
   }
 
   document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
-  document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+  let viewerTouchX=0;
+  document.getElementById('image-viewer').addEventListener('touchstart',e=>{viewerTouchX=e.changedTouches[0].clientX},{passive:true});
+  document.getElementById('image-viewer').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-viewerTouchX;if(Math.abs(dx)>55)stepLightbox(dx>0?-1:1)},{passive:true});
+  document.addEventListener('keydown', e => { if(e.key==='Escape'){document.getElementById('image-viewer').classList.contains('open')?closeLightbox():closeModal();} if(document.getElementById('image-viewer').classList.contains('open')&&e.key==='ArrowLeft')stepLightbox(-1); if(document.getElementById('image-viewer').classList.contains('open')&&e.key==='ArrowRight')stepLightbox(1); });
 
   init();
 </script>
