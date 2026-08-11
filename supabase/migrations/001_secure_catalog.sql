@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.5 seconds
-Output:
 -- RR Joyería: catálogo público y administración autenticada.
 create table if not exists public.config (
   key text primary key,
