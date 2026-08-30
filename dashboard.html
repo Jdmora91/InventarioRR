@@ -377,8 +377,8 @@
 
           <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:between;gap:8px;">
             <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
-            <p style="font-size:0.7rem;color:rgba(15,15,15,0.6);flex:1;">Máximo 4 productos se muestran en la sección de ofertas.</p>
-            <span id="promo-count-badge" style="font-size:0.6rem;letter-spacing:0.1em;background:var(--gold-dark);color:#fff;padding:3px 10px;border-radius:2px;">0/4</span>
+            <p style="font-size:0.7rem;color:rgba(15,15,15,0.6);flex:1;">Seleccioná todos los productos que querás destacar en la sección de ofertas.</p>
+            <span id="promo-count-badge" style="font-size:0.6rem;letter-spacing:0.1em;background:var(--gold-dark);color:#fff;padding:3px 10px;border-radius:2px;">0 seleccionados</span>
           </div>
 
           <div id="promo-product-list" class="space-y-2" style="max-height:400px;overflow-y:auto;padding-right:4px;">
@@ -789,7 +789,6 @@ function togglePromoProduct(id, el) {
     el.classList.remove('selected');
     if (cb) cb.checked = false;
   } else {
-    if (selectedPromoIds.size >= 4) { toast('Máximo 4 productos en oferta.',false); return; }
     selectedPromoIds.add(sid);
     el.classList.add('selected');
     if (cb) cb.checked = true;
@@ -798,7 +797,7 @@ function togglePromoProduct(id, el) {
 }
 
 function updatePromoBadge() {
-  document.getElementById('promo-count-badge').textContent = `${selectedPromoIds.size}/4`;
+  document.getElementById('promo-count-badge').textContent = `${selectedPromoIds.size} seleccionados`;
 }
 
 async function savePromoProducts(silent=false) {
