@@ -298,10 +298,35 @@
     @media(max-width:767px){
       .hero-title{font-size:clamp(2.85rem,14vw,4.35rem);line-height:.9}.mobile-dock{grid-template-columns:repeat(5,1fr)}
       .assistant-launch{width:52px;height:52px;right:14px;bottom:82px}.assistant-panel{right:14px;bottom:145px}
-      .modal-ov{align-items:center;padding:16px;background:rgba(9,8,7,.82)}.modal-pn{width:100%;max-width:370px;max-height:88svh;border-radius:20px;overflow-y:auto}
-      .modal-pn>.flex{display:block}.modal-pn>.flex>div:first-child{padding:12px!important;gap:7px!important}.modal-pn #modal-main-img{max-height:34svh}.modal-pn>.flex>div:last-child{padding:16px 18px 18px!important}
-      #modal-name{font-size:1.42rem!important;margin-bottom:7px!important}#modal-desc{font-size:.7rem!important;line-height:1.5!important;margin-bottom:10px!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-      #modal-price{margin-bottom:2px!important}#modal-scarcity{margin-bottom:11px!important;padding:7px 10px!important}#modal-thumbs{flex-wrap:nowrap!important;overflow-x:auto}.modal-thumb{width:45px;height:45px}
+      /* Modal móvil de tamaño estable: la foto nunca define la altura de la card. */
+      .modal-ov{align-items:center;padding:12px;background:rgba(9,8,7,.82)}
+      .modal-pn{width:min(100%,370px);height:min(92svh,720px);max-height:none;border-radius:20px;overflow:hidden}
+      .modal-pn>.flex{display:grid!important;grid-template-rows:minmax(0,36%) minmax(0,64%);height:100%;min-height:0}
+      .modal-pn>.flex>div:first-child{padding:10px!important;gap:6px!important;min-height:0;overflow:hidden}
+      .modal-pn>.flex>div:first-child>div:first-child{aspect-ratio:auto!important;flex:1;min-height:0}
+      .modal-pn #modal-main-img{width:100%;height:100%;max-height:none;object-fit:contain}
+      .modal-pn>.flex>div:last-child{padding:12px 16px 14px!important;min-height:0;overflow:hidden;gap:6px}
+      .modal-pn>.flex>div:last-child>div:first-child{min-height:0}
+      #modal-name{font-size:clamp(1.12rem,5.4vw,1.38rem)!important;line-height:1.05!important;margin-bottom:5px!important;padding-right:28px}
+      #modal-desc{font-size:clamp(.6rem,1.55svh,.69rem)!important;line-height:1.38!important;margin-bottom:7px!important;display:block;overflow:visible}
+      #modal-price{font-size:clamp(1.35rem,6.5vw,1.85rem)!important;line-height:1!important;margin-bottom:1px!important}
+      #modal-price+ p{font-size:.58rem!important;margin-bottom:7px!important}
+      #modal-scarcity{margin-bottom:7px!important;padding:6px 9px!important}
+      #modal-scarcity p{font-size:.58rem!important}
+      #modal-thumbs{flex:0 0 auto;flex-wrap:nowrap!important;overflow-x:auto;min-height:0;scrollbar-width:none}
+      #modal-thumbs:empty{display:none}
+      #modal-thumbs::-webkit-scrollbar{display:none}.modal-thumb{width:38px;height:38px;flex:0 0 38px}
+      #modal-wa-btn .btn-wa{padding-top:10px!important;padding-bottom:10px!important;font-size:.58rem!important}
+      #modal-wa-btn button{width:44px!important}
+      .modal-pn .gold-line{margin-bottom:7px!important}
+    }
+    @media(max-width:767px) and (max-height:700px){
+      .modal-pn{height:94svh}
+      .modal-pn>.flex{grid-template-rows:minmax(0,31%) minmax(0,69%)}
+      .modal-pn>.flex>div:first-child{padding:7px!important}
+      .modal-pn>.flex>div:last-child{padding:9px 14px 10px!important}
+      #modal-desc{font-size:.58rem!important;line-height:1.28!important;margin-bottom:5px!important}
+      #modal-scarcity{margin-bottom:5px!important}
     }
     /* Product image viewer + richer campaign status */
     .card-img-wrap{cursor:pointer}.card-img-wrap:after{content:'→';position:absolute;right:10px;bottom:10px;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:rgba(251,248,242,.9);color:#171411;font-size:1rem;opacity:0;transform:translateY(4px);transition:.25s;box-shadow:0 7px 18px rgba(0,0,0,.13)}
