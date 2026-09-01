@@ -346,6 +346,24 @@
     .hero-brand-card img{width:min(82%,270px);height:auto;max-height:62%;object-fit:contain;mix-blend-mode:multiply}
     .hero-brand-line{width:34px;height:1px;background:#bd9852;margin:24px auto 14px}
     .hero-brand-card p{font-size:.57rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(23,20,17,.48)}
+    /* Servicio de búsqueda privada */
+    .sourcing-section{position:relative;overflow:hidden;background:#171411;color:#fff;padding:92px 20px}
+    .sourcing-section:before{content:'';position:absolute;width:460px;height:460px;border:1px solid rgba(203,170,103,.16);border-radius:50%;right:-120px;top:-190px}
+    .sourcing-section:after{content:'';position:absolute;width:300px;height:300px;border:1px solid rgba(203,170,103,.09);border-radius:50%;right:-40px;top:-110px}
+    .sourcing-inner{position:relative;z-index:1;max-width:1120px;margin:auto;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:80px;align-items:center}
+    .sourcing-kicker{display:flex;align-items:center;gap:12px;font-size:.56rem;letter-spacing:.35em;text-transform:uppercase;color:#cbaa67;margin-bottom:20px}
+    .sourcing-kicker:before{content:'';width:34px;height:1px;background:#cbaa67}
+    .sourcing-title{font-family:'Cormorant Garamond',serif!important;font-size:clamp(2.5rem,5vw,4.7rem);font-weight:500;letter-spacing:-.035em;line-height:.92;max-width:720px}
+    .sourcing-title em{font-weight:400;color:#cbaa67}
+    .sourcing-copy{max-width:650px;margin-top:24px;color:rgba(255,255,255,.62);font-size:.8rem;line-height:1.85}
+    .sourcing-steps{display:flex;align-items:center;gap:14px;margin:30px 0 34px;color:rgba(255,255,255,.72);font-size:.58rem;letter-spacing:.13em;text-transform:uppercase}
+    .sourcing-steps i{width:28px;height:1px;background:rgba(203,170,103,.38)}
+    .sourcing-cta{display:inline-flex;align-items:center;gap:16px;background:#cbaa67;color:#171411;padding:15px 21px;border-radius:999px;font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;transition:.25s}
+    .sourcing-cta:hover{background:#dfc17e;transform:translateY(-2px);box-shadow:0 14px 35px rgba(0,0,0,.2)}
+    .sourcing-seal{width:270px;height:270px;border:1px solid rgba(203,170,103,.27);border-radius:50%;display:grid;place-items:center;text-align:center;margin:auto;position:relative}
+    .sourcing-seal:before,.sourcing-seal:after{content:'';position:absolute;border:1px solid rgba(203,170,103,.12);border-radius:50%;inset:18px}.sourcing-seal:after{inset:42px}
+    .sourcing-seal div{position:relative;z-index:1}.sourcing-seal strong{display:block;font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:400;color:#cbaa67;line-height:.8}.sourcing-seal span{display:block;margin-top:15px;font-size:.48rem;line-height:1.7;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.48)}
+    @media(max-width:767px){.sourcing-section{padding:68px 20px}.sourcing-inner{grid-template-columns:1fr;gap:42px}.sourcing-title{font-size:clamp(2.65rem,13vw,4rem)}.sourcing-copy{font-size:.73rem;line-height:1.75}.sourcing-steps{gap:8px;font-size:.48rem;letter-spacing:.08em}.sourcing-steps i{width:14px}.sourcing-cta{width:100%;justify-content:center;padding:14px 16px}.sourcing-seal{width:190px;height:190px}.sourcing-seal strong{font-size:3.1rem}.sourcing-seal span{font-size:.42rem}.sourcing-section:before{width:330px;height:330px}}
   </style>
 </head>
 <body>
@@ -585,6 +603,24 @@
       <p style="font-family:'Playfair Display',serif;font-size:2.5rem;font-style:italic;color:rgba(201,168,76,.18);margin-bottom:8px;">Sin resultados</p>
       <p style="font-size:.73rem;color:rgba(15,15,15,.28);">No hay productos que coincidan con tu búsqueda.</p>
     </div>
+  </div>
+</section>
+
+<!-- BÚSQUEDA PRIVADA -->
+<section class="sourcing-section" aria-labelledby="sourcing-title">
+  <div class="sourcing-inner">
+    <div class="reveal">
+      <p class="sourcing-kicker">Servicio personalizado</p>
+      <h2 id="sourcing-title" class="sourcing-title">Búsqueda privada<br/>de <em>piezas vintage</em></h2>
+      <p class="sourcing-copy">¿Tiene una joya vintage en mente? Si busca una marca, estilo, época o pieza especial que no encuentra en nuestra colección, cuéntenos su idea. Podemos realizar una búsqueda personalizada, evaluar opciones disponibles internacionalmente y presentarle una cotización antes de gestionar su importación.</p>
+      <div class="sourcing-steps" aria-label="Proceso del servicio">
+        <span>Cuéntenos</span><i></i><span>Buscamos</span><i></i><span>Cotizamos</span>
+      </div>
+      <a class="sourcing-cta" href="https://wa.me/50683049209?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20b%C3%BAsqueda%20privada%20de%20piezas%20vintage.%20Estoy%20buscando%20una%20joya%2C%20marca%20o%20estilo%20en%20particular%20y%20quisiera%20conocer%20las%20opciones%20disponibles%20y%20recibir%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener noreferrer">
+        Solicitar búsqueda privada <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="sourcing-seal reveal" aria-hidden="true"><div><strong>RR</strong><span>Curaduría<br/>internacional</span></div></div>
   </div>
 </section>
 
