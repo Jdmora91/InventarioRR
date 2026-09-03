@@ -248,9 +248,10 @@
             <div class="space-y-4">
               <div><label class="inp-label">Nombre *</label><input id="fn" type="text" class="inp" placeholder="Collar de oro vintage"/></div>
               <div class="grid grid-cols-2 gap-3">
-                <div><label class="inp-label">Categoría *</label><input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Collares..."/><datalist id="cat-dl"></datalist></div>
+                <div><label class="inp-label">Categoría principal *</label><input id="fcat" type="text" list="cat-dl" class="inp" placeholder="Sets..."/><datalist id="cat-dl"></datalist></div>
                 <div><label class="inp-label">Marca</label><input id="fbrand" type="text" list="brand-dl" class="inp" placeholder="Avon, Monet..."/><datalist id="brand-dl"></datalist></div>
               </div>
+              <div><label class="inp-label">Segunda categoría</label><input id="fcat2" type="text" list="cat-dl" class="inp" placeholder="Pulseras (opcional)"/><p style="font-size:.58rem;color:rgba(15,15,15,.32);margin-top:4px;">El producto aparecerá en ambos filtros.</p></div>
               <div class="grid grid-cols-2 gap-3">
                 <div><label class="inp-label">Precio regular (₡) *</label><input id="fprice" type="number" min="0" class="inp" placeholder="25000"/></div>
                 <div><label class="inp-label">Precio oferta (₡)</label><input id="fsale" type="number" min="0" class="inp" placeholder="Opcional"/><p style="font-size:.58rem;color:rgba(15,15,15,.32);margin-top:4px;">Debe ser menor al regular</p></div>
@@ -505,6 +506,17 @@ function priceHtml(p) {
   return `<span class="price-old">${fmt(p.price)}</span><span class="price-sale">${fmt(p.sale_price)}</span><span class="discount-chip">-${pct}%</span>`;
 }
 
+// La columna histórica `category` sigue siendo texto. Dos categorías se guardan
+// separadas internamente para evitar una migración y mantener los datos existentes.
+function getCategories(p) {
+  return String(p?.category||'').split('||').map(c=>c.trim()).filter(Boolean).slice(0,2);
+}
+function categoryLabel(p) { return getCategories(p).join(' · '); }
+function hasCategory(p, value) {
+  const wanted=String(value||'').toLocaleLowerCase('es');
+  return getCategories(p).some(c=>c.toLocaleLowerCase('es')===wanted);
+}
+
 function getImages(p) {
   if (!p.images) return [];
   if (Array.isArray(p.images)) return p.images;
@@ -597,7 +609,7 @@ async function uploadFiles(productId) {
 }
 
 function clearForm() {
-  ['eid','fn','fcat','fbrand','fprice','fsale','fdesc'].forEach(id => document.getElementById(id).value='');
+  ['eid','fn','fcat','fcat2','fbrand','fprice','fsale','fdesc'].forEach(id => document.getElementById(id).value='');
   document.getElementById('fsold').checked = false;
   newFiles = []; existingUrls = []; originalUrls = []; renderPH();
   document.getElementById('form-title').textContent = 'Nueva pieza';
@@ -609,6 +621,7 @@ async function saveProduct() {
   const id    = document.getElementById('eid').value;
   const name  = document.getElementById('fn').value.trim();
   const cat   = document.getElementById('fcat').value.trim();
+  const cat2  = document.getElementById('fcat2').value.trim();
   const brand = document.getElementById('fbrand').value.trim();
   const price = parseFloat(document.getElementById('fprice').value);
   const saleRaw = document.getElementById('fsale').value;
@@ -616,7 +629,9 @@ async function saveProduct() {
   const desc  = document.getElementById('fdesc').value.trim();
   const sold  = document.getElementById('fsold').checked;
 
-  if (!name||!cat||isNaN(price)||price<0) { toast('Nombre, categoría y un precio válido son obligatorios.',false); return; }
+  if (!name||!cat||isNaN(price)||price<0) { toast('Nombre, categoría principal y un precio válido son obligatorios.',false); return; }
+  if (cat2 && cat.localeCompare(cat2,'es',{sensitivity:'base'})===0) { toast('La segunda categoría debe ser diferente.',false); return; }
+  const storedCategory = [cat,cat2].filter(Boolean).join('||');
   if (salePrice!==null && (isNaN(salePrice)||salePrice<0||salePrice>=price)) { toast('El precio de oferta debe ser menor al precio regular.',false); return; }
 
   const btn = document.getElementById('save-btn');
@@ -628,7 +643,7 @@ async function saveProduct() {
       const newUrls = await uploadFiles(id);
       const finalImages = [...existingUrls,...newUrls];
       const { error } = await db.from('productos').update({
-        name, category:cat, brand:brand||null, price, sale_price:salePrice, description:desc||null, sold, images:finalImages
+        name, category:storedCategory, brand:brand||null, price, sale_price:salePrice, description:desc||null, sold, images:finalImages
       }).eq('id',id);
       if (error) throw error;
       const removed = originalUrls.filter(url => !finalImages.includes(url)).map(storagePathFromUrl).filter(Boolean);
@@ -636,7 +651,7 @@ async function saveProduct() {
       toast('✓ Producto actualizado');
     } else {
       const { data, error } = await db.from('productos').insert({
-        name, category:cat, brand:brand||null, price, sale_price:salePrice, description:desc||null, sold, images:[]
+        name, category:storedCategory, brand:brand||null, price, sale_price:salePrice, description:desc||null, sold, images:[]
       }).select().single();
       if (error) throw error;
       const newUrls = await uploadFiles(data.id);
@@ -657,7 +672,9 @@ function editProduct(id) {
   const p = allProducts.find(x=>x.id==id); if (!p) return;
   document.getElementById('eid').value    = p.id;
   document.getElementById('fn').value     = p.name;
-  document.getElementById('fcat').value   = p.category;
+  const categories = getCategories(p);
+  document.getElementById('fcat').value   = categories[0]||'';
+  document.getElementById('fcat2').value  = categories[1]||'';
   document.getElementById('fbrand').value = p.brand||'';
   document.getElementById('fprice').value = p.price;
   document.getElementById('fsale').value  = p.sale_price??'';
@@ -695,10 +712,10 @@ function renderList() {
   const catF   = document.getElementById('s-cat').value;
   const brandF = document.getElementById('s-brand').value;
   let products = [...allProducts];
-  if (catF)   products = products.filter(p=>p.category===catF);
+  if (catF)   products = products.filter(p=>hasCategory(p,catF));
   if (brandF) products = products.filter(p=>p.brand===brandF);
   if (search) products = products.filter(p=>
-    p.name.toLowerCase().includes(search)||(p.category||'').toLowerCase().includes(search)||(p.brand||'').toLowerCase().includes(search)
+    p.name.toLowerCase().includes(search)||getCategories(p).some(c=>c.toLowerCase().includes(search))||(p.brand||'').toLowerCase().includes(search)
   );
 
   const cont  = document.getElementById('product-list');
@@ -718,7 +735,7 @@ function renderList() {
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 justify-between mb-1 flex-wrap">
           <div class="flex items-center gap-2 flex-wrap">
-            <span style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">${esc(p.category||'')}</span>
+            <span style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">${esc(categoryLabel(p))}</span>
             ${p.brand?`<span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(15,15,15,0.35);border:1px solid rgba(15,15,15,0.1);padding:1px 6px;">${esc(p.brand)}</span>`:''}
             ${p.sold?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;">Agotado</span>':'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:2px 7px;">Disponible</span>'}
             ${isPromo?'<span style="font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:var(--gold-dark);border:1px solid rgba(201,168,76,0.3);padding:2px 7px;">En Oferta</span>':''}
@@ -739,7 +756,7 @@ function renderList() {
 
 function updateStats() {
   const sold = allProducts.filter(p=>p.sold).length;
-  const cats = [...new Set(allProducts.map(p=>p.category))].filter(Boolean);
+  const cats = [...new Set(allProducts.flatMap(getCategories))].filter(Boolean);
   document.getElementById('st-total').textContent = allProducts.length;
   document.getElementById('st-cats').textContent  = cats.length;
   document.getElementById('st-sold').textContent  = sold;
@@ -747,7 +764,7 @@ function updateStats() {
 }
 
 function updateDataLists() {
-  const cats   = [...new Set(allProducts.map(p=>p.category))].filter(Boolean);
+  const cats   = [...new Set(allProducts.flatMap(getCategories))].filter(Boolean);
   const brands = [...new Set(allProducts.map(p=>p.brand))].filter(Boolean);
   document.getElementById('cat-dl').innerHTML   = cats.map(c=>`<option value="${c}"/>`).join('');
   document.getElementById('brand-dl').innerHTML = brands.map(b=>`<option value="${b}"/>`).join('');
@@ -773,7 +790,7 @@ function renderPromoProductList() {
       <img src="${esc(thumb)}" loading="lazy" style="width:44px;height:44px;object-fit:cover;border:1px solid rgba(201,168,76,0.2);flex-shrink:0;" onerror="this.src='https://placehold.co/44x44/f0ebe0/8B6914?text=RR'"/>
       <div class="flex-1 min-w-0">
         <p style="font-size:0.8rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</p>
-        <p style="font-size:0.65rem;color:rgba(15,15,15,0.4);">${esc(p.category||'')} ${p.brand?'· '+esc(p.brand):''}</p>
+        <p style="font-size:0.65rem;color:rgba(15,15,15,0.4);">${esc(categoryLabel(p))} ${p.brand?'· '+esc(p.brand):''}</p>
       </div>
       <div class="price-stack">${priceHtml(p)}</div>
     </div>`;

@@ -774,6 +774,12 @@
   };
   const effectivePrice = p => hasSale(p) ? Number(p.sale_price) : Number(p.price);
   const discountPercent = p => hasSale(p) ? Math.round((1-Number(p.sale_price)/Number(p.price))*100) : 0;
+  const getCategories = p => String(p?.category||'').split('||').map(c=>c.trim()).filter(Boolean).slice(0,2);
+  const categoryLabel = p => getCategories(p).join(' · ');
+  const hasCategory = (p,value) => {
+    const wanted=String(value||'').toLocaleLowerCase('es');
+    return getCategories(p).some(c=>c.toLocaleLowerCase('es')===wanted);
+  };
   const priceHtml = (p,onDark=false) => hasSale(p)
     ? `<span class="price-row ${onDark?'on-dark':''}"><span class="price-original">${fmt(p.price)}</span><span class="price-current">${fmt(p.sale_price)}</span></span>`
     : `<span class="price-row ${onDark?'on-dark':''}"><span class="price-current">${fmt(p.price)}</span></span>`;
@@ -947,7 +953,7 @@
         <img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" decoding="async" onclick="event.stopPropagation();openLightbox('${p.id}',0)" style="cursor:zoom-in" onerror="this.src='${ph}'"/>
         ${hasSale(p)?`<span class="sale-badge">-${discountPercent(p)}%</span>`:''}
         <div class="promo-card-overlay"></div>
-        <div class="promo-card-badge">${esc(p.category||'Joya')}</div>
+        <div class="promo-card-badge">${esc(categoryLabel(p)||'Joya')}</div>
         <div class="promo-card-info">
           ${imgs.length>1?`<p style="font-size:.5rem;color:rgba(255,255,255,.5);margin-bottom:2px;">+${imgs.length} fotos</p>`:''}
           <p style="font-family:'Playfair Display',serif;font-size:.92rem;color:#fff;font-weight:600;line-height:1.25;margin-bottom:6px;">${esc(p.name)}</p>
@@ -967,7 +973,7 @@
   }
 
   function renderFilterPills() {
-    const source = filterMode==='category' ? allProducts.map(p=>p.category) : allProducts.map(p=>p.brand);
+    const source = filterMode==='category' ? allProducts.flatMap(getCategories) : allProducts.map(p=>p.brand);
     const vals = [...new Map(source.filter(Boolean).map(v=>[String(v).trim().toLocaleLowerCase('es'),String(v).trim()])).values()];
     const c = document.getElementById('filter-pills');
     c.innerHTML = `<button onclick="setFilter('Todos')" class="filter-pill ${activeFilter==='Todos'?'active':''}">Todos</button>`;
@@ -984,13 +990,13 @@
     if (activeFilter !== 'Todos') {
       const normalized=String(activeFilter).toLocaleLowerCase('es');
       products = filterMode==='category'
-        ? products.filter(p=>String(p.category||'').toLocaleLowerCase('es')===normalized)
+        ? products.filter(p=>hasCategory(p,normalized))
         : products.filter(p=>String(p.brand||'').toLocaleLowerCase('es')===normalized);
     }
     if (search) products = products.filter(p=>
       p.name.toLowerCase().includes(search)||
       (p.description||'').toLowerCase().includes(search)||
-      (p.category||'').toLowerCase().includes(search)||
+      getCategories(p).some(c=>c.toLowerCase().includes(search))||
       (p.brand||'').toLowerCase().includes(search)
     );
     if (sort==='price-asc') products.sort((a,b)=>effectivePrice(a)-effectivePrice(b));
@@ -1024,7 +1030,7 @@
           <div class="card-action">Ver pieza completa →</div>
         </div>
         <div class="product-meta" style="padding:14px 14px 18px;">
-          <p style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">${esc(p.category||'')}</p>
+          <p style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">${esc(categoryLabel(p))}</p>
           <h3 class="product-name" style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${esc(p.name)}</h3>
           <p class="product-desc" style="font-size:.68rem;color:rgba(15,15,15,.32);line-height:1.5;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(p.description||'')}</p>
           <div class="product-card-footer flex items-center justify-between">
@@ -1083,7 +1089,7 @@
     const images=getImages(viewerProduct);
     document.getElementById('viewer-image').src=images[viewerIndex];
     document.getElementById('viewer-image').alt=`${viewerProduct.name} · foto ${viewerIndex+1}`;
-    document.getElementById('viewer-category').textContent=viewerProduct.category||'Joyería RR';
+    document.getElementById('viewer-category').textContent=categoryLabel(viewerProduct)||'Joyería RR';
     document.getElementById('viewer-name').textContent=viewerProduct.name;
     document.getElementById('viewer-counter').textContent=`Foto ${viewerIndex+1} de ${images.length}`;
     document.getElementById('viewer-prev').style.display=images.length>1?'block':'none';
@@ -1099,7 +1105,7 @@
     const imgs = getImages(p);
     const ph = 'https://placehold.co/600x600/f0e8d8/8B6914?text=RR';
 
-    document.getElementById('modal-category').textContent = p.category||'';
+    document.getElementById('modal-category').textContent = categoryLabel(p);
     document.getElementById('modal-brand').textContent    = p.brand||'';
     document.getElementById('modal-name').textContent     = p.name;
     document.getElementById('modal-desc').textContent     = p.description||'Sin descripción disponible.';
